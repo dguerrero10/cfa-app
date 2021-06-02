@@ -43,7 +43,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-form-field-appearance-outline .mat-form-field-outline {
   background-color:rgba(79, 84, 92, 0.02) !important;
 }
-
+body.dark {
+  background-color: $color-light-charcoal;
+}
 .mat-tooltip {
   font-size: .9rem;
   font-weight: bold;

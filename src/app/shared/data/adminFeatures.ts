@@ -6,5 +6,11 @@ export let ADMIN_FEATURES: Feature[] = [
         feature: "users",
         icon: 'people',
         selected: true
+    },
+    {  
+        matToolTip: "Users",
+        feature: "users",
+        icon: 'people',
+        selected: false
     }
 ];

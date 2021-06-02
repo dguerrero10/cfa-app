@@ -5,7 +5,7 @@ import { AdminComponent } from './pages/admin.component';
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent
+    component: AdminComponent, data: {bodyClass: 'dark'}
   }
 ];
 

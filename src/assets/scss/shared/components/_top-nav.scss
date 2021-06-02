@@ -1,6 +1,12 @@
 @import '../../abstracts/variables';
+@import '../../base/animations';
 
 .top-nav {
+    animation: fadein .4s;
+    -moz-animation: fadein .4s; /* Firefox */
+    -webkit-animation: fadein .4s; /* Safari and Chrome */
+    -o-animation: fadein .4s; /* Opera */
+
     position: absolute;
     top: 0;
     background-color: $color-white;
@@ -40,6 +46,6 @@
 }
 
 .dark-mode {
-    background-color: $color-light-charcoal !important;
+    background-color: $color-med-charcoal !important;
     color: $color-white;
 }
