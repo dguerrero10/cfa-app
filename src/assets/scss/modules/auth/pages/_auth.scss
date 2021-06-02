@@ -1,0 +1,24 @@
+.auth {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    &__logo {
+        width: 150px;
+        height: 150px;
+        padding-bottom: .5rem;
+    }
+
+    &__form-switch {
+        text-align: center;
+        padding: 1.5rem 0;
+
+        &--btn {
+            cursor: pointer;
+            color: rgb(32, 32, 228)
+        }
+    }
+}

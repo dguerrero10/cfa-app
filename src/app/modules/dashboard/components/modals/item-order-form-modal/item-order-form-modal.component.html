@@ -1,0 +1,69 @@
+<div class="space-between">
+    <h2 mat-dialog-title>Item Order</h2>
+    <button mat-icon-button class="exit-btn" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<form class="item-order-form-modal">
+    <div class="single-row u-sm-margin-bottom">
+        <mat-checkbox class="u-sm-margin-right">FOH</mat-checkbox>
+        <mat-checkbox>BOH</mat-checkbox>
+    </div>
+<mat-form-field class="u-sm-margin-bottom">
+    <mat-label>Areas searched for item</mat-label>
+    <mat-chip-list #chipListArea aria-label="Areas searched">
+      <mat-chip
+        *ngFor="let area of areas"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="removeArea(area)">
+        {{area}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="New area..."
+        #areaInput
+        [formControl]="areaCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipListArea"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addArea($event)">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAreas($event)">
+      <mat-option *ngFor="let area of filteredAreas | async" [value]="area">
+        {{area}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field class="u-sm-margin-bottom">
+    <mat-label>Items needed</mat-label>
+    <mat-chip-list #chipListItem aria-label="Items needed">
+      <mat-chip
+        *ngFor="let item of items"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="removeItem(item)">
+        {{item}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="New item..."
+        #itemInput
+        [formControl]="itemCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipListItem"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addItem($event)">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedItems($event)">
+      <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+        {{item}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Leader name</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <button mat-flat-button color="primary">Submit</button>
+</form>

@@ -1,0 +1,9 @@
+.fs-form-modal {
+    display: flex;
+    flex-direction: column;
+
+    &__upload-btn {
+        width: 150px;
+        margin-bottom: 1.5975em;
+    }
+}

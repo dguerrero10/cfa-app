@@ -1,0 +1,35 @@
+<div class="space-between">
+  <h2 mat-dialog-title>Team Member Attendance</h2>
+  <button mat-icon-button class="exit-btn" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<form class="attendance-form-modal">
+    <mat-form-field appearance="outline">
+      <mat-label>Team member name</mat-label>
+      <input matInput>
+    </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Issue</mat-label>
+    <mat-select>
+      <mat-option value="one">First option</mat-option>
+      <mat-option value="two">Second option</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Reported symptoms</mat-label>
+    <mat-select>
+      <mat-option value="one">First option</mat-option>
+      <mat-option value="two">Second option</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Notes (optional)</mat-label>
+    <textarea matInput></textarea>
+  </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Leader name</mat-label>
+      <input matInput>
+    </mat-form-field>
+  <button mat-flat-button color="primary">Submit</button>
+</form>

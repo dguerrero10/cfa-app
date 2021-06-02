@@ -1,0 +1,27 @@
+<div class="financial-services">
+    <div class="single-row u-xs-margin-bottom">
+        <button mat-icon-button class="refresh-data-btn" matTooltip="Refresh Data" matTooltipPosition="above">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <div class="mat-h1">Financial Services</div>
+        <button mat-mini-fab matTooltip="Add Data" matTooltipPosition="right" class="add-btn-fab grow"
+            (click)="openFinancialServicesFormModal()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-tab-group animationDuration="0ms" class="financial-services__tab-group">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                Data
+                <mat-icon class="tab-icon">list</mat-icon>
+            </ng-template>
+            <app-financial-services-data-table></app-financial-services-data-table>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                Metrics
+                <mat-icon class="tab-icon">insights</mat-icon>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>

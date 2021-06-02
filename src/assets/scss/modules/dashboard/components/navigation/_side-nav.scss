@@ -1,0 +1,68 @@
+@import '../../../../abstracts/variables';
+
+.side-nav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom:0;
+    background-color:$color-light-gray;
+    width: 87px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__wrapper {
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 1px 0 rgba(6,6,7,0.1),0 1.5px 0 rgba(6,6,7,0.025),0 2px 0 rgba(6,6,7,0.025);
+    }
+
+    &__logo {
+        cursor: pointer;
+        margin-top: .25rem;
+        height: 60px;
+        width: 60px;
+    }
+
+    &__list {
+        position: relative;
+        list-style: none;
+        padding: 0;
+        margin: .5rem auto auto auto;
+
+        &-item {
+            padding: 12px 0;
+        }
+
+        &-btn {
+            box-shadow: none !important;
+            background-color: $color-white;
+            transition: all .15s ease-out;
+        }
+
+        &-icon {
+            font-size: 26px;
+            color: $color-dark-gray;
+            margin-top: -3px;
+            transition: all .15s ease-out;
+        }
+
+        &-btn:hover {
+            border-radius: 16px;
+            background-color: $color-cfa-red;
+        }
+
+        &-btn:hover &-icon {
+            color: $color-white;
+        }
+
+        &-btn-active {
+            border-radius: 16px;
+            background-color: $color-cfa-red;
+        }
+
+        &-btn-active &-icon {
+            color: $color-white;
+        }
+    }
+}

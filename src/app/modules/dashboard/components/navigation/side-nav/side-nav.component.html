@@ -1,0 +1,13 @@
+<nav class="side-nav">
+    <div class="side-nav__wrapper">
+        <img class="side-nav__logo" [src]=cfaLogo alt="">
+    </div>
+    <li class="side-nav__list">
+        <div *ngFor="let feature of features; index as i;" class="side-nav__list-item">
+            <button mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="right" [ngClass]="{'side-nav__list-btn-active': feature.selected}"
+                class="side-nav__list-btn u-icon-center-inline" (click)="onSelect(feature.feature)">
+                <mat-icon class="side-nav__list-icon">{{feature.icon}}</mat-icon>
+            </button>
+        </div>
+    </li>
+</nav>

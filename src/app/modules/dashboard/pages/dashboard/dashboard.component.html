@@ -1,0 +1,8 @@
+<app-top-nav></app-top-nav>
+<app-side-nav></app-side-nav>
+<div class="dashboard" [ngSwitch]="feature">
+    <app-team-attendance *ngSwitchCase="'teamMemberAttendance'"></app-team-attendance>
+    <app-cares *ngSwitchCase="'cares'"></app-cares>
+    <app-item-order *ngSwitchCase="'itemOrder'"></app-item-order>
+    <app-financial-services *ngSwitchCase="'financialServices'"></app-financial-services>
+</div>
