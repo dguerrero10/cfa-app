@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>Confirm Action</h1>
+<div mat-dialog-content>Are you sure? This action cannot be reversed.</div>
+<div mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="warn" cdkFocusInitial>Cancel</button>
+    <button mat-stroked-button [mat-dialog-close]="true" color="primary">Yes</button>
+</div>

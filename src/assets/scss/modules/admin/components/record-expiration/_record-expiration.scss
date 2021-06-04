@@ -1,0 +1,77 @@
+@import '../../../../abstracts/variables';
+
+.record-expiration {
+
+    &__header {
+        margin-bottom: 1.5rem !important;
+        color: $color-white;
+    }
+
+    &__sm-header {
+        color: $color-white;
+    }
+
+    &__card {
+        max-width: 1000px;
+    }
+
+    &__para {
+        color: $color-white;
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: .5rem auto auto auto;
+
+        &-btn {
+            box-shadow: none !important;
+            background-color: $color-white;
+            transition: all .15s ease-out;
+            margin-right: 2rem;
+        }
+
+        &-icon {
+            font-size: 26px;
+            color: $color-dark-gray;
+            margin-top: -3px;
+            transition: all .15s ease-out;
+        }
+
+        &-btn:hover {
+            border-radius: 16px;
+            background-color: $color-blue;
+        }
+
+        &-btn:hover &-icon {
+            color: $color-white;
+        }
+
+        &-btn-active {
+            border-radius: 16px;
+            background-color: $color-blue;
+        }
+
+        &-btn-active &-icon {
+            color: $color-white;
+        }
+    }
+
+    &__btn {
+        max-height: 50px;
+        margin-top: 10px;
+        width: 100px;
+        margin-left: 1rem;
+    }
+
+    &__container {
+        max-width: 600px;
+        margin-top: 2rem;
+    }
+}
+
+mat-card {
+    margin-top: 1rem;
+    background-color: $color-black;
+}
+

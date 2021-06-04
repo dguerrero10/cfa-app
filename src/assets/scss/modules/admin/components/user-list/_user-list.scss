@@ -1,0 +1,39 @@
+@import '../../../../abstracts/variables';
+
+.user-list {
+
+    &__header {
+        margin-bottom: 1.5rem !important;
+        color: $color-white;
+    }
+
+    &__card {
+        max-width: 1200px;
+    }
+
+    &__para {
+        color: $color-white;
+    }
+
+    &__checkbox {
+        margin-left: 1rem;
+        color: $color-white;
+    }
+}
+
+mat-card {
+    margin: 1rem 0;
+    background-color: $color-black;
+}
+mat-expansion-panel {
+    background-color: $color-light-charcoal !important;
+}
+mat-panel-title, .mat-subheader {
+    color: $color-white !important;
+}
+.mat-subheader {
+    padding-bottom: 0 !important;
+}
+mat-list-item {
+    color: $color-blue !important;
+}

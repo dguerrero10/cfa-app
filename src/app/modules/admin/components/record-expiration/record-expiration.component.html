@@ -1,0 +1,32 @@
+<div class="record-expiration">
+    <div class="mat-h1 record-expiration__header">Manage Record Expiration</div>
+    <mat-divider></mat-divider>
+    <mat-card class="u-slight-shadow single-row record-expiration__card">
+        <div *ngFor="let feature of features; index as i;">
+            <button mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="above" color="primary"
+                [ngClass]="{'record-expiration__list-btn-active': feature.selected}"
+                class="record-expiration__list-btn u-icon-center-inline" (click)="onSelect(feature.feature)">
+                <mat-icon class="record-expiration__list-icon">{{feature.icon}}</mat-icon>
+            </button>
+        </div>
+    </mat-card>
+    <p mat-body class="record-expiration__para">
+        Change the amount of time that passes before records expire and delete.
+        By default, records are set to expire and be deleted after 30 days.
+    </p>
+    <mat-divider></mat-divider>
+    <div class="record-expiration__container">
+        <div class="mat-h2 record-expiration__sm-header">{{featureEdit}}</div>
+        <div class="single-row">
+            <mat-form-field appearance="outline">
+                <mat-label style="color: white;">Expiration</mat-label>
+                <mat-select>
+                  <mat-option *ngFor="let time of expirationTimes" [value]="time">
+                    {{time}} days
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-flat-button class="record-expiration__btn" color="primary">Submit</button>
+        </div>
+    </div>
+</div>

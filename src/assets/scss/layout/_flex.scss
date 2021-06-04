@@ -3,7 +3,18 @@
     flex-direction: row;
 }
 
+.align-center {
+    display: flex;
+    align-items: center;
+}
+
 .space-between {
     display: flex;
     justify-content: space-between;
+}
+
+.space-evenly {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }

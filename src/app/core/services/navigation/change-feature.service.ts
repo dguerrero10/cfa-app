@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Feature } from '../../shared/models/feature.model';
-import { FEATURES } from '../../shared/data/features';
+import { Feature } from '../../../shared/models/feature.model';
+import { FEATURES } from '../../../shared/data/features';
 
 @Injectable({
   providedIn: 'root'

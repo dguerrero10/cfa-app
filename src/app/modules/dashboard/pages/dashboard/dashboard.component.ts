@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChangeFeatureService } from 'src/app/core/services/change-feature.service';
+import { ChangeFeatureService } from 'src/app/core/services/navigation/change-feature.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,10 +9,10 @@ import { ChangeFeatureService } from 'src/app/core/services/change-feature.servi
 export class DashboardComponent implements OnInit {
   public feature: string = <string>('');
 
-  constructor(private changeFeatureService: ChangeFeatureService) { }
+  constructor(private changeFeatureSerivce: ChangeFeatureService) { }
 
   ngOnInit(): void {
-    this.changeFeatureService.currentFeature.subscribe(feature => this.feature = feature);
+    this.changeFeatureSerivce.currentFeature.subscribe(feature => this.feature = feature);
   }
 
 }

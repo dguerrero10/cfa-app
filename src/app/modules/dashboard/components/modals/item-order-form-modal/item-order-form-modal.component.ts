@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
@@ -12,24 +12,26 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./item-order-form-modal.component.scss']
 })
 export class ItemOrderFormModalComponent implements OnInit {
-  visible = true;
-  selectable = true;
-  removable = true;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  areaCtrl = new FormControl();
-  itemCtrl = new FormControl();
-  filteredAreas: Observable<string[]>;
-  filteredItems: Observable<string[]>;
-  areas: string[] = [];
-  items: string[] = [];
-  allAreas: string[] = [];
-  allItems: string[] = [];
+ public visible = true;
+ public selectable = true;
+ public removable = true;
+ public separatorKeysCodes: number[] = [ENTER, COMMA];
+ public areaCtrl = new FormControl();
+ public itemCtrl = new FormControl();
+ public filteredAreas: Observable<string[]>;
+ public filteredItems: Observable<string[]>;
+ public items: string[] = [];
+ public areas: string[] = [];
+ public allAreas: string[] = [];
+ public allItems: string[] = [];
+
+ public itemOrderForm: FormGroup = <FormGroup>{};
 
   @ViewChild('areaInput') areaInput?: ElementRef<HTMLInputElement>;
   @ViewChild('itemInput') itemInput?: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete?: MatAutocomplete;
 
-  constructor() {
+  constructor(private fb: FormBuilder) {
     this.filteredAreas = this.areaCtrl.valueChanges.pipe(
       startWith(null),
       map((area: string | null) => area ? this._filterArea(area) : this.allAreas.slice()));
@@ -39,7 +41,18 @@ export class ItemOrderFormModalComponent implements OnInit {
       map((item: string | null) => item ? this._filterItem(item) : this.allItems.slice()));
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.createForm();
+  }
+
+  createForm() {
+    this.itemOrderForm = this.fb.group({
+      'workArea': ['', Validators.required],
+      'areasSearched': ['', Validators.required],
+      'itemsNeeded': ['', Validators.required],
+      'leaderName': ['', Validators.required]
+    });
+  }
 
   addArea(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

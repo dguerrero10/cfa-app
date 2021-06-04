@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ADMIN_FEATURES } from 'src/app/shared/data/adminFeatures';
+import { ChangeFeatureAdminService } from 'src/app/core/services/navigation/change-feature-admin.service';
+import { ADMIN_FEATURES } from 'src/app/shared/data/admin-features';
 import { Feature } from 'src/app/shared/models/feature.model';
 
 @Component({
@@ -12,13 +13,15 @@ export class AdminSideNavComponent implements OnInit {
   public adminFeatures: Feature[] = ADMIN_FEATURES;
   public adminFeature: string = <string>('');
 
-  constructor() { }
+  constructor(public changeFeatureAdmiService: ChangeFeatureAdminService) { }
 
   ngOnInit(): void {
+    this.changeFeatureAdmiService.currentFeature.subscribe(feature => this.adminFeature = feature);
   }
 
   onSelect(feature:string) {
-    console.log(feature);
+   this.adminFeatures = this.changeFeatureAdmiService.onSelect(feature);
+   this.changeFeatureAdmiService.switchFeature(feature); 
   }
 
 }

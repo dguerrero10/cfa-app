@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ChangeFeatureService } from 'src/app/core/services/change-feature.service';
 import { Feature } from '../../../../../shared/models/feature.model';
 import { FEATURES } from 'src/app/shared/data/features';
+import { ChangeFeatureService } from 'src/app/core/services/navigation/change-feature.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -9,9 +9,9 @@ import { FEATURES } from 'src/app/shared/data/features';
   styleUrls: ['./side-nav.component.scss']
 })
 export class SideNavComponent implements OnInit {
+  public cfaLogo = '../../../../../assets/images/cfa-logo.svg';
   public features: Feature[] = FEATURES;
   public feature: string = <string>('');
-  public cfaLogo = '../../../../../assets/images/cfa-logo.svg';
 
   constructor(private featureService: ChangeFeatureService) { }
 

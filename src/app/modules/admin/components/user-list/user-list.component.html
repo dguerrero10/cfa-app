@@ -1,0 +1,44 @@
+<div class="user-list">
+  <div class="mat-h1 user-list__header">Manage Users</div>
+  <mat-divider></mat-divider>
+  <mat-card class="u-slight-shadow user-list__card">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let user of users" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{user.name}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list role="list">
+          <div mat-subheader>Email</div>
+          <mat-list-item role="listitem">
+            {{user.email}}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Privileges</div>
+          <mat-list-item role="listitem">
+            {{user.privileges}}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Employee ID</div>
+          <mat-list-item role="listitem">
+            {{user.employeeID}}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Edit User</div>
+          <div class="single-row align-center">
+            <mat-list-item role="listitem">
+              <button mat-flat-button color="warn" 
+              (click)="deleteUserWarningModal()">Delete user</button>
+              <mat-checkbox class="user-list__checkbox" [checked]="checked"
+              color="primary" (change)="adminChecked($event)">Admin
+              </mat-checkbox>
+            </mat-list-item>
+          </div>
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+  <p mat-body class="user-list__para">Delete a user, or edit their permissions.</p>
+  <mat-divider></mat-divider>
+</div>

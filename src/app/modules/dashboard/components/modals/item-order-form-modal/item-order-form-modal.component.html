@@ -4,10 +4,10 @@
         <mat-icon>close</mat-icon>
     </button>
 </div>
-<form class="item-order-form-modal">
+<form [formGroup]="itemOrderForm" class="item-order-form-modal">
     <div class="single-row u-sm-margin-bottom">
-        <mat-checkbox class="u-sm-margin-right">FOH</mat-checkbox>
-        <mat-checkbox>BOH</mat-checkbox>
+        <mat-checkbox class="u-sm-margin-right" color="primary">FOH</mat-checkbox>
+        <mat-checkbox color="primary">BOH</mat-checkbox>
     </div>
 <mat-form-field class="u-sm-margin-bottom">
     <mat-label>Areas searched for item</mat-label>

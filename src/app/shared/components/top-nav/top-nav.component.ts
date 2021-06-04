@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ export class TopNavComponent implements OnInit {
   public adminUrl: string = '/admin';
   public navigatedToAdmin: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private renderer2: Renderer2) { }
 
   ngOnInit(): void {
     this.url = this.router.url;
@@ -23,7 +23,7 @@ export class TopNavComponent implements OnInit {
       this.navigatedToAdmin = false;
     }
   }
-
+  
   goToAdmin() {
     this.router.navigate(['/admin']);
   }
