@@ -1,31 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
+import { MatTableDataSource } from '@angular/material/table';
+import { first } from 'rxjs/operators';
+import { CaresService } from 'src/app/core/services/cares/cares.service';
+import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
+import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
+import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
+import { Care } from 'src/app/shared/models/form-table/cares.model';
 
 @Component({
   selector: 'app-cares-data-table',
@@ -33,12 +14,55 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./cares-data-table.component.scss']
 })
 export class CaresDataTableComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  public displayedColumns: string[] = [
+    'Date', 'Guest Name', 'Guest #', 'Mode of Visit', 'Category', 'Issue(s)', 'Team Member Position', 'Leader'
+  ];
+  public caresData: Care[] = [];
+  public chartData: Care[] = [];
+  public loading: boolean = true;
+  public noData: boolean = false;
+  public dataSource: any;
+  public clickedRows = new Set<Care>();
+  public _idList: string[] = [];
 
-  constructor() { }
+  constructor(public shareChartDataService: ShareChartDataService,
+              public disableMetricService: DisableMetricTabService,
+              public deleteStateService: DeleteStateService,
+              public refreshDataService: RefreshDataService,
+              private caresService: CaresService) { }
 
   ngOnInit(): void {
+    this.caresService.getCares()
+      .subscribe(data => {
+        this.caresData = data.care;
+        console.log(data.care)
+        this.shareChartDataService.shareData(this.caresData);
+        this.loading = false;
+        this.dataSource = new MatTableDataSource(this.caresData);
+        if (this.caresData.length === 0) {
+          this.noData = true;
+          this.disableMetricService.switchState(this.noData);
+        }
+      });
+    this.refreshDataService.refreshData.subscribe(data => {
+      if (data) {
+        this.caresService.getCares()
+          .subscribe(data => {
+            this.caresData = data.care;
+            this.shareChartDataService.shareData(this.caresData);
+            this.loading = false;
+            this.dataSource = new MatTableDataSource(this.caresData);
+            if (this.caresData.length === 0) {
+              this.noData = true;
+              this.disableMetricService.switchState(this.noData);
+            }
+            else {
+              this.noData = false;
+              this.disableMetricService.switchState(this.noData);
+            }
+          });
+      }
+    });
   }
 
   applyFilter(event: Event) {
@@ -46,4 +70,37 @@ export class CaresDataTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  addRow(newRow: any) {
+    if (this.clickedRows.has(newRow)) {
+      this.clickedRows.delete(newRow);
+      this.removeDataToDelete(newRow);
+    }
+    else {
+      this.clickedRows.add(newRow);
+      this.addDataToDelete(newRow);
+    }
+    if (this.clickedRows.size === 0) {
+      this.deleteStateService.changeDeleteState(false);
+    }
+    else {
+      this.deleteStateService.changeDeleteState(true);
+    }
+  }
+
+  addDataToDelete(row: any) {
+    if (this._idList.includes(row._id)) return;
+    this._idList.push(row._id);
+  }
+
+  removeDataToDelete(row: any) {
+    this._idList = this._idList.filter(x => x !== row._id);
+    console.log(this._idList)
+  }
+
+  deleteData(data: boolean) {
+    if (data) {
+      this.caresService.deleteData(this._idList);
+    }
+  }
+  
 }

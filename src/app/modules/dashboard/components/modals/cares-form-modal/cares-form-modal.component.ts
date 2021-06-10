@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CaresService } from 'src/app/core/services/cares/cares.service';
+import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { CATEGORIES, FOOD_QUALITY, MISSING_ITEMS, MODES_OF_VISIT, SERVICES } from 'src/app/shared/data/forms/cares';
 
 @Component({
@@ -19,8 +20,10 @@ export class CaresFormModalComponent implements OnInit {
   public missingItems = MISSING_ITEMS;
   public selectedCategory: string = '';
   public other: boolean = false;
+  public submitting: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<CaresFormModalComponent>,
+              public refreshDataService: RefreshDataService,
               private fb: FormBuilder,
               public caresService: CaresService,
               public snackBar: MatSnackBar) { }
@@ -74,7 +77,7 @@ export class CaresFormModalComponent implements OnInit {
       }
     }
   }
-  
+
   getFormErrors(el: string) {
     switch (el) {
       case 'guestName':
@@ -112,21 +115,61 @@ export class CaresFormModalComponent implements OnInit {
     }
   }
 
+  prepString(stringToTransform: string) {
+    for (let i = 0; i < stringToTransform.length; i++) {
+      // Find where to seperate string by uppercase letter
+      if (stringToTransform[i] === stringToTransform[i].toUpperCase()) {
+        // Seperate string by uppercase index
+        let transformedString = stringToTransform.substring(0, i) + ' ' + stringToTransform.substring(i);
+        // Split string into array to change first chracter to uppercase
+        let stringArray = transformedString.split('');
+        stringArray[0] = stringArray[0].toUpperCase();
+        // Join array into string and return it
+        return stringArray.join('');
+      }
+    }
+    let stringArray = stringToTransform.split('');
+    stringArray[0] = stringToTransform[0].toLocaleUpperCase();
+    return stringArray.join('');
+  }
+
+  prepareData(formData: FormGroup) {
+    let items = ['category', 'modeOfVisit']
+    // Control values that need data transformed
+    for (let i = 0; i < items.length; i++) {
+      // Call prepString function on control items
+      let transformedString = this.prepString(formData.value[items[i]]);
+      // Set form data with transformed data
+      formData.controls[items[i]].setValue(transformedString);
+    }
+    // Iterate through array of issues of issue control and transform them
+    const transformedIssues = [];
+    for (let i = 0; i < formData.value.issue.length; i++) {
+      // Transform each item in array
+      let transformedString = this.prepString(formData.value.issue[i]);
+      // Push to new array
+      transformedIssues.push(transformedString)
+    }
+    // Switch old issue array with transformed issue array
+    formData.controls.issue.setValue(transformedIssues);
+    return formData;
+  }
+
+
   onSubmit(formData: FormGroup) {
     if (this.caresForm.invalid) {
       return;
     }
-    this.caresService.addCare(formData.value)
-      .subscribe(data => {
-        console.log(data)
-        if (data.success) {
-          this.dialogRef.close();
-          this.snackBar.open('Data submitted successfully!', 'Dismiss', {
-            duration: 3000
-          });
-        }
+    this.submitting = true;
+    this.prepareData(formData);
+    this.caresService.addCare(formData.value).subscribe(data => {
+      if (data.success) {
+        this.refreshDataService.refresh(true);
+        this.dialogRef.close();
+        this.snackBar.open('Data submitted successfully!', 'Dismiss', {
+          duration: 3000
+        });
       }
-    )
+    });
   }
-
 }

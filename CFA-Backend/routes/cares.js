@@ -15,18 +15,20 @@ router.post("", (req, res, next) => {
         teamMemberPosition: req.body.teamMemberPosition,
         leaderName: req.body.leaderName
     });
-    care.save();
-    res.status(201).json({
-        success: true
+    care.save().then(careData => {
+        res.status(201).json({
+            success: true,
+            care: careData
+        });
     });
-});
+})
 
 router.get("", (req, res, next) => {
-    Care.find()
+    Care.find().sort({_id: -1})
         .then(documents => {
             res.status(201).json({
                 success: true,
-                cares: documents
+                care: documents
             });
         });
 });

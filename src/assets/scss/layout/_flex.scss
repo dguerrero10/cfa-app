@@ -4,8 +4,11 @@
 }
 
 .align-center {
-    display: flex;
     align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
 }
 
 .space-between {

@@ -56,6 +56,13 @@ body.dark {
 .add-btn-fab {
   margin-left: 1.25rem !important;
   margin-top: -.25rem !important;
+  background-color: $color-white !important; 
+  color: $color-blue !important;
+
+}
+.delete-btn-fab {
+  margin-left: 1.25rem !important;
+  margin-top: -.25rem !important;
   background-color: $color-cfa-red !important; 
   color: $color-white !important;
 }
@@ -71,4 +78,32 @@ body.dark {
 }
 .tab-icon {
   margin-left: .5rem;
+}
+.table-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-data {
+  margin: 4rem;
+  display: flex;
+  justify-content: center;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    padding: 2rem;
+    background-color: $color-light-gray;
+  }
+
+    &__cow {
+      margin: auto;
+      width: 200px;
+      height: 200px;
+    }
+
+    &__text {
+      text-align: center;
+    }
 }

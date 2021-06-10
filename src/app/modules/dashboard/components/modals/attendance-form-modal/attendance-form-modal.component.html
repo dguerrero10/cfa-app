@@ -20,6 +20,11 @@
     <mat-error *ngIf="teamAttendanceForm.get('issue')">{{getFormErrors('issue')}}</mat-error>
   </mat-form-field>
 
+  <mat-radio-group class="single-row u-sm-margin-bottom" formControlName="workArea">
+    <mat-radio-button value="BOH" [checked]="true" class="u-sm-margin-right">BOH</mat-radio-button>
+    <mat-radio-button value="FOH">FOH</mat-radio-button>
+  </mat-radio-group>
+
   <mat-form-field *ngIf="sick" appearance="outline">
     <mat-label>Reported symptoms</mat-label>
     <mat-select formControlName="reportedSymptoms" multiple>
@@ -45,5 +50,5 @@
     <mat-error *ngIf="teamAttendanceForm.get('leaderName')">{{getFormErrors('leaderName')}}</mat-error>
   </mat-form-field>
 
-  <button mat-flat-button color="primary" type="submit">Submit</button>
+  <button mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
 </form>

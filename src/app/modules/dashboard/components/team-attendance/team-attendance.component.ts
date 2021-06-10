@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TeamAttendanceService } from 'src/app/core/services/team-attendance/team-attendance.service';
-import { TeamAttendance } from 'src/app/shared/models/form-table/team-attendance.model';
+import { TooltipPosition } from '@angular/material/tooltip';
+import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
+import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { AttendanceFormModalComponent } from '../modals/attendance-form-modal/attendance-form-modal.component';
 
 @Component({
@@ -10,16 +13,31 @@ import { AttendanceFormModalComponent } from '../modals/attendance-form-modal/at
   styleUrls: ['./team-attendance.component.scss']
 })
 export class TeamAttendanceComponent implements OnInit {
-  public teamAttendanceData: TeamAttendance[] = [];
-
-  constructor(public dialog: MatDialog,
-    private teamAttendanceService: TeamAttendanceService) { }
+  public metricDisabled: boolean = false;
+  public deleteState: boolean = false;
+  public tooltipPositionArr: TooltipPosition[] = ['right', 'above'];
+  public toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
+  
+  constructor(public deleteStateService: DeleteStateService,
+              public refreshDataService: RefreshDataService,
+              public metricService: DisableMetricTabService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.teamAttendanceService.getTeamAttendance()
-      .subscribe(data => {
-        this.teamAttendanceData = data.teamAttendance;
-      });
+    this.metricService.currentMetricState.subscribe(data => this.metricDisabled = data);
+    this.deleteStateService.deleteState.subscribe(data => {
+      this.deleteState = data;
+      if (this.deleteState === true) this.toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
+      else this.toolTipPosition = new FormControl(this.tooltipPositionArr[0]);
+    });
+  }
+
+  refreshData() {
+    this.refreshDataService.refresh(true);
+  }
+
+  deleteData() {
+    this.deleteStateService.deleteData(true);
   }
 
   openTeamAttendanceFormModal() {

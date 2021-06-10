@@ -80,6 +80,8 @@
     <input matInput formControlName="leaderName">
     <mat-error *ngIf="caresForm.get('leaderName')">{{getFormErrors('leaderName')}}</mat-error>
   </mat-form-field>
-
-  <button mat-flat-button color="primary" type="submit">Submit</button>
+  <div class="single-row justify-center">
+    <button *ngIf="!submitting" mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
+    <mat-spinner *ngIf="submitting" [diameter]="40"></mat-spinner>
+  </div>
 </form>

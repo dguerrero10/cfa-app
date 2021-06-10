@@ -4,11 +4,11 @@
         <mat-icon>close</mat-icon>
     </button>
 </div>
-<form [formGroup]="itemOrderForm" class="item-order-form-modal">
-    <div class="single-row u-sm-margin-bottom">
-        <mat-checkbox class="u-sm-margin-right" color="primary">FOH</mat-checkbox>
-        <mat-checkbox color="primary">BOH</mat-checkbox>
-    </div>
+<form [formGroup]="itemOrderForm" (ngSubmit)="onSubmit(itemOrderForm)" class="item-order-form-modal">
+  <mat-radio-group class="single-row u-sm-margin-bottom" formControlName="workArea">
+    <mat-radio-button value="BOH" [checked]="true" class="u-sm-margin-right">BOH</mat-radio-button>
+    <mat-radio-button value="FOH">FOH</mat-radio-button>
+  </mat-radio-group>
 <mat-form-field class="u-sm-margin-bottom">
     <mat-label>Areas searched for item</mat-label>
     <mat-chip-list #chipListArea aria-label="Areas searched">
@@ -20,7 +20,7 @@
         {{area}}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
       </mat-chip>
-      <input
+      <input formControlName="areasSearched"
         placeholder="New area..."
         #areaInput
         [formControl]="areaCtrl"
@@ -33,7 +33,7 @@
       <mat-option *ngFor="let area of filteredAreas | async" [value]="area">
         {{area}}
       </mat-option>
-    </mat-autocomplete>
+    </mat-autocomplete>  
   </mat-form-field>
   <mat-form-field class="u-sm-margin-bottom">
     <mat-label>Items needed</mat-label>
@@ -46,7 +46,7 @@
         {{item}}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
       </mat-chip>
-      <input
+      <input formControlName="itemsNeeded"
         placeholder="New item..."
         #itemInput
         [formControl]="itemCtrl"
@@ -63,7 +63,7 @@
   </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Leader name</mat-label>
-        <input matInput>
+        <input matInput formControlName="leaderName">
     </mat-form-field>
-    <button mat-flat-button color="primary">Submit</button>
+    <button mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
 </form>

@@ -74,12 +74,16 @@ export const SERVICES: Select[] = [
 
 export const MISSING_ITEMS: Select[] = [
     {
+        value: 'entree',
+        name: 'Entree(s)'
+    },
+    {
         value: 'drink',
         name: 'Drink(s)'
     },
     {
-        value: 'entree',
-        name: 'Entree(s)'
+        value: 'side',
+        name: 'Side(s)'
     },
     {
         value: 'fries',

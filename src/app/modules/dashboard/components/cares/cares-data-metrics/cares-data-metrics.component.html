@@ -1,0 +1,19 @@
+<div class="single-row align-center cares-metrics">
+    <div class="mat-h1 cares-metrics__header">Past {{timeFrame}}</div>
+    <mat-form-field appearance="outline" class="cares-metrics__form-field">
+        <mat-label>Select Timeframe</mat-label>
+        <mat-select (selectionChange)="getData($event)" placeholder="1 Month">
+            <mat-option *ngFor="let time of timeFrames"
+                        [value]="time.value">{{time.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<mat-divider></mat-divider>
+<div class="grid-container">
+    <app-categories-doughnut-chart class="chart-container"></app-categories-doughnut-chart>
+    <app-mode-of-visit-doughnut-chart class="chart-container"></app-mode-of-visit-doughnut-chart>
+    <app-food-quality-bar-chart class="chart-container"></app-food-quality-bar-chart>
+    <app-service-bar-chart class="chart-container"></app-service-bar-chart>
+    <app-missing-items-bar-chart class="chart-container"></app-missing-items-bar-chart>
+    <app-time-issue-line-chart class="chart-container"></app-time-issue-line-chart>
+</div>

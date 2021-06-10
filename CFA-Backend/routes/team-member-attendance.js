@@ -8,6 +8,7 @@ router.post("", (req, res, next) => {
     const teamMemberAbsent = new TeamMemberAbsent({
         teamMemberName: req.body.teamMemberName,
         issue: req.body.issue,
+        workArea: req.body.workArea,
         reportedSymptoms: req.body.reportedSymptoms,
         otherExplanation: req.body.otherExplanation,
         notes: req.body.notes,
@@ -20,13 +21,17 @@ router.post("", (req, res, next) => {
 });
 
 router.get("", (req, res, next) => {
-    TeamMemberAbsent.find()
+    TeamMemberAbsent.find().sort({_id: -1})
         .then(documents => {
             res.status(201).json({
                 success: true,
                 teamAttendance: documents
             });
         });
+});
+
+router.delete(":id", (req, res, next) => {
+    console.log(req.params)
 });
 
 module.exports = router;

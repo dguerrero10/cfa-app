@@ -17,5 +17,10 @@ export class TeamAttendanceService {
   getTeamAttendance() {
     return this.http.get<{ success: boolean; teamAttendance: TeamAttendance[] }>(this.endpoint);
   }
-  
+
+  deleteData(id: string[]) {
+    id.forEach(e => {
+      return this.http.delete<{ teamAttendance: TeamAttendance[] }>(this.endpoint+"/"+ e);
+    })
+  }
 }

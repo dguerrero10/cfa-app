@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatMenuModule } from '@angular/material/menu';
@@ -30,6 +30,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatRippleModule } from '@angular/material/core'
+import { MatRadioModule } from '@angular/material/radio';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 const MaterialComponents = [
@@ -61,7 +64,10 @@ const MaterialComponents = [
   MatCheckboxModule,
   MatAutocompleteModule,
   MatGridListModule,
-  MatRippleModule
+  MatRippleModule,
+  MatRadioModule,
+  NgxSpinnerModule,
+  DragDropModule
 ];
 
 @NgModule({
@@ -70,6 +76,7 @@ const MaterialComponents = [
   imports: [
     CommonModule,
     MaterialComponents
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MaterialModule { }

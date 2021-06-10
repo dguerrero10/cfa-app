@@ -1,3 +1,5 @@
+@import '../../../../abstracts/variables';
+
 .d-table {
     &__search {
         width: 100%;
@@ -7,5 +9,17 @@
         width: 100%;
         margin-top: -1.34375em;
     }
+}
+
+.mat-row .mat-cell {
+    cursor: pointer;
+  }
+  
+.mat-row:hover .mat-cell {
+  background-color: #E1E5EA;
+}
+  
+.row-is-clicked {
+  background-color: #d5d8e2;
 }
 

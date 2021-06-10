@@ -47,11 +47,33 @@ export class ItemOrderFormModalComponent implements OnInit {
 
   createForm() {
     this.itemOrderForm = this.fb.group({
-      'workArea': ['', Validators.required],
-      'areasSearched': ['', Validators.required],
-      'itemsNeeded': ['', Validators.required],
-      'leaderName': ['', Validators.required]
+      'workArea': [''],
+      'areasSearched': ['', [Validators.required]],
+      'itemsNeeded': ['', [Validators.required]],
+      'leaderName': ['', [Validators.required]]
     });
+  }
+
+  getFormErrors(el:string) {
+    switch(el) {
+     case 'areasSearched':
+       if (this.itemOrderForm.controls['areasSearched'].hasError('required')) {
+         return 'Areas searched is required.';
+       }
+       else return;
+     case 'itemsNeeded':
+       if (this.itemOrderForm.controls['itemsNeeded'].hasError('required')) {
+         return 'Items needed is required.';
+       }
+       else return;
+     case 'leaderName':
+       if (this.itemOrderForm.controls['leaderName'].hasError('required')) {
+         return 'Leader name is required';
+       }
+       else return;
+     default:
+       return;
+    }
   }
 
   addArea(event: MatChipInputEvent): void {
@@ -114,5 +136,9 @@ export class ItemOrderFormModalComponent implements OnInit {
   private _filterItem(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.allItems.filter(item => item.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  onSubmit(formData: FormGroup) {
+    console.log(formData.value);
   }
 }
