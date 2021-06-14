@@ -1,0 +1,64 @@
+<div class="d-table">
+    <mat-form-field appearance="fill" class="d-table__search">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+    </mat-form-field>
+    <div *ngIf="loading" class="table-spinner-container">
+        <mat-spinner [diameter]="40"></mat-spinner>
+    </div>
+    <div class="no-data" *ngIf="noData">
+        <div class="no-data__wrapper">
+            <img class="no-data__cow" src="../../../../../../assets/images/no-data/cow.svg" alt="">
+            <div class="mat-h2 no-data__text">You have no data, so here's a cow.</div>
+        </div>
+    </div>
+    <table *ngIf="!loading && cashAccountabilityData.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z0"
+        class="d-table__table">
+        <ng-container matColumnDef="Date">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date | date:'MMMM d, h:mm a'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Leader">
+            <th mat-header-cell *matHeaderCellDef> Leader </th>
+            <td mat-cell *matCellDef="let element"> {{element.leaderFirstName}} {{element.leaderLastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Team Member">
+            <th mat-header-cell *matHeaderCellDef> Team Member </th>
+            <td mat-cell *matCellDef="let element"> {{element.teamMemberFirstName}} {{element.teamMemberLastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Shortage / Overage">
+            <th mat-header-cell *matHeaderCellDef> Shortage / Overage </th>
+            <td mat-cell *matCellDef="let element"> {{element.shortageOverage}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Amount Missing">
+            <th mat-header-cell *matHeaderCellDef> Amount Missing </th>
+            <td mat-cell *matCellDef="let element"> {{element.amountMissing}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Mixed Drawer">
+            <th mat-header-cell *matHeaderCellDef> Mixed Drawer </th>
+            <td mat-cell *matCellDef="let element"> {{element.mixedDrawer}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Mixed with Team Member">
+            <th mat-header-cell *matHeaderCellDef> Mixed with Team Member </th>
+            <td mat-cell *matCellDef="let element"> {{element.mixedDrawerTeamMemberFirstName}} {{element.mixedDrawerTeamMemberLastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Notes">
+            <th mat-header-cell *matHeaderCellDef> Notes </th>
+            <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr class="ripple" mat-row (click)="addRow(row)" [class.row-is-clicked]="clickedRows.has(row)"
+            *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
+    </table>
+</div>

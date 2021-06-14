@@ -34,7 +34,7 @@ export class CaresComponent implements OnInit {
   }
 
   refreshData() {
-    this.refreshDataService.refresh(true);
+    this.refreshDataService.refreshData(true);
   }
 
   deleteData() {

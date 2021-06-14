@@ -4,8 +4,9 @@
     <mat-icon>close</mat-icon>
   </button>
 </div>
+<mat-divider></mat-divider>
 <form [formGroup]="caresForm" (ngSubmit)="onSubmit(caresForm)" class="cares-form-modal">
-  <div class="single-row">
+  <div class="single-row u-md-margin-top">
     <mat-form-field appearance="outline" class="u-two-form-field">
       <mat-label>Guest name</mat-label>
       <input matInput formControlName="guestName">

@@ -31,4 +31,10 @@ export let FEATURES: Feature[] = [
         icon: 'local_shipping',
         selected: false
     },
+    {  
+        matToolTip: "Cash Accountability",
+        feature: "cashAccountability",
+        icon: 'money_off',
+        selected: false
+    },
 ];

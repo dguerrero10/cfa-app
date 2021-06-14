@@ -33,7 +33,7 @@ export class TeamAttendanceComponent implements OnInit {
   }
 
   refreshData() {
-    this.refreshDataService.refresh(true);
+    this.refreshDataService.refreshData(true);
   }
 
   deleteData() {
@@ -41,6 +41,6 @@ export class TeamAttendanceComponent implements OnInit {
   }
 
   openTeamAttendanceFormModal() {
-    this.dialog.open(AttendanceFormModalComponent, { width: '400px' });
+    this.dialog.open(AttendanceFormModalComponent);
   }
 }

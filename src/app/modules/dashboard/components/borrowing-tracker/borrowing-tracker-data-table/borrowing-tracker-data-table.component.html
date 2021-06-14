@@ -1,1 +1,58 @@
-<p>borrowing-tracker-data-table works!</p>
+<div class="d-table">
+    <mat-form-field appearance="fill" class="d-table__search">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+    </mat-form-field>
+    <div *ngIf="loading" class="table-spinner-container">
+        <mat-spinner [diameter]="40"></mat-spinner>
+    </div>
+    <div class="no-data" *ngIf="noData">
+        <div class="no-data__wrapper">
+            <img class="no-data__cow" src="../../../../../../assets/images/no-data/cow.svg" alt="">
+            <div class="mat-h2 no-data__text">You have no data, so here's a cow.</div>
+        </div>
+    </div>
+    <table *ngIf="!loading && borrowingTrackerData.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z0"
+        class="d-table__table">
+        <ng-container matColumnDef="Date">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date | date:'MMMM d, h:mm a'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Item Borrowed">
+            <th mat-header-cell *matHeaderCellDef> Item Borrowed </th>
+            <td mat-cell *matCellDef="let element"> {{element.itemBorrowed}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Amount of Item">
+            <th mat-header-cell *matHeaderCellDef> Amount of Item </th>
+            <td mat-cell *matCellDef="let element"> {{element.amountOfItem}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="From">
+            <th mat-header-cell *matHeaderCellDef> From </th>
+            <td mat-cell *matCellDef="let element"> {{element.fromLocation}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="To">
+            <th mat-header-cell *matHeaderCellDef> To </th>
+            <td mat-cell *matCellDef="let element"> {{element.toLocation}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Leader">
+            <th mat-header-cell *matHeaderCellDef> Leader </th>
+            <td mat-cell *matCellDef="let element"> {{element.leaderFirstName}} {{element.leaderLastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Notes">
+            <th mat-header-cell *matHeaderCellDef> Notes </th>
+            <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter."{{input.value}}"</td>
+        </tr>
+    </table>
+</div>

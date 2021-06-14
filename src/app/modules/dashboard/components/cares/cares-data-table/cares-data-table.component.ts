@@ -44,7 +44,7 @@ export class CaresDataTableComponent implements OnInit {
           this.disableMetricService.switchState(this.noData);
         }
       });
-    this.refreshDataService.refreshData.subscribe(data => {
+    this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
         this.caresService.getCares()
           .subscribe(data => {

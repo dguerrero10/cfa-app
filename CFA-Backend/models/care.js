@@ -12,4 +12,4 @@ const CareSchema = mongoose.Schema({
     leaderName: {type: String, required: true}
 });
 
-module.exports = mongoose.model('CareSchema', CareSchema);
+module.exports = mongoose.model('Care', CareSchema);

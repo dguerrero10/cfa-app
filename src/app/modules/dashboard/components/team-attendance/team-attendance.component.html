@@ -32,7 +32,9 @@
                 Metrics
                 <mat-icon class="tab-icon">insights</mat-icon>
             </ng-template>
-            <app-attendance-data-metrics></app-attendance-data-metrics>
+            <ng-template matTabContent>
+                <app-attendance-data-metrics></app-attendance-data-metrics>
+            </ng-template>
         </mat-tab>
     </mat-tab-group>
 </div>

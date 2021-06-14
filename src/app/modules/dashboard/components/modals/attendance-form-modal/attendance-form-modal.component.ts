@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
-import { TeamAttendanceService } from 'src/app/core/services/team-attendance/team-attendance.service';
+import { TeamMemberAttendanceService } from 'src/app/core/services/team-attendance/team-member-attendance.service';
 import { ISSUES, SYMPTOMS } from 'src/app/shared/data/forms/team-attendance';
 
 @Component({
@@ -22,7 +22,7 @@ export class AttendanceFormModalComponent implements OnInit {
     public refreshDataService: RefreshDataService,
     public snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<AttendanceFormModalComponent>,
-    public teamAttendanceService: TeamAttendanceService,
+    public teamMemberAttendanceService: TeamMemberAttendanceService
   ) { }
 
   ngOnInit(): void {
@@ -31,13 +31,15 @@ export class AttendanceFormModalComponent implements OnInit {
 
   createForm() {
     this.teamAttendanceForm = this.fb.group({
-      'teamMemberName': ['', Validators.required],
-      'issue': ['', Validators.required],
+      'firstName': ['', Validators.required],
+      'lastName': ['', Validators.required],
       'workArea': ['BOH'],
+      'issue': ['', Validators.required],
       'reportedSymptoms': [''],
       'otherExplanation': [''],
       'notes': [''],
-      'leaderName': ['', Validators.required]
+      'leaderFirstName': ['', Validators.required],
+      'leaderLastName': ['', Validators.required]
     });
   }
 
@@ -53,15 +55,15 @@ export class AttendanceFormModalComponent implements OnInit {
   }
 
   onIssueChange(event: any) {
-    if (event.value === 'sick') {
+    if (event.value === 'Call_in_sick') {
       this.sick = true;
       this.updateForm('reportedSymptoms', true);
     }
     else {
       this.sick = false;
-      this.updateForm('reportedSymptom', false);
+      this.updateForm('reportedSymptoms', false);
     }
-    if (event.value === 'other') {
+    if (event.value === 'Other') {
       this.other = true;
       this.updateForm('otherExplanation', true);
     }
@@ -73,33 +75,44 @@ export class AttendanceFormModalComponent implements OnInit {
 
   getFormErrors(el: string) {
     switch (el) {
-      case 'teamMemberName':
-        if (this.teamAttendanceForm.controls['teamMemberName'].hasError('required')) {
-          return 'Team member name is required.'
+      case 'firstName':
+        if (this.teamAttendanceForm.controls['firstName'].hasError('required')) {
+          return "TM's first name is required."
         }
-        else return
+        else return;
+      case 'lastName':
+        if (this.teamAttendanceForm.controls['lastName'].hasError('required')) {
+          return "TM's last name is required."
+        }
+        else return;
       case 'issue':
         if (this.teamAttendanceForm.controls['issue'].hasError('required')) {
           return 'Issue is required.'
         }
-        else return
+        else return;
       case 'reportedSymptoms':
         if (this.teamAttendanceForm.controls['reportedSymptoms'].hasError('required')) {
           return 'Reported symptoms are required.'
         }
-        else return
+        else return;
       case 'otherExplanation':
         if (this.teamAttendanceForm.controls['otherExplanation'].hasError('required')) {
           return 'An explanation is required.'
         }
-        else return
-      case 'leaderName':
-        if (this.teamAttendanceForm.controls['leaderName'].hasError('required')) {
-          return 'Leader name is required.'
+        else return;
+      case 'leaderFirstName':
+        if (this.teamAttendanceForm.controls['leaderFirstName'].hasError('required')) {
+          return "Leader's first name is required."
         }
-        else return
+        else return;
+
+      case 'leaderLastName':
+        if (this.teamAttendanceForm.controls['leaderFirstName'].hasError('required')) {
+          return "Leader's last name is required."
+        }
+        else return;
       default:
-        return
+        return;
     }
   }
 
@@ -117,20 +130,19 @@ export class AttendanceFormModalComponent implements OnInit {
       }
     }
     let stringArray = stringToTransform.split('');
-    stringArray[0] = stringToTransform[0].toLocaleUpperCase();
+    stringArray[0] = stringToTransform[0].toUpperCase();
     return stringArray.join('');
   }
 
   prepareData(formData: FormGroup) {
-    let items = ['issue'];
-    // Control values that need data transformed
-    for (let i = 0; i < items.length; i++) {
-      // Call prepString function on control items
-      let transformedString = this.prepString(formData.value[items[i]]);
-      // Set form data with transformed data
-      formData.controls[items[i]].setValue(transformedString);
+    let stringArray = formData.value.issue;
+    if (formData.value.issue === 'Uniform') {
+      return;
     }
-    // Iterate through array of issues of issue control and transform them
+    stringArray = stringArray.split('_');
+    const transformedString = stringArray.join(' ');
+    formData.controls.issue.setValue(transformedString);
+
     const transformedSymptoms = [];
     for (let i = 0; i < formData.value.reportedSymptoms.length; i++) {
       // Transform each item in array
@@ -140,22 +152,20 @@ export class AttendanceFormModalComponent implements OnInit {
     }
     // Switch old issue array with transformed issue array
     formData.controls.reportedSymptoms.setValue(transformedSymptoms);
-    return formData;
   }
 
   onSubmit(formData: FormGroup) {
-    console.log(formData.value)
     if (this.teamAttendanceForm.invalid) {
       return;
     }
     this.prepareData(formData);
-    if (!formData.value.reportedSymptoms.length){
+    if (!formData.value.reportedSymptoms.length) {
       formData.controls.reportedSymptoms.setValue('N/A');
     }
-    this.teamAttendanceService.addTeamMemberAbsent(formData.value)
+    this.teamMemberAttendanceService.addTeamMemberAttendance(formData.value)
       .subscribe(data => {
         if (data.success) {
-          this.refreshDataService.refresh(true);
+          this.refreshDataService.refreshData(true);
           this.dialogRef.close();
           this.snackBar.open('Data submitted successfully!', 'Dismiss', {
             duration: 3000

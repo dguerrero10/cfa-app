@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, Color } from 'ng2-charts';
-import { TeamAttendance } from 'src/app/shared/models/form-table/team-attendance.model';
+import { TeamMemberAttendance } from 'src/app/shared/models/form-table/team-member-attendance.model';
 
 @Component({
   selector: 'app-call-out-bar-chart',
@@ -10,7 +10,7 @@ import { TeamAttendance } from 'src/app/shared/models/form-table/team-attendance
   styleUrls: ['./call-out-bar-chart.component.scss']
 })
 export class CallOutBarChartComponent implements OnInit {
-  public endpoint: string = 'http://localhost:3000/api/team-attendance';
+  public endpoint: string = 'http://localhost:3000/api/team-members-attendance';
   public barChartLabels: Label[] = ['Personal Reasons', 'Sick', 'Emergency', 'Other'];
   public barChartType: ChartType = 'bar';
   public barChartLegend: boolean = true;
@@ -57,10 +57,10 @@ export class CallOutBarChartComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get<TeamAttendance>(this.endpoint).
+    this.http.get<TeamMemberAttendance>(this.endpoint).
       subscribe(data => {
         console.log(data)
-        Object.values(data)[1].forEach((item: TeamAttendance) => {
+        Object.values(data)[1].forEach((item: TeamMemberAttendance) => {
           if (item.issue === 'Personal Reasons') {
             this.personalReasonsCounter++;
           }

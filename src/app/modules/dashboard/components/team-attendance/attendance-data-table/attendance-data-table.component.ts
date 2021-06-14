@@ -4,8 +4,8 @@ import { first } from 'rxjs/operators';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
-import { TeamAttendanceService } from 'src/app/core/services/team-attendance/team-attendance.service';
-import { TeamAttendance } from 'src/app/shared/models/form-table/team-attendance.model';
+import { TeamMemberAttendanceService } from 'src/app/core/services/team-attendance/team-member-attendance.service';
+import { TeamMemberAttendance } from 'src/app/shared/models/form-table/team-member-attendance.model';
 
 @Component({
   selector: 'app-attendance-data-table',
@@ -14,20 +14,20 @@ import { TeamAttendance } from 'src/app/shared/models/form-table/team-attendance
 })
 export class AttendanceDataTableComponent implements OnInit {
   public displayedColumns: string[] = [
-    'Date', 'Team Member Name', 'Issue', 'Work Area', 'Reported Symptoms', 'Notes', 'Leader'];
-  public teamAttendance: TeamAttendance[] = [];
+    'Date', 'Team Member', 'Issue', 'Work Area', 'Reported Symptoms', 'Leader', 'Notes'];
+  public teamMemberAttendance: TeamMemberAttendance[] = [];
   public loading: boolean = true;
   public noData: boolean = false;
   public deleteDataActivated: boolean = false;
   public refreshData: boolean = false;
   public dataSource: any;
-  public clickedRows = new Set<TeamAttendance>();
+  public clickedRows = new Set<TeamMemberAttendance>();
   public _idList: string[] = [];
 
   constructor(public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
-    private teamAttendanceService: TeamAttendanceService) { }
+    private teamMemberAttendanceService: TeamMemberAttendanceService) { }
 
   ngOnInit(): void {
     this.deleteStateService.activateDeleteData.subscribe(data => {
@@ -35,25 +35,25 @@ export class AttendanceDataTableComponent implements OnInit {
         this.deleteData(true)
       }
     });
-    this.teamAttendanceService.getTeamAttendance()
+    this.teamMemberAttendanceService.getTeamMemberAttendance()
       .subscribe(data => {
-        this.teamAttendance = data.teamAttendance
+        this.teamMemberAttendance = data.teamAttendance
         this.loading = false;
-        this.dataSource = new MatTableDataSource(this.teamAttendance);
-        if (this.teamAttendance.length === 0) {
+        this.dataSource = new MatTableDataSource(this.teamMemberAttendance);
+        if (this.teamMemberAttendance.length === 0) {
           this.noData = true;
           this.disableMetricService.switchState(this.noData);
         }
       });
-    this.refreshDataService.refreshData.subscribe(data => {
+    this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
-        this.teamAttendanceService.getTeamAttendance()
+        this.teamMemberAttendanceService.getTeamMemberAttendance()
           .pipe(first())
           .subscribe(data => {
-            this.teamAttendance = data.teamAttendance
+            this.teamMemberAttendance = data.teamAttendance
             this.loading = false;
-            this.dataSource = new MatTableDataSource(this.teamAttendance);
-            if (this.teamAttendance.length === 0) {
+            this.dataSource = new MatTableDataSource(this.teamMemberAttendance);
+            if (this.teamMemberAttendance.length === 0) {
               this.noData = true;
               this.disableMetricService.switchState(this.noData);
             }
@@ -99,7 +99,7 @@ export class AttendanceDataTableComponent implements OnInit {
 
   deleteData(data: boolean) {
     if (data) {
-      this.teamAttendanceService.deleteData(this._idList);
+      this.teamMemberAttendanceService.deleteData(this._idList);
     }
   }
 }

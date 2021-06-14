@@ -8,19 +8,14 @@ import { MaterialModule } from 'src/app/shared/material/material.module';
 import { TeamAttendanceComponent } from './components/team-attendance/team-attendance.component';
 import { AttendanceDataTableComponent } from './components/team-attendance/attendance-data-table/attendance-data-table.component';
 import { AttendanceDataMetricsComponent } from './components/team-attendance/attendance-data-metrics/attendance-data-metrics.component';
-import { AttendanceFormModalComponent } from './components/modals/attendance-form-modal/attendance-form-modal.component';
 import { CaresComponent } from './components/cares/cares.component';
 import { ItemOrderComponent } from './components/item-order/item-order.component';
 import { FinancialServicesComponent } from './components/financial-services/financial-services.component';
 import { BorrowingTrackerComponent } from './components/borrowing-tracker/borrowing-tracker.component';
 import { CaresDataTableComponent } from './components/cares/cares-data-table/cares-data-table.component';
-import { CaresFormModalComponent } from './components/modals/cares-form-modal/cares-form-modal.component';
 import { ItemOrderDataTableComponent } from './components/item-order/item-order-data-table/item-order-data-table.component';
-import { ItemOrderFormModalComponent } from './components/modals/item-order-form-modal/item-order-form-modal.component';
 import { FinancialServicesDataTableComponent } from './components/financial-services/financial-services-data-table/financial-services-data-table.component';
-import { FinancialServicesFormModalComponent } from './components/modals/financial-services-form-modal/financial-services-form-modal.component';
 import { BorrowingTrackerDataTableComponent } from './components/borrowing-tracker/borrowing-tracker-data-table/borrowing-tracker-data-table.component';
-import { BorrowingTrackerFormModalComponent } from './components/modals/borrowing-tracker-form-modal/borrowing-tracker-form-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
 import { CallOutBarChartComponent } from './components/team-attendance/attendance-data-metrics/charts/call-out-bar-chart/call-out-bar-chart.component';
@@ -31,6 +26,17 @@ import { FoodQualityBarChartComponent } from './components/cares/cares-data-metr
 import { ServiceBarChartComponent } from './components/cares/cares-data-metrics/charts/service-bar-chart/service-bar-chart.component';
 import { MissingItemsBarChartComponent } from './components/cares/cares-data-metrics/charts/missing-items-bar-chart/missing-items-bar-chart.component';
 import { TimeIssueLineChartComponent } from './components/cares/cares-data-metrics/charts/time-issue-line-chart/time-issue-line-chart.component';
+import { CallOutLineChartComponent } from './components/team-attendance/attendance-data-metrics/charts/call-out-line-chart/call-out-line-chart.component';
+import { BorrowingTrackerDataMetricsComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/borrowing-tracker-data-metrics.component';
+import { CashAccountabilityComponent } from './components/cash-accountability/cash-accountability.component';
+import { CashAccountabilityDataMetricsComponent } from './components/cash-accountability/cash-accountability-data-metrics/cash-accountability-data-metrics.component';
+import { CashAccountabilityDataTableComponent } from './components/cash-accountability/cash-accountability-data-table/cash-accountability-data-table.component';
+import { AttendanceFormModalComponent } from './components/modals/attendance-form-modal/attendance-form-modal.component';
+import { CaresFormModalComponent } from './components/modals/cares-form-modal/cares-form-modal.component';
+import { ItemOrderFormModalComponent } from './components/modals/item-order-form-modal/item-order-form-modal.component';
+import { FinancialServicesFormModalComponent } from './components/modals/financial-services-form-modal/financial-services-form-modal.component';
+import { BorrowingTrackerFormModalComponent } from './components/modals/borrowing-tracker-form-modal/borrowing-tracker-form-modal.component';
+import { CashAccountabilityFormModalComponent } from './components/modals/cash-accountability-form-modal/cash-accountability-form-modal.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +65,13 @@ import { TimeIssueLineChartComponent } from './components/cares/cares-data-metri
     FoodQualityBarChartComponent,
     ServiceBarChartComponent,
     MissingItemsBarChartComponent,
-    TimeIssueLineChartComponent
+    TimeIssueLineChartComponent,
+    CallOutLineChartComponent,
+    BorrowingTrackerDataMetricsComponent,
+    CashAccountabilityComponent,
+    CashAccountabilityDataMetricsComponent,
+    CashAccountabilityDataTableComponent,
+    CashAccountabilityFormModalComponent
   ],
   imports: [
     CommonModule,

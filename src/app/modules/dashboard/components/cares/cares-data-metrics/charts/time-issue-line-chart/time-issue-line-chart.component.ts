@@ -14,7 +14,6 @@ export class TimeIssueLineChartComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
   lineChartData: ChartDataSets[] = [
     { data: [12, 9, 3, 8, 7], label: 'Issues by Time' },
   ];

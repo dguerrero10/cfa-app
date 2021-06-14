@@ -1,1 +1,63 @@
-<p>borrowing-tracker-form-modal works!</p>
+<div class="space-between">
+    <h2 mat-dialog-title>Borrowed Tracker</h2>
+    <button mat-icon-button class="exit-btn" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<form [formGroup]="borrowingTrackerForm" (ngSubmit)="onSubmit(borrowingTrackerForm)" class="cares-form-modal">
+    <div class="single-row u-md-margin-top">
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>Item borrowed</mat-label>
+            <input required matInput formControlName="itemBorrowed">
+            <mat-error *ngIf="borrowingTrackerForm.get('itemBorrowed')">{{getFormErrors('itemBorrowed')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Amount of item</mat-label>
+            <input required matInput type="number" min="1" formControlName="amountOfItem">
+            <mat-error *ngIf="borrowingTrackerForm.get('amountOfItem')">{{getFormErrors('amountOfItem')}}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="single-row">
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>From</mat-label>
+            <input required matInput formControlName="fromLocation">
+            <mat-error *ngIf="borrowingTrackerForm.get('fromLocation')">{{getFormErrors('fromLocation')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>To</mat-label>
+            <input required matInput formControlName="toLocation">
+            <mat-error *ngIf="borrowingTrackerForm.get('toLocation')">{{getFormErrors('toLocation')}}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Notes</mat-label>
+        <input matInput formControlName="notes">
+    </mat-form-field>
+
+    <div class="single-row">
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>Leader's first name</mat-label>
+            <input required matInput formControlName="leaderFirstName">
+            <mat-error *ngIf="borrowingTrackerForm.get('leaderFirstName')">{{getFormErrors('leaderFirstName')}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Leader's last name</mat-label>
+            <input required matInput formControlName="leaderLastName">
+            <mat-error *ngIf="borrowingTrackerForm.get('leaderLastName')">{{getFormErrors('leaderLastName')}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="single-row justify-center">
+        <button *ngIf="!submitting" mat-flat-button color="primary" type="submit"
+            class="u-xs-margin-top">Submit</button>
+        <mat-spinner *ngIf="submitting" [diameter]="40"></mat-spinner>
+    </div>
+</form>

@@ -1,11 +1,14 @@
+@import '../../../../abstracts/variables';
+
 .grid-container {
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-  grid-gap: 4rem;
-  row-gap: 3rem;
+  grid-gap: 3rem;
   margin: 1.5rem 0;
-  padding: .5rem;
+  padding: 2rem;
   overflow-x: hidden; 
+  background-color: $color-light-gray;
+  border-radius: 10px;
 }
 
 .single-item {
@@ -19,6 +22,8 @@
 }
 
 .chart-container {
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-  padding: 1rem
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  padding: 1rem;
+  background-color: $color-white;
+  border-radius: 6px;
 }

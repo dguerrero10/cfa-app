@@ -5,13 +5,13 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class RefreshDataService {
-  private _refresh = new BehaviorSubject<boolean>(false);
-  public refreshData = this._refresh.asObservable();
+  private refresh = new BehaviorSubject<boolean>(false);
+  public dataRefreshed = this.refresh.asObservable();
 
   constructor() { }
 
-  refresh(value: boolean) {
-    this._refresh.next(value)
+  refreshData(value: boolean) {
+    this.refresh.next(value)
   }
 
 }

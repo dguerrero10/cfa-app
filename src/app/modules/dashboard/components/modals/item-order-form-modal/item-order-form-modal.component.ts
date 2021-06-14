@@ -2,9 +2,13 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ItemOrderService } from 'src/app/core/services/item-order/item-order.service';
+import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-item-order-form-modal',
@@ -12,80 +16,124 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./item-order-form-modal.component.scss']
 })
 export class ItemOrderFormModalComponent implements OnInit {
- public visible = true;
- public selectable = true;
- public removable = true;
- public separatorKeysCodes: number[] = [ENTER, COMMA];
- public areaCtrl = new FormControl();
- public itemCtrl = new FormControl();
- public filteredAreas: Observable<string[]>;
- public filteredItems: Observable<string[]>;
- public items: string[] = [];
- public areas: string[] = [];
- public allAreas: string[] = [];
- public allItems: string[] = [];
+  public visible: boolean = true;
+  public selectable: boolean = true;
+  public removable: boolean = true;
+  public otherRadioSelected: boolean = false;
+  public otherSelectSelected: boolean = false;
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public itemCtrl = new FormControl(Validators.required);
+  public filteredItems: Observable<string[]>;
+  public items: string[] = [];
+  public allItems: string[] = [];
+  public areasSerched = [
+    {
+      value: 'Office',
+      name: 'Office'
+    },
+    {
+      value: 'Playground',
+      name: 'Playground'
+    },
+    {
+      value: 'Marketing_closet',
+      name: 'Marketing closet'
+    },
+    {
+      value: 'Other',
+      name: 'Other area'
+    }
+  ];
+  public itemOrderForm: FormGroup = <FormGroup>{};
 
- public itemOrderForm: FormGroup = <FormGroup>{};
-
-  @ViewChild('areaInput') areaInput?: ElementRef<HTMLInputElement>;
   @ViewChild('itemInput') itemInput?: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete?: MatAutocomplete;
 
-  constructor(private fb: FormBuilder) {
-    this.filteredAreas = this.areaCtrl.valueChanges.pipe(
-      startWith(null),
-      map((area: string | null) => area ? this._filterArea(area) : this.allAreas.slice()));
-
+  constructor(
+              private dialogRef: MatDialogRef<ItemOrderFormModalComponent>,
+              public itemOrderService: ItemOrderService,
+              public snackBar: MatSnackBar,
+              public refreshDataService: RefreshDataService,
+              private fb: FormBuilder) {
     this.filteredItems = this.itemCtrl.valueChanges.pipe(
       startWith(null),
       map((item: string | null) => item ? this._filterItem(item) : this.allItems.slice()));
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.createForm();
   }
 
   createForm() {
     this.itemOrderForm = this.fb.group({
-      'workArea': [''],
+      'workAreaItem': ['BOH'],
+      'other': [''],
       'areasSearched': ['', [Validators.required]],
-      'itemsNeeded': ['', [Validators.required]],
-      'leaderName': ['', [Validators.required]]
+      'otherArea': [''],
+      'itemsNeeded': [''],
+      'firstName': ['', [Validators.required]],
+      'lastName': ['', [Validators.required]],
     });
   }
 
-  getFormErrors(el:string) {
-    switch(el) {
-     case 'areasSearched':
-       if (this.itemOrderForm.controls['areasSearched'].hasError('required')) {
-         return 'Areas searched is required.';
-       }
-       else return;
-     case 'itemsNeeded':
-       if (this.itemOrderForm.controls['itemsNeeded'].hasError('required')) {
-         return 'Items needed is required.';
-       }
-       else return;
-     case 'leaderName':
-       if (this.itemOrderForm.controls['leaderName'].hasError('required')) {
-         return 'Leader name is required';
-       }
-       else return;
-     default:
-       return;
+  onRadioButtonChange(event: any) {
+    if (event.value === 'Other') {
+      this.otherRadioSelected = true;
+      this.itemOrderForm.controls['other'].setValidators(Validators.required);
+      this.itemOrderForm.controls['other'].updateValueAndValidity();
+    }
+    else {
+      this.otherRadioSelected = false;
+      this.itemOrderForm.controls['other'].clearValidators();
+      this.itemOrderForm.controls['other'].updateValueAndValidity();
     }
   }
 
-  addArea(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.areas.push(value);
+  onSelectionChange(event: any) {
+    if (event.value.includes('Other')) {
+      this.otherSelectSelected = true;
+      this.itemOrderForm.controls['otherArea'].setValidators(Validators.required);
+      this.itemOrderForm.controls['otherArea'].updateValueAndValidity();
     }
+    else {
+      this.otherSelectSelected = false;
+      this.itemOrderForm.controls['otherArea'].clearValidators();
+      this.itemOrderForm.controls['otherArea'].updateValueAndValidity();
+    }
+  }
 
-    event.chipInput!.clear();
-
-    this.areaCtrl.setValue(null);
+  getFormErrors(el: string) {
+    switch (el) {
+      case 'other':
+        if (this.itemOrderForm.controls['other'].hasError('required')) {
+          return 'This field is required';
+        }
+        else return;
+      case 'areasSearched':
+        if (this.itemOrderForm.controls['areasSearched'].hasError('required')) {
+          return 'Areas searched is required.';
+        }
+        else return;
+      case 'otherArea':
+        if (this.itemOrderForm.controls['otherArea'].hasError('required')) {
+          return 'This field is required.';
+        }
+        else return;
+      case 'itemsNeeded':
+          return 'Items needed is required.';
+      case 'firstName':
+        if (this.itemOrderForm.controls['firstName'].hasError('required')) {
+          return 'Your first name is required.';
+        }
+        else return;
+      case 'lastName':
+        if (this.itemOrderForm.controls['lastName'].hasError('required')) {
+          return 'Your last name is required.';
+        }
+        else return;
+      default:
+        return;
+    }
   }
 
   addItem(event: MatChipInputEvent): void {
@@ -100,14 +148,6 @@ export class ItemOrderFormModalComponent implements OnInit {
     this.itemCtrl.setValue(null);
   }
 
-  removeArea(area: string): void {
-    const index = this.areas.indexOf(area);
-
-    if (index >= 0) {
-      this.areas.splice(index, 1);
-    }
-  }
-
   removeItem(item: string): void {
     const index = this.items.indexOf(item);
 
@@ -116,21 +156,9 @@ export class ItemOrderFormModalComponent implements OnInit {
     }
   }
 
-  selectedAreas(event: MatAutocompleteSelectedEvent): void {
-    this.areas.push(event.option.viewValue);
-    // this.areaInput.nativeElement.value = '' ;
-    this.areaCtrl.setValue(null);
-  }
-
   selectedItems(event: MatAutocompleteSelectedEvent): void {
     this.items.push(event.option.viewValue);
-    // this.areaInput.nativeElement.value = '' ;
     this.itemCtrl.setValue(null);
-  }
-
-  private _filterArea(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.allAreas.filter(area => area.toLowerCase().indexOf(filterValue) === 0);
   }
 
   private _filterItem(value: string): string[] {
@@ -139,6 +167,23 @@ export class ItemOrderFormModalComponent implements OnInit {
   }
 
   onSubmit(formData: FormGroup) {
-    console.log(formData.value);
+    if (this.items.length > 0) {
+      this.itemOrderForm.controls['itemsNeeded'].setValue(this.items);
+    }
+    if (this.items.length === 0) {
+      return;
+    }
+    if (this.itemOrderForm.invalid) {
+      return;
+    }
+    this.itemOrderService.addItemOrder(formData.value).subscribe(data => {
+      if (data.success) {
+        this.refreshDataService.refreshData(true);
+        this.dialogRef.close();
+        this.snackBar.open('Data submitted successfully!', 'Dismiss', {
+          duration: 3000
+        });
+      }
+    });
   }
 }

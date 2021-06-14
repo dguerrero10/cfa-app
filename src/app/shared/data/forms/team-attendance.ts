@@ -2,21 +2,33 @@ import { Select } from '../../models/interfaces/select.interface'
 
 export const ISSUES: Select[] = [
   {
-    value: 'sick',
-    name: 'Sick'
+    value: 'Call_in_personal',
+    name: 'Call in personal'
   },
   {
-    value: 'personalReasons',
-    name: 'Personal reasons'
+    value: 'Call_in_sick',
+    name: 'Call in sick'
   },
   {
-    value: 'emergency',
-    name: 'Emergency'
+    value: 'Late_to_work',
+    name: 'Late to work'
   },
   {
-    value: 'other',
+    value: 'No_call_no_show',
+    name: 'No Call No Show'
+  },
+  {
+    value: 'Uniform',
+    name: 'Uniform'
+  },
+  {
+    value: 'Did_not_call_in',
+    name: 'Did not Call in'
+  },
+  {
+    value: 'Other',
     name: 'Other'
-  }
+  },
 ];
 
 export const SYMPTOMS: Select[] = [

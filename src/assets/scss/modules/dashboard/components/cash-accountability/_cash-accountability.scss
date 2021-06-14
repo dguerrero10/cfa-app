@@ -1,0 +1,8 @@
+@import '../../../../base/animations';
+
+.cash-accountability {
+    animation: fadein .6s;
+    -moz-animation: fadein .6s; /* Firefox */
+    -webkit-animation: fadein .6s; /* Safari and Chrome */
+    -o-animation: fadein .6s; /* Opera */
+}

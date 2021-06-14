@@ -1,1 +1,41 @@
-<p>borrowing-tracker works!</p>
+<div class="borrowing-tracker">
+    <div class="single-row u-xs-margin-bottom">
+        <button mat-icon-button class="refresh-data-btn" 
+            matTooltip="Refresh Data" 
+            matTooltipPosition="above"
+            (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <div class="mat-h1">Borrowing Tracker</div>
+        <button *ngIf="onTableComponent" mat-mini-fab matTooltip="Add Data" 
+            [matTooltipPosition]="toolTipPosition.value" class="add-btn-fab grow"
+            class="add-btn-fab grow"
+            (click)="openBorrowingTrackerFormModal()">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button *ngIf="deleteState && onTableComponent" mat-mini-fab matTooltip="Delete Data" 
+            matTooltipPosition="right" 
+            class="delete-btn-fab grow"
+            (click)="deleteData()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+    <mat-tab-group animationDuration="0ms" class="borrowing-tracker__tab-group" (selectedTabChange)="tabChanged($event)">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                Data
+                <mat-icon class="tab-icon">list</mat-icon>
+            </ng-template>
+            <app-borrowing-tracker-data-table></app-borrowing-tracker-data-table>
+        </mat-tab>
+        <mat-tab [disabled]="metricDisabled">
+            <ng-template mat-tab-label>
+                Metrics
+                <mat-icon class="tab-icon">insights</mat-icon>
+            </ng-template>
+            <ng-template matTabContent>
+                <app-borrowing-tracker-data-metrics></app-borrowing-tracker-data-metrics>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>

@@ -6,8 +6,7 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   providedIn: 'root'
 })
 export class CaresService {
-  public cares: Care[] = [];
-  endpoint = "http://localhost:3000/api/cares";
+  public endpoint: string = "http://localhost:3000/api/cares";
 
   constructor(private http: HttpClient) { }
 

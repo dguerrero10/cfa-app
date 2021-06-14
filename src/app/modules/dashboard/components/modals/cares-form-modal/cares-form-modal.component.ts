@@ -164,7 +164,7 @@ export class CaresFormModalComponent implements OnInit {
     this.prepareData(formData);
     this.caresService.addCare(formData.value).subscribe(data => {
       if (data.success) {
-        this.refreshDataService.refresh(true);
+        this.refreshDataService.refreshData(true);
         this.dialogRef.close();
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {
           duration: 3000

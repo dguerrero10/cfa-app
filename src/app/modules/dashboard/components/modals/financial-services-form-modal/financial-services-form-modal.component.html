@@ -6,18 +6,19 @@
   </div>
   <form class="fs-form-modal">
     <mat-form-field appearance="outline">
-      <mat-label>Receipt purpose</mat-label>
-      <mat-select>
-        <mat-option value="one">First option</mat-option>
-        <mat-option value="two">Second option</mat-option>
-      </mat-select>
+      <mat-label>Purpose of receipt</mat-label>
+      <input matInput>
     </mat-form-field>
     <button mat-raised-button class="fs-form-modal__upload-btn">
       <mat-icon>file_upload</mat-icon>
       Upload image
     </button>
       <mat-form-field appearance="outline">
-        <mat-label>Leader name</mat-label>
+        <mat-label>Employee's first name</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Employee's last name</mat-label>
         <input matInput>
       </mat-form-field>
     <button mat-flat-button color="primary" class="u-xs-margin-top">Submit</button>

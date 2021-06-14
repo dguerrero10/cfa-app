@@ -1,0 +1,21 @@
+.cash-accountability-form-modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+
+    &__btn {
+        margin-bottom: 5px;
+    }
+}
+
+.mat-flat-button {
+    width: 100%;
+}
+
+.mat-form-field {
+    width: 100%;
+}
