@@ -3,7 +3,7 @@ import { Feature } from "../models/feature.model";
 export let FEATURES: Feature[] = [
     {  
         matToolTip: "Team Member Attendance",
-        feature: "teamMemberAttendance",
+        feature: "team-attendance",
         icon: 'groups',
         selected: true
     },
@@ -15,25 +15,25 @@ export let FEATURES: Feature[] = [
     },
     {  
         matToolTip: "Item Order",
-        feature: "itemOrder",
+        feature: "item-order",
         icon: 'production_quantity_limits',
         selected: false
     },
     {  
         matToolTip: "Financial Services",
-        feature: "financialServices",
+        feature: "financial-services",
         icon: 'request_quote',
         selected: false
     },
     {  
         matToolTip: "Borrowing Tracker",
-        feature: "borrowingTracker",
+        feature: "borrowing-tracker",
         icon: 'local_shipping',
         selected: false
     },
     {  
         matToolTip: "Cash Accountability",
-        feature: "cashAccountability",
+        feature: "cash-accountability",
         icon: 'money_off',
         selected: false
     },

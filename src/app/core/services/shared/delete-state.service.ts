@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class DeleteStateService {
   private deleteVisible = new BehaviorSubject<boolean>(false);
-  public deleteState = this.deleteVisible.asObservable();
+  public deleteVisibleListener = this.deleteVisible.asObservable();
 
-  private delete = new BehaviorSubject<boolean>(false);
-  public activateDeleteData = this.delete.asObservable();
+  private _deleteData = new BehaviorSubject<boolean>(false);
+  public deleteDataListener = this._deleteData.asObservable();
 
   constructor() { }
 
@@ -18,7 +18,7 @@ export class DeleteStateService {
   }
 
   deleteData(value: boolean) {
-    this.delete.next(value);
+    this._deleteData.next(value);
   }
 
 }

@@ -1,6 +1,6 @@
 <mat-toolbar class="top-nav" [ngClass]="{'dark-mode': navigatedToAdmin}">
     <div class="top-nav__container">
-        <span class="top-nav__container-name" [ngClass]="{'dark-mode': navigatedToAdmin}">Tim</span>
+        <span class="top-nav__container-name" [ngClass]="{'dark-mode': navigatedToAdmin}">{{user.firstName}} {{user.lastName}}</span>
         <img [src]=profileImg alt="" class="top-nav__container-img">
         <button class="top-nav__container-menu" mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>keyboard_arrow_down</mat-icon>
@@ -18,7 +18,7 @@
                 <mat-icon>settings</mat-icon>
                 <span>Account settings</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="onLogout()">
                 <mat-icon>logout</mat-icon>
                 <span>Logout</span>
             </button>

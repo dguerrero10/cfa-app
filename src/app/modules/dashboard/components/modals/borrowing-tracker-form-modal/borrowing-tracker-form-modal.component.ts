@@ -84,7 +84,7 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
         this.refreshDataService.refreshData(true);
         this.dialogRef.close();
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {
-          duration: 3000
+          duration: 1000
         });
       }
     });

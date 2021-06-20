@@ -25,7 +25,7 @@ export class CashAccountabilityComponent implements OnInit {
 
   ngOnInit(): void {
     this.metricService.currentMetricState.subscribe(data => this.metricDisabled = data);
-    this.deleteStateService.deleteState.subscribe(data => {
+    this.deleteStateService.deleteVisibleListener.subscribe(data => {
       this.deleteState = data;
       if (this.deleteState === true) this.toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
       else this.toolTipPosition = new FormControl(this.tooltipPositionArr[0]);

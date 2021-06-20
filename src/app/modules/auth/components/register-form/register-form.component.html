@@ -1,24 +1,48 @@
 <div class="mat-h1">Register</div>
-<form class="register-form">
-    <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Confirm password</mat-label>
-        <input matInput>
-    </mat-form-field>
-    <button mat-flat-button color="primary">Register</button>
+<form [formGroup]="registerForm" class="register-form" (ngSubmit)="onSubmit(registerForm)">
+    <div class="single-row">
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>First name</mat-label>
+            <input matInput formControlName="firstName">
+            <mat-error *ngIf="registerForm.get('firstName')">{{getFormErrors('firstName')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput formControlName="lastName">
+            <mat-error *ngIf="registerForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="single-row">
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>Employee ID</mat-label>
+            <input matInput formControlName="employeeId">
+            <mat-error *ngIf="registerForm.get('employeeId')">{{getFormErrors('employeeId')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngIf="registerForm.get('email')">{{getFormErrors('email')}}</mat-error>
+        </mat-form-field>
+    </div>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerForm.get('password')">{{getFormErrors('password')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Confirm password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide" formControlName="confirmPassword">
+            <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerForm.get('confirmPassword')">{{getFormErrors('confirmPassword')}}</mat-error>
+        </mat-form-field>
+
+    <button mat-flat-button type="submit" color="primary" class="u-xs-margin-top">Register</button>
 </form>

@@ -1,5 +1,8 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
+import { User } from '../../models/auth/user.model';
 
 @Component({
   selector: 'app-top-nav',
@@ -9,12 +12,19 @@ import { Router } from '@angular/router';
 export class TopNavComponent implements OnInit {
   public profileImg = '../../../../../../assets/images/profile-imgs/sacred-cow.png';
   public url: string = <string>('');
+  public user: User = <User>{};
   public adminUrl: string = '/admin';
   public navigatedToAdmin: boolean = false;
 
-  constructor(private router: Router, private renderer2: Renderer2) { }
+  constructor(public currentUserService: CurrentUserService,
+              public authService: AuthService,
+              private router: Router) { }
 
   ngOnInit(): void {
+    this.currentUserService.getCurrentUser()
+      .subscribe(userData => {
+        this.user = (Object.values(userData)[0]);
+      });
     this.url = this.router.url;
     if (this.url === this.adminUrl) {
       this.navigatedToAdmin = true;
@@ -23,7 +33,11 @@ export class TopNavComponent implements OnInit {
       this.navigatedToAdmin = false;
     }
   }
-  
+
+  onLogout() {
+    this.authService.logout();
+  }
+
   goToAdmin() {
     this.router.navigate(['/admin']);
   }

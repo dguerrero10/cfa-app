@@ -1,12 +1,23 @@
 <div class="mat-h1">Login</div>
-<form class="login-form">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
   <mat-form-field appearance="outline">
     <mat-label>Email</mat-label>
-    <input matInput>
+    <input matInput formControlName="email">
+    <mat-error *ngIf="loginForm.get('email')">{{getFormErrors('email')}}</mat-error>
+    <mat-error *ngIf="dataInvalid">Email or password is invalid</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Password</mat-label>
-    <input matInput>
+    <input matInput [type]="hide ? 'password' : 'text'" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide"
+      formControlName="password">
+    <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngIf="loginForm.get('password')">{{getFormErrors('password')}}</mat-error>
+    <mat-error *ngIf="dataInvalid">Email or password is invalid</mat-error>
   </mat-form-field>
-  <button mat-flat-button color="primary">Login</button>
+  <div class="single-row justify-center">
+    <button *ngIf="!isLoading" mat-flat-button type="submit" class="u-xs-margin-top" color="primary">Login</button>
+    <mat-spinner *ngIf="isLoading" class="spinner" [diameter]="35"></mat-spinner>
+  </div>
 </form>

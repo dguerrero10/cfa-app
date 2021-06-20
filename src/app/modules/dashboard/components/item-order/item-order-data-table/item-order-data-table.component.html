@@ -12,7 +12,7 @@
             <div class="mat-h2 no-data__text">You have no data, so here's a cow.</div>
         </div>
     </div>
-    <table *ngIf="!loading && itemOrders.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z0"
+    <table *ngIf="!loading && itemOrderData.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z0"
         class="d-table__table">
         <ng-container matColumnDef="Date">
             <th mat-header-cell *matHeaderCellDef> Date </th>

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { first } from 'rxjs/operators';
 import { CaresService } from 'src/app/core/services/cares/cares.service';
@@ -13,7 +15,7 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   templateUrl: './cares-data-table.component.html',
   styleUrls: ['./cares-data-table.component.scss']
 })
-export class CaresDataTableComponent implements OnInit {
+export class CaresDataTableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = [
     'Date', 'Guest Name', 'Guest #', 'Mode of Visit', 'Category', 'Issue(s)', 'Team Member Position', 'Leader'
   ];
@@ -23,19 +25,28 @@ export class CaresDataTableComponent implements OnInit {
   public noData: boolean = false;
   public dataSource: any;
   public clickedRows = new Set<Care>();
-  public _idList: string[] = [];
+  public rowIds: string[] = [];
+  public deleteDataForm: FormGroup = <FormGroup>{};
 
-  constructor(public shareChartDataService: ShareChartDataService,
-              public disableMetricService: DisableMetricTabService,
+  constructor(private fb: FormBuilder,
+              private snackBar: MatSnackBar,
               public deleteStateService: DeleteStateService,
               public refreshDataService: RefreshDataService,
-              private caresService: CaresService) { }
+              public disableMetricService: DisableMetricTabService,
+              private caresService: CaresService,
+              public shareChartDataService: ShareChartDataService
+              ) { }
 
   ngOnInit(): void {
+    this.createForm();
+    this.deleteStateService.deleteDataListener.subscribe(deleteStatus => {
+      if (deleteStatus) {
+        this.deleteData(true)
+      }
+    });
     this.caresService.getCares()
       .subscribe(data => {
-        this.caresData = data.care;
-        console.log(data.care)
+        this.caresData = data.caresData;
         this.shareChartDataService.shareData(this.caresData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.caresData);
@@ -46,22 +57,34 @@ export class CaresDataTableComponent implements OnInit {
       });
     this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
-        this.caresService.getCares()
-          .subscribe(data => {
-            this.caresData = data.care;
-            this.shareChartDataService.shareData(this.caresData);
-            this.loading = false;
-            this.dataSource = new MatTableDataSource(this.caresData);
-            if (this.caresData.length === 0) {
-              this.noData = true;
-              this.disableMetricService.switchState(this.noData);
-            }
-            else {
-              this.noData = false;
-              this.disableMetricService.switchState(this.noData);
-            }
-          });
+        this.refreshData();
       }
+    });
+  }
+
+  refreshData() {
+    this.caresService.getCares()
+    .pipe(first())
+      .subscribe(data => {
+        this.caresData = data.caresData;
+        this.shareChartDataService.shareData(this.caresData);
+        this.loading = false;
+        this.dataSource = new MatTableDataSource(this.caresData);
+        if (this.caresData.length === 0) {
+          this.noData = true;
+          this.disableMetricService.switchState(this.noData);
+          this.deleteStateService.changeDeleteState(false);
+        }
+        else {
+          this.noData = false;
+          this.disableMetricService.switchState(this.noData);
+        }
+      });
+  }
+
+  createForm() {
+    this.deleteDataForm = this.fb.group({
+      'ids': ['']
     });
   }
 
@@ -88,19 +111,30 @@ export class CaresDataTableComponent implements OnInit {
   }
 
   addDataToDelete(row: any) {
-    if (this._idList.includes(row._id)) return;
-    this._idList.push(row._id);
+    if (this.rowIds.includes(row._id)) return;
+    this.rowIds.push(row._id);
   }
 
   removeDataToDelete(row: any) {
-    this._idList = this._idList.filter(x => x !== row._id);
-    console.log(this._idList)
+    this.rowIds = this.rowIds.filter(x => x !== row._id);
+    console.log(this.rowIds)
   }
 
-  deleteData(data: boolean) {
-    if (data) {
-      this.caresService.deleteData(this._idList);
+  deleteData(deleteStatus: boolean) {
+    if (deleteStatus) {
+      this.deleteDataForm.controls['ids'].setValue(this.rowIds);
+      this.caresService.deleteCares(this.deleteDataForm.value)
+        .subscribe(data => {
+          if (data.success) {
+            this.refreshData();
+            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
+          }
+        });
     }
   }
-  
+    ngOnDestroy() {
+      this.deleteStateService.changeDeleteState(false);
+      this.deleteStateService.deleteData(false);
+    
+  }
 }

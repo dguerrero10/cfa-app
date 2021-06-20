@@ -6,7 +6,8 @@ import { ItemOrder } from 'src/app/shared/models/form-table/item-order.model';
   providedIn: 'root'
 })
 export class ItemOrderService {
-  endpoint = "http://localhost:3000/api/item-orders";
+  private endpoint = "http://localhost:3000/api/item-orders";
+  private endpointDelete = "http://localhost:3000/api/item-orders/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -17,4 +18,9 @@ export class ItemOrderService {
   getItemOrders() {
     return this.http.get<{ success: boolean; itemOrderData: ItemOrder[] }>(this.endpoint);
   }
+
+  deleteItemOrders(rowIds: any) {
+    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
+  }
+
 }

@@ -6,7 +6,7 @@
       <mat-expansion-panel *ngFor="let user of users" hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{user.name}}
+            {{user.firstName}} {{user.lastName}}
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-list role="list">
@@ -17,12 +17,12 @@
           <mat-divider></mat-divider>
           <div mat-subheader>Privileges</div>
           <mat-list-item role="listitem">
-            {{user.privileges}}
+            <!-- {{user.privileges}} -->
           </mat-list-item>
           <mat-divider></mat-divider>
           <div mat-subheader>Employee ID</div>
           <mat-list-item role="listitem">
-            {{user.employeeID}}
+            {{user.employeeId}}
           </mat-list-item>
           <mat-divider></mat-divider>
           <div mat-subheader>Edit User</div>

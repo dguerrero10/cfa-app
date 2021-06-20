@@ -6,7 +6,8 @@ import { CashAccountability } from 'src/app/shared/models/form-table/cash-accoun
   providedIn: 'root'
 })
 export class CashAccountabilityService {
-  public endpoint: string = "http://localhost:3000/api/cash-accountability";
+  private endpoint: string = "http://localhost:3000/api/cash-accountability";
+  private endpointDelete: string = "http://localhost:3000/api/cash-accountability/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -18,7 +19,8 @@ export class CashAccountabilityService {
     return this.http.get<{ success: boolean; cashAccountabilityData: CashAccountability[] }>(this.endpoint);
   }
 
-  deleteData(t:any) {
-    console.log('deleted')
+  deleteCashAccountability(rowIds: any) {
+    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
   }
+
 }

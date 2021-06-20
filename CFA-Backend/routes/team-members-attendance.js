@@ -1,39 +1,13 @@
 const express = require("express");
 
+const checkAuth = require('../middleware/check-auth');
+
+const teamMemberAttendanceController = require('../controllers/team-member-attendance');
+
 const router = express.Router();
 
-const TeamMemberAttendance = require('../models/team-member-attendance');
-
-router.post("", (req, res, next) => {
-    const teamMemberAttendance = new TeamMemberAttendance({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        issue: req.body.issue,
-        workArea: req.body.workArea,
-        reportedSymptoms: req.body.reportedSymptoms,
-        otherExplanation: req.body.otherExplanation,
-        notes: req.body.notes,
-        leaderFirstName: req.body.leaderFirstName,
-        leaderLastName: req.body.leaderLastName,
-    });
-    teamMemberAttendance.save();
-    res.status(201).json({
-        success: true
-    });
-});
-
-router.get("", (req, res, next) => {
-    TeamMemberAttendance.find().sort({_id: -1})
-        .then(documents => {
-            res.status(201).json({
-                success: true,
-                teamAttendance: documents
-            });
-        });
-});
-
-router.delete(":id", (req, res, next) => {
-    console.log(req.params)
-});
+router.post("", checkAuth, teamMemberAttendanceController.createteamMemberAttendance);
+router.post("/delete", checkAuth, teamMemberAttendanceController.deleteTeamMemberAttendance);
+router.get("", checkAuth, teamMemberAttendanceController.getTeamMemberAttendance);
 
 module.exports = router;

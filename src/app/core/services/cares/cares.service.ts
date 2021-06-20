@@ -6,7 +6,8 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   providedIn: 'root'
 })
 export class CaresService {
-  public endpoint: string = "http://localhost:3000/api/cares";
+  private endpoint: string = "http://localhost:3000/api/cares";
+  private endpointDelete: string = "http://localhost:3000/api/cares/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -15,11 +16,11 @@ export class CaresService {
   }
 
   getCares() {
-    return this.http.get<{ success: boolean; care: Care[] }>(this.endpoint);
+    return this.http.get<{ success: boolean; caresData: Care[] }>(this.endpoint);
   }
 
-  deleteData(t:any) {
-    console.log('deleted')
+  deleteCares(rowIds: any) {
+    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
   }
 
 }

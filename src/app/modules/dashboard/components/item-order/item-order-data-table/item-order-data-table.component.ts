@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { first } from 'rxjs/operators';
 import { ItemOrderService } from 'src/app/core/services/item-order/item-order.service';
@@ -15,57 +17,71 @@ import { ItemOrder } from 'src/app/shared/models/form-table/item-order.model';
 export class ItemOrderDataTableComponent implements OnInit {
   public displayedColumns: string[] = [
     'Date', 'For', 'Areas Searched', "Item's Needed", 'Submitted By'];
-  public itemOrders: ItemOrder[] = [];
+  public itemOrderData: ItemOrder[] = [];
   public loading: boolean = true;
   public noData: boolean = false;
-  public deleteDataActivated: boolean = false;
-  public refreshData: boolean = false;
   public dataSource: any;
   public clickedRows = new Set<ItemOrder>();
-  public _idList: string[] = [];
+  public rowIds: string[] = [];
+  public deleteDataForm: FormGroup = <FormGroup>{};
 
-  constructor(public deleteStateService: DeleteStateService,
+  constructor(private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
     private itemOrderService: ItemOrderService) { }
 
   ngOnInit(): void {
-    this.deleteStateService.activateDeleteData.subscribe(data => {
+    this.createForm();
+    this.deleteStateService.deleteDataListener.subscribe(data => {
       if (data) {
         this.deleteData(true)
       }
     });
     this.itemOrderService.getItemOrders()
       .subscribe(data => {
-        console.log(data)
-        this.itemOrders = data.itemOrderData
+        this.itemOrderData = data.itemOrderData
         this.loading = false;
-        this.dataSource = new MatTableDataSource(this.itemOrders);
-        if (this.itemOrders.length === 0) {
+        this.dataSource = new MatTableDataSource(this.itemOrderData);
+        if (this.itemOrderData.length === 0) {
           this.noData = true;
           this.disableMetricService.switchState(this.noData);
         }
       });
     this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
-        this.itemOrderService.getItemOrders()
-          .pipe(first())
-          .subscribe(data => {
-            this.itemOrders = data.itemOrderData
-            this.loading = false;
-            this.dataSource = new MatTableDataSource(this.itemOrders);
-            if (this.itemOrders.length === 0) {
-              this.noData = true;
-              this.disableMetricService.switchState(this.noData);
-            }
-            else {
-              this.noData = false;
-              this.disableMetricService.switchState(this.noData);
-            }
-          });
+        this.refreshData();
       }
     });
   }
+
+  refreshData() {
+    this.itemOrderService.getItemOrders()
+      .pipe(first())
+      .subscribe(data => {
+        this.itemOrderData = data.itemOrderData;
+        // this.shareChartDataService.shareData(this.itemOrderData);
+        this.loading = false;
+        this.dataSource = new MatTableDataSource(this.itemOrderData);
+        if (this.itemOrderData.length === 0) {
+          this.noData = true;
+          this.disableMetricService.switchState(this.noData);
+          this.deleteStateService.changeDeleteState(false);
+        }
+        else {
+          this.noData = false;
+          this.disableMetricService.switchState(this.noData);
+        }
+      });
+  }
+
+  createForm() {
+    this.deleteDataForm = this.fb.group({
+      'ids': ['']
+    });
+  }
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -90,18 +106,29 @@ export class ItemOrderDataTableComponent implements OnInit {
   }
 
   addDataToDelete(row: any) {
-    if (this._idList.includes(row._id)) return;
-    this._idList.push(row._id);
+    if (this.rowIds.includes(row._id)) return;
+    this.rowIds.push(row._id);
   }
 
   removeDataToDelete(row: any) {
-    this._idList = this._idList.filter(x => x !== row._id);
+    this.rowIds = this.rowIds.filter(x => x !== row._id);
   }
 
-  deleteData(data: boolean) {
-    if (data) {
-      return;
-      // this.itemOrderService.deleteData(this._idList);
+  deleteData(deleteStatus: boolean) {
+    if (deleteStatus) {
+      this.deleteDataForm.controls['ids'].setValue(this.rowIds);
+      this.itemOrderService.deleteItemOrders(this.deleteDataForm.value)
+        .subscribe(data => {
+          if (data.success) {
+            this.refreshData();
+            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
+          }
+        });
     }
+  }
+  ngOnDestroy() {
+    this.deleteStateService.changeDeleteState(false);
+    this.deleteStateService.deleteData(false);
+
   }
 }
