@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { first } from 'rxjs/operators';
+import { finalize, first, take } from 'rxjs/operators';
 import { ItemOrderService } from 'src/app/core/services/item-order/item-order.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
@@ -118,10 +118,13 @@ export class ItemOrderDataTableComponent implements OnInit {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.itemOrderService.deleteItemOrders(this.deleteDataForm.value)
+        .pipe(take(1),
+          finalize(() => {
+            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
+          }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
-            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }
         });
     }

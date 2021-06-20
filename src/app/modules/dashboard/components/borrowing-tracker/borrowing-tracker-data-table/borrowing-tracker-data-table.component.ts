@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { first } from 'rxjs/operators';
+import { finalize, first, take } from 'rxjs/operators';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
@@ -28,13 +28,13 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
   public deleteDataForm: FormGroup = <FormGroup>{};
 
   constructor(private fb: FormBuilder,
-              private snackBar: MatSnackBar,
-              public deleteStateService: DeleteStateService,
-              public refreshDataService: RefreshDataService,
-              public disableMetricService: DisableMetricTabService,
-              private borrowingTrackerService: BorrowingTrackerService,
-              public shareChartDataService: ShareChartDataService,
-              ) { }
+    private snackBar: MatSnackBar,
+    public deleteStateService: DeleteStateService,
+    public refreshDataService: RefreshDataService,
+    public disableMetricService: DisableMetricTabService,
+    private borrowingTrackerService: BorrowingTrackerService,
+    public shareChartDataService: ShareChartDataService,
+  ) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -63,7 +63,7 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
 
   refreshData() {
     this.borrowingTrackerService.getBorrowingTrackerItems()
-    .pipe(first())
+      .pipe(first())
       .subscribe(data => {
         this.borrowingTrackerData = data.borrowingTrackerData;
         this.shareChartDataService.shareData(this.borrowingTrackerData);
@@ -80,7 +80,7 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   createForm() {
     this.deleteDataForm = this.fb.group({
       'ids': ['']
@@ -122,10 +122,13 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.borrowingTrackerService.deleteBorrowingTrackerData(this.deleteDataForm.value)
+        .pipe(take(1),
+          finalize(() => {
+            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
+          }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
-            this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }
         });
     }
@@ -135,6 +138,6 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
   }
-  
+
 }
 
