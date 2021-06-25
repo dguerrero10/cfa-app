@@ -13,5 +13,5 @@ export class CurrentUserService {
     const userId = localStorage.getItem('userId');
     return this.http.get<User>(`http://localhost:3000/api/users/current-user/${userId}`);
   }
-
+  
 }

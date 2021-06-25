@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 export interface FormDialogue {
   dialogue: string;
@@ -19,9 +20,15 @@ export class AuthComponent implements OnInit {
     action: ' Register'
   }
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.getUserRegisteredListener()
+      .subscribe(data => {
+        if (data.success) {
+          this.login = true;
+        }
+      })
   }
 
   switchForms() {

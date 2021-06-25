@@ -1,6 +1,11 @@
 @import '../../../../abstracts/variables';
+@import '../../../../base/animations';
 
 .user-list {
+    animation: fadein .6s;
+    -moz-animation: fadein .6s; /* Firefox */
+    -webkit-animation: fadein .6s; /* Safari and Chrome */
+    -o-animation: fadein .6s; /* Opera */
 
     &__header {
         margin-bottom: 1.5rem !important;

@@ -29,7 +29,7 @@
           <div class="single-row align-center">
             <mat-list-item role="listitem">
               <button mat-flat-button color="warn" 
-              (click)="deleteUserWarningModal()">Delete user</button>
+              (click)="deleteUserWarningModal(user._id)">Delete user</button>
               <mat-checkbox class="user-list__checkbox" [checked]="checked"
               color="primary" (change)="adminChecked($event)">Admin
               </mat-checkbox>

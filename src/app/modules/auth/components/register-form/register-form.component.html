@@ -16,7 +16,7 @@
     <div class="single-row">
         <mat-form-field appearance="outline" class="u-two-form-field">
             <mat-label>Employee ID</mat-label>
-            <input matInput formControlName="employeeId">
+            <input matInput formControlName="employeeId" type="number">
             <mat-error *ngIf="registerForm.get('employeeId')">{{getFormErrors('employeeId')}}</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
@@ -33,6 +33,7 @@
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
             <mat-error *ngIf="registerForm.get('password')">{{getFormErrors('password')}}</mat-error>
+            <mat-error *ngIf="noMatch">Passwords must match.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Confirm password</mat-label>
@@ -42,6 +43,7 @@
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
             <mat-error *ngIf="registerForm.get('confirmPassword')">{{getFormErrors('confirmPassword')}}</mat-error>
+            <mat-error *ngIf="noMatch">Passwords must match.</mat-error>
         </mat-form-field>
 
     <button mat-flat-button type="submit" color="primary" class="u-xs-margin-top">Register</button>

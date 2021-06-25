@@ -4,7 +4,9 @@
     </div>
     <li class="side-nav__list">
         <div *ngFor="let feature of features; index as i;" class="side-nav__list-item">
-            <a mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="right" [routerLink]="feature.feature"
+            <a mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="right" 
+                       [routerLinkActiveOptions]="{exact: true}" 
+                       [routerLink]="feature.feature"
                routerLinkActive="side-nav__list-btn-active"
                 class="side-nav__list-btn u-icon-center-inline">
                 <mat-icon class="side-nav__list-icon">{{feature.icon}}</mat-icon>

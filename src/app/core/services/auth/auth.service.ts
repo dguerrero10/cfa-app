@@ -14,14 +14,15 @@ export class AuthService {
   public endpointLogin: string = "http://localhost:3000/api/users/login";
   private authStatusListener = new Subject<boolean>();
   private authErrorListener = new Subject<boolean>();
+  private userRegisteredListener = new Subject<{success: boolean, email: string, password: string}>()
   public isAuthenticated: boolean = false;
   private token: string | null | undefined = <string>('');
   private user: User = <User>{};
   private tokenTimer: any;
 
   constructor(
-              private router: Router,
-              private http: HttpClient) { }
+    private router: Router,
+    private http: HttpClient) { }
 
   getToken() {
     return this.token;
@@ -32,7 +33,7 @@ export class AuthService {
   }
 
   getUserId() {
-    return this.user.id;
+    return this.user._id;
   }
 
   getIsAuth() {
@@ -47,6 +48,10 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
+  getUserRegisteredListener() {
+    return this.userRegisteredListener.asObservable();
+  }
+
   createUser(registerUser: RegisterUser) {
     const newUser: RegisterUser = {
       firstName: registerUser.firstName,
@@ -55,21 +60,25 @@ export class AuthService {
       email: registerUser.email,
       password: registerUser.password
     };
-    this.http.post<{success: boolean}>(this.endpointRegister, newUser)
-        .subscribe(res => {
-          if (res.success) {
-            const authUser: Auth = {email: registerUser.email, password: registerUser.password}
-            this.loginUser(authUser);
-          }
-        }, error => {
-          console.log(error)
+    this.http.post<{ success: boolean }>(this.endpointRegister, newUser)
+     .subscribe(res => {
+        if (res.success) {
+          this.userRegisteredListener.next
+              ({
+               success: true, 
+               email: newUser.email, 
+               password: newUser.password
+              })
         }
-        );
+      }, error => {
+        console.log(error)
+      }
+      );
   };
 
   loginUser(loginUser: Auth) {
-    const authUser: Auth = {email: loginUser.email, password: loginUser.password}
-    this.http.post<{token: string, expiresIn: number, user: User}>(this.endpointLogin, authUser)
+    const authUser: Auth = { email: loginUser.email, password: loginUser.password }
+    this.http.post<{ token: string, expiresIn: number, user: User }>(this.endpointLogin, authUser)
       .subscribe(res => {
         const token = res.token;
         this.token = token;
@@ -81,14 +90,14 @@ export class AuthService {
           this.authStatusListener.next(true);
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-          this.saveAuthData(token, expirationDate, this.user.id);
+          this.saveAuthData(token, expirationDate, this.user._id);
           this.router.navigate(['dashboard']);
         }
-    }, error => {
-      this.authErrorListener.next(error);
-      this.authStatusListener.next(false);
+      }, error => {
+        this.authErrorListener.next(error);
+        this.authStatusListener.next(false);
       }
-    );
+      );
   }
 
   autoAuthUser() {
@@ -101,7 +110,7 @@ export class AuthService {
     if (expiresIn > 0) {
       this.token = authInformation?.token;
       this.isAuthenticated = true;
-      this.user.id = authInformation.userId!;
+      this.user._id = authInformation.userId!;
       this.setAuthTimer(expiresIn / 1000);
       this.authStatusListener.next(true);
     }
@@ -113,7 +122,7 @@ export class AuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
-    this.user.id = null!;
+    this.user._id = null!;
     this.router.navigate(['login']);
   }
 
@@ -142,7 +151,7 @@ export class AuthService {
     if (!token || !expirationDate) {
       return;
     }
-    return  {
+    return {
       token: token,
       expirationDate: new Date(expirationDate),
       userId: userId

@@ -11,17 +11,9 @@ import { Feature } from 'src/app/shared/models/feature.model';
 export class AdminSideNavComponent implements OnInit {
   cfaLogo = '../../../../../../assets/images/cfa-logo.svg';
   public adminFeatures: Feature[] = ADMIN_FEATURES;
-  public adminFeature: string = <string>('');
 
-  constructor(public changeFeatureAdmiService: ChangeFeatureAdminService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.changeFeatureAdmiService.currentFeature.subscribe(feature => this.adminFeature = feature);
   }
-
-  onSelect(feature:string) {
-   this.adminFeatures = this.changeFeatureAdmiService.onSelect(feature);
-   this.changeFeatureAdmiService.switchFeature(feature); 
-  }
-
 }

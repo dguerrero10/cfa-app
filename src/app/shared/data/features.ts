@@ -2,10 +2,16 @@ import { Feature } from "../models/feature.model";
 
 export let FEATURES: Feature[] = [
     {  
+        matToolTip: "Home",
+        feature: "./",
+        icon: 'home',
+        selected: true
+    },
+    {  
         matToolTip: "Team Member Attendance",
         feature: "team-attendance",
         icon: 'groups',
-        selected: true
+        selected: false
     },
     {  
         matToolTip: "Cares",

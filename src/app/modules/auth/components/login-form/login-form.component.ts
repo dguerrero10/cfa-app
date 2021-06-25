@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+
+export interface RegisterFormData {
+  success: boolean;
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-login-form',
@@ -12,6 +19,7 @@ export class LoginFormComponent implements OnInit {
   public isLoading: boolean = false;
   public hide: boolean = true;
   public dataInvalid: boolean = false;
+  public registerFormData: RegisterFormData = {success: false, email: '', password: ''}
 
   constructor(private fb: FormBuilder,
     public authService: AuthService) { }
@@ -25,13 +33,13 @@ export class LoginFormComponent implements OnInit {
     );
     this.authService.getAuthErrorListener()
       .subscribe(() => {
-       this.dataInvalid = true;
-       this.loginForm.controls['email'].setErrors({'incorrect': true})
-       this.loginForm.controls['password'].setErrors({'incorrect': true})
-       setTimeout(() => { 
-         this.dataInvalid = false;
-         this.loginForm.controls['email'].setErrors(null)
-         this.loginForm.controls['password'].setErrors(null);
+        this.dataInvalid = true;
+        this.loginForm.controls['email'].setErrors({ 'incorrect': true })
+        this.loginForm.controls['password'].setErrors({ 'incorrect': true })
+        setTimeout(() => {
+          this.dataInvalid = false;
+          this.loginForm.controls['email'].setErrors(null)
+          this.loginForm.controls['password'].setErrors(null);
         }, 2000);
       });
   }

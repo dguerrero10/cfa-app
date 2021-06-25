@@ -14,6 +14,7 @@ export class CashAccountabilityFormModalComponent implements OnInit {
   public cashAccountabilityForm: FormGroup = <FormGroup>{};
   public submitting: boolean = false;
   public mixedDrawer: boolean = false;
+  public amount: number = 0;
 
   constructor(public cashAccountabilityService: CashAccountabilityService,
               public dialogRef: MatDialogRef<CashAccountabilityFormModalComponent>,
@@ -107,6 +108,9 @@ export class CashAccountabilityFormModalComponent implements OnInit {
       return;
     }
     this.submitting = true;
+    if (this.cashAccountabilityForm.controls['mixedDrawer'].value === 'No') {
+      this.cashAccountabilityForm.controls['mixedDrawerTeamMemberFirstName'].setValue('N/A');
+    }
     this.cashAccountabilityService.addCashAccountability(formData.value).subscribe(data => {
       if (data.success) {
         this.refreshDataService.refreshData(true);

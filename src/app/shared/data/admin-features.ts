@@ -2,14 +2,20 @@ import { Feature } from "../models/feature.model";
 
 export let ADMIN_FEATURES: Feature[] = [
     {  
-        matToolTip: "Manage Users",
-        feature: "manageUsers",
-        icon: 'people',
+        matToolTip: "Home",
+        feature: "./",
+        icon: 'home',
         selected: true
     },
     {  
-        matToolTip: "Manage Record Expiration",
-        feature: "manageRecordExpiration",
+        matToolTip: "Manage Users",
+        feature: "manage-users",
+        icon: 'people',
+        selected: false
+    },
+    {  
+        matToolTip: "Manage Record Expirations",
+        feature: "manage-record-expirations",
         icon: 'pending_actions',
         selected: false
     }

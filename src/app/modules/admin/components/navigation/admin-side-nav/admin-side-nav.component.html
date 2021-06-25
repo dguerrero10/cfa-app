@@ -4,10 +4,13 @@
     </div>
     <li class="admin-side-nav__list">
         <div *ngFor="let feature of adminFeatures; index as i;" class="admin-side-nav__list-item">
-            <button mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="right" [ngClass]="{'admin-side-nav__list-btn-active': feature.selected}"
-                class="admin-side-nav__list-btn u-icon-center-inline" (click)="onSelect(feature.feature)">
+            <a mat-fab [matTooltip]=feature.matToolTip matTooltipPosition="right" 
+                       [routerLink]="feature.feature"
+                       [routerLinkActiveOptions]="{exact: true}" 
+               routerLinkActive="admin-side-nav__list-btn-active"
+                class="admin-side-nav__list-btn u-icon-center-inline">
                 <mat-icon class="admin-side-nav__list-icon">{{feature.icon}}</mat-icon>
-            </button>
+            </a>
         </div>
     </li>
 </nav>

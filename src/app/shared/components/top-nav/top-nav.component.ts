@@ -13,7 +13,7 @@ export class TopNavComponent implements OnInit {
   public profileImg = '../../../../../../assets/images/profile-imgs/sacred-cow.png';
   public url: string = <string>('');
   public user: User = <User>{};
-  public adminUrl: string = '/admin';
+  public adminUrl: string = 'admin';
   public navigatedToAdmin: boolean = false;
 
   constructor(public currentUserService: CurrentUserService,
@@ -25,8 +25,7 @@ export class TopNavComponent implements OnInit {
       .subscribe(userData => {
         this.user = (Object.values(userData)[0]);
       });
-    this.url = this.router.url;
-    if (this.url === this.adminUrl) {
+    if (this.router.url.includes(this.adminUrl)) {
       this.navigatedToAdmin = true;
     }
     else {

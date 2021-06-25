@@ -23,11 +23,11 @@ const routes: Routes = [
       },
       {
         path: 'item-order',
-        component: ItemOrderComponent, // another child route component that the router renders
+        component: ItemOrderComponent,
       },
       {
         path: 'financial-services',
-        component: FinancialServicesComponent, // another child route component that the router renders
+        component: FinancialServicesComponent,
       },
       {
         path: 'borrowing-tracker',

@@ -1,6 +1,5 @@
 <app-top-nav></app-top-nav>
 <app-admin-side-nav></app-admin-side-nav>
-<div class="admin" [ngSwitch]="feature">
-    <app-user-list *ngSwitchCase="'manageUsers'"></app-user-list>
-    <app-record-expiration *ngSwitchCase="'manageRecordExpiration'"></app-record-expiration>
+<div class="admin">
+  <router-outlet></router-outlet>
 </div>

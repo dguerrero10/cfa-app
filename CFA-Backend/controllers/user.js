@@ -1,3 +1,4 @@
+
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
@@ -19,7 +20,7 @@ exports.registerUser = (req, res, next) => {
             })
         })
         .catch(err => {
-            res.status(300).json({
+            res.status(401).json({
                 error: err
             })
         });
@@ -43,7 +44,7 @@ exports.loginUser = (req, res, next) => {
                     message: 'Authentication failed.'
                 });
             }
-            const token = jwt.sign({ email: fetchedUser.email, userId: fetchedUser._id },
+            const token = jwt.sign({ email: fetchedUser.email, _id: fetchedUser._id },
                 '87CE40D3FFDB218326DBDA1E3602214F1E40EB73A1CD73A08011DEA986881A6B',
                 { expiresIn: '24hr' }
             );
@@ -51,7 +52,7 @@ exports.loginUser = (req, res, next) => {
                 token: token,
                 expiresIn: 86400,
                 user: {
-                    id: fetchedUser._id,
+                    _id: fetchedUser._id,
                     firstName: fetchedUser.firstName,
                     lastName: fetchedUser.lastName,
                     employeeId: fetchedUser.employeeId,
@@ -83,5 +84,12 @@ exports.getAllUsers = (req, res, next) => {
             res.status(201).json({
                 users: users
             })
-        });
+        })
+}
+
+exports.deleteUser = (req, res, next) => {
+    User.deleteOne({_id: req.params.id})
+        .then(res.status(200).json({
+            success: true
+        }))
 }
