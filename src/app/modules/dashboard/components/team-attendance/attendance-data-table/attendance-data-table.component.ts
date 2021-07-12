@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { finalize, first, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
+import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
 import { TeamMemberAttendanceService } from 'src/app/core/services/team-attendance/team-member-attendance.service';
 import { TeamMemberAttendance } from 'src/app/shared/models/form-table/team-member-attendance.model';
 
@@ -15,7 +16,7 @@ import { TeamMemberAttendance } from 'src/app/shared/models/form-table/team-memb
   styleUrls: ['./attendance-data-table.component.scss']
 })
 export class AttendanceDataTableComponent implements OnInit, OnDestroy {
-  public displayedColumns: string[] = [
+  public displayedColumns: string[] = ['Index',
     'Date', 'Team Member', 'Issue', 'Work Area', 'Reported Symptoms', 'Leader', 'Notes'];
   public teamMemberAttendanceData: TeamMemberAttendance[] = [];
   public loading: boolean = true;
@@ -30,7 +31,9 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
-    private teamMemberAttendanceService: TeamMemberAttendanceService) { }
+    private teamMemberAttendanceService: TeamMemberAttendanceService,
+    public shareChartDataService: ShareChartDataService
+    ) { }
 
 
   ngOnInit(): void {
@@ -43,10 +46,15 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
     this.teamMemberAttendanceService.getTeamMemberAttendance()
       .subscribe(data => {
         this.teamMemberAttendanceData = data.teamMemberAttendanceData;
+        this.shareChartDataService.shareData(this.teamMemberAttendanceData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.teamMemberAttendanceData);
         if (this.teamMemberAttendanceData.length === 0) {
           this.noData = true;
+          this.disableMetricService.switchState(this.noData);
+        }
+        else {
+          this.noData = false;
           this.disableMetricService.switchState(this.noData);
         }
       });
@@ -59,9 +67,9 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
 
   refreshData() {
     this.teamMemberAttendanceService.getTeamMemberAttendance()
-      .pipe(first())
       .subscribe(data => {
         this.teamMemberAttendanceData = data.teamMemberAttendanceData;
+        this.shareChartDataService.shareData(this.teamMemberAttendanceData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.teamMemberAttendanceData);
         if (this.teamMemberAttendanceData.length === 0) {
@@ -117,13 +125,16 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.teamMemberAttendanceService.deleteTeamMemberAttendanceData(this.deleteDataForm.value)
-        .pipe(take(1),
+        .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
+            this.deleteStateService.changeDeleteState(false);
+            this.deleteStateService.deleteData(false);
+            this.rowIds = [];
           }
         });
     }

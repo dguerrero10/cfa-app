@@ -15,6 +15,7 @@ export interface RegisterFormData {
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
+  public cfaLogo = '../../../../../assets/images/cfa-logo.svg';
   public loginForm: FormGroup = <FormGroup>{};
   public isLoading: boolean = false;
   public hide: boolean = true;

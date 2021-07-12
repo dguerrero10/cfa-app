@@ -1,6 +1,7 @@
 const TeamMemberAttendance = require('../models/team-member-attendance');
+const TeamMemberAttendanceQueries = require('../controllers/queries/teamMemberAttendance');
 
-exports.createteamMemberAttendance = (req, res, next) => {
+exports.createTeamMemberAttendance = (req, res, next) => {
         const teamMemberAttendance = new TeamMemberAttendance({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -16,6 +17,9 @@ exports.createteamMemberAttendance = (req, res, next) => {
         res.status(201).json({
             success: true
         });
+        TeamMemberAttendanceQueries.queryNoAttendance(req);
+        TeamMemberAttendanceQueries.queryLateToWork(req);
+        TeamMemberAttendanceQueries.queryUniformIssues(req);
     };
 
 exports.getTeamMemberAttendance = (req, res, next) => {
@@ -31,7 +35,7 @@ exports.getTeamMemberAttendance = (req, res, next) => {
 exports.deleteTeamMemberAttendance = (req, res, next) => {
     const _ids = req.body.ids;
     TeamMemberAttendance.deleteMany({_id: { $in: _ids}})
-        .then(() => {
+        .then(result => {
             res.status(201).json({
                 success: true
             })

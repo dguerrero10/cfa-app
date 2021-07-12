@@ -23,10 +23,10 @@ export class CaresFormModalComponent implements OnInit {
   public submitting: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<CaresFormModalComponent>,
-              public refreshDataService: RefreshDataService,
-              private fb: FormBuilder,
-              public caresService: CaresService,
-              public snackBar: MatSnackBar) { }
+    public refreshDataService: RefreshDataService,
+    private fb: FormBuilder,
+    public caresService: CaresService,
+    public snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -34,14 +34,15 @@ export class CaresFormModalComponent implements OnInit {
 
   createForm() {
     this.caresForm = this.fb.group({
-      'guestName': [''],
+      'guestName': ['', [Validators.required]],
       'guestPhoneNumber': [''],
       'category': ['', [Validators.required]],
       'issue': ['', [Validators.required]],
-      'otherExplanation': [''],
+      'otherExplanation': ['', [Validators.required]],
       'modeOfVisit': ['', [Validators.required]],
       'teamMemberPosition': [''],
-      'leaderName': ['', [Validators.required]]
+      'leaderFirstName': ['', [Validators.required]],
+      'leaderLastName': ['', [Validators.required]]
     });
   }
 
@@ -105,9 +106,14 @@ export class CaresFormModalComponent implements OnInit {
           return 'Mode of visit is required.';
         }
         else return;
-      case 'leaderName':
-        if (this.caresForm.controls['leaderName'].hasError('required')) {
-          return 'Leader name is required.';
+      case 'leaderFirstName':
+        if (this.caresForm.controls['leaderFirstName'].hasError('required')) {
+          return "Leader's first name is required.";
+        }
+        else return;
+      case 'leaderLastName':
+        if (this.caresForm.controls['leaderLastName'].hasError('required')) {
+          return "Leader's last name is required.";
         }
         else return;
       default:
@@ -115,30 +121,13 @@ export class CaresFormModalComponent implements OnInit {
     }
   }
 
-  prepString(stringToTransform: string) {
-    for (let i = 0; i < stringToTransform.length; i++) {
-      // Find where to seperate string by uppercase letter
-      if (stringToTransform[i] === stringToTransform[i].toUpperCase()) {
-        // Seperate string by uppercase index
-        let transformedString = stringToTransform.substring(0, i) + ' ' + stringToTransform.substring(i);
-        // Split string into array to change first chracter to uppercase
-        let stringArray = transformedString.split('');
-        stringArray[0] = stringArray[0].toUpperCase();
-        // Join array into string and return it
-        return stringArray.join('');
-      }
-    }
-    let stringArray = stringToTransform.split('');
-    stringArray[0] = stringToTransform[0].toLocaleUpperCase();
-    return stringArray.join('');
-  }
-
   prepareData(formData: FormGroup) {
     let items = ['category', 'modeOfVisit']
     // Control values that need data transformed
     for (let i = 0; i < items.length; i++) {
       // Call prepString function on control items
-      let transformedString = this.prepString(formData.value[items[i]]);
+      let stringArray = formData.value[items[i]].split('_');
+      let transformedString = stringArray.join(' ');
       // Set form data with transformed data
       formData.controls[items[i]].setValue(transformedString);
     }
@@ -146,7 +135,8 @@ export class CaresFormModalComponent implements OnInit {
     const transformedIssues = [];
     for (let i = 0; i < formData.value.issue.length; i++) {
       // Transform each item in array
-      let transformedString = this.prepString(formData.value.issue[i]);
+      let stringArray = formData.value.issue[i].split('_');
+      let transformedString = stringArray.join(' ');
       // Push to new array
       transformedIssues.push(transformedString)
     }
@@ -162,6 +152,9 @@ export class CaresFormModalComponent implements OnInit {
     }
     this.submitting = true;
     this.prepareData(formData);
+    if (!formData.value.teamMemberPosition.length) {
+      formData.controls.teamMemberPosition.setValue('N/A');
+    }
     this.caresService.addCare(formData.value).subscribe(data => {
       if (data.success) {
         this.refreshDataService.refreshData(true);

@@ -14,6 +14,12 @@ export let ADMIN_FEATURES: Feature[] = [
         selected: false
     },
     {  
+        matToolTip: "Add Employee ID",
+        feature: "add-employee-id",
+        icon: 'person_add_alt',
+        selected: false
+    },
+    {  
         matToolTip: "Manage Record Expirations",
         feature: "manage-record-expirations",
         icon: 'pending_actions',

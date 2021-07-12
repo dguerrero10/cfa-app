@@ -10,11 +10,11 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   styleUrls: ['./mode-of-visit-doughnut-chart.component.scss']
 })
 export class ModeOfVisitDoughnutChartComponent implements OnInit {
-  public doughnutChartLabels: Label[] = ['Drive Through Issues', 'Dine In Issues', 'Delivery Issues'];
+  public doughnutChartLabels: Label[] = [];
   public doughnutChartData: MultiDataSet = [];
   public doughnutChartType: ChartType = 'doughnut';
   public chartData: number[] = [];
-
+  public dictModeOfVisit: any = <any>{};
   public barChartOptions: ChartOptions = {
     responsive: true,
   };
@@ -22,43 +22,30 @@ export class ModeOfVisitDoughnutChartComponent implements OnInit {
   doughnutChartColors: Color[] = [
     {
       backgroundColor: [
-        'rgba(255, 99, 132, 0.8)',
-        'rgb(50, 165, 88, 0.8)',
-        'rgba(255, 205, 86, 0.8)'
+        'rgba(78, 137, 174, .8)',
+        'rgba(67, 101, 139, .8)',
+        'rgba(237, 102, 99, .8)',
+        'rgba(255, 163, 114, .8)',
+        'rgba(123, 17, 58, .8)'
       ]
     }
   ];
 
-  public driveThroughCounter: number = 0;
-  public dineInCounter: number = 0;
-  public deliveryCounter: number = 0;
+  constructor(public shareChartDataService: ShareChartDataService) { }
 
   getValues(value: string) {
-    switch(value) {
-      case 'Drive Through':
-        this.driveThroughCounter++;
-        break;
-      case 'Dine In':
-          this.dineInCounter++;
-        break;
-      case 'Delivery':
-        this.dineInCounter++;
-        break;
-    }
+    this.dictModeOfVisit[value] = (this.dictModeOfVisit[value] || 0) + 1;
   }
-
- constructor(public shareChartDataService: ShareChartDataService) { }
 
   ngOnInit(): void {
     this.shareChartDataService.currentData.subscribe(data => {
       Object.values(data).forEach((item: Care) => {
         this.getValues(item.modeOfVisit);
       });
-      this.chartData.push(
-        this.driveThroughCounter,
-        this.dineInCounter,
-        this.deliveryCounter
-      );
+      for (const [key, value] of Object.entries(this.dictModeOfVisit) as any) {
+        this.chartData.push(value);
+        this.doughnutChartLabels.push(key + " Issues");
+      }
     });
     this.doughnutChartData.push(this.chartData);
   }

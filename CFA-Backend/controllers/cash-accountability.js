@@ -32,7 +32,7 @@ exports.getCashAccountability = (req, res, next) => {
 exports.deleteCashAccountability = (req, res, next) => {
     const _ids = req.body.ids;
     CashAccountability.deleteMany({ _id: { $in: _ids } })
-        .then(() => {
+        .then(result => {
             res.status(201).json({
                 success: true
             })

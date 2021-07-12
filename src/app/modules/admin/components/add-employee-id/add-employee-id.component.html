@@ -1,0 +1,20 @@
+<div class="employee-id">
+    <div class="mat-h1 employee-id__header">Add Employee ID</div>
+    <mat-divider></mat-divider>
+    <div class="employee-id__container">
+        <form [formGroup]="addEmployeeIdForm" (ngSubmit)="onSubmit(addEmployeeIdForm)">
+            <mat-form-field appearance="outline">
+                <mat-label>Employee ID</mat-label>
+                <input type="number" matInput formControlName="employeeId">
+                <mat-error *ngIf="addEmployeeIdForm.get('employeeId')">{{getFormErrors('employeeId')}}</mat-error>
+            </mat-form-field>            
+            <button mat-flat-button class="employee-id__btn" type="submit" color="primary">Add</button>
+        </form>
+    </div>
+    <p mat-body class="employee-id__para">
+        <mat-icon>info</mat-icon> 
+        An employee's ID must be registered in order for him/she
+        to make a new account. This is to ensure only employee's can make an account.
+    </p>
+    <mat-divider></mat-divider>
+</div>

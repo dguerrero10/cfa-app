@@ -1,6 +1,6 @@
 <div class="cares">
     <div class="single-row u-xs-margin-bottom">
-        <button mat-icon-button class="refresh-data-btn" 
+        <button [disabled]="!onTableComponent" mat-icon-button class="refresh-data-btn" 
             matTooltip="Refresh Data" 
             matTooltipPosition="above"
             (click)="refreshData()">

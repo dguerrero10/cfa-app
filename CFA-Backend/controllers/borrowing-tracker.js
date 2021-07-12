@@ -29,7 +29,7 @@ exports.getBorrowingTrackerItems = (req, res, next) => {
 exports.deleteBorrowingTrackerItems = (req, res, next) => {
     const _ids = req.body.ids;
     BorrowingTracker.deleteMany({ _id: { $in: _ids } })
-        .then(() => {
+        .then(result => {
             res.status(201).json({
                 success: true
             })

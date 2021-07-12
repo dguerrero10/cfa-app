@@ -2,8 +2,22 @@
     min-width: 320px;
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid #dadce0;
+    padding: 3.5rem;
+
+    &__forgot-btn {
+        padding-left: .5rem;
+        padding-right: .5rem;
+    }
+
+    &__login-btn {
+        width: 100px;
+    }
 }
 
-.mat-flat-button {
-    width: 100%;
+.cfa-logo {
+    align-self: center;
+    width: 100px;
+    height: 100px;
 }

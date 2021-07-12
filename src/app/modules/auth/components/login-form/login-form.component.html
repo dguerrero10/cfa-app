@@ -1,5 +1,6 @@
-<div class="mat-h1">Login</div>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
+  <img class="cfa-logo" [src]=cfaLogo>
+  <div class="mat-h1">Login</div>
   <mat-form-field appearance="outline">
     <mat-label>Email</mat-label>
     <input matInput formControlName="email">
@@ -16,8 +17,11 @@
     <mat-error *ngIf="loginForm.get('password')">{{getFormErrors('password')}}</mat-error>
     <mat-error *ngIf="dataInvalid">Email or password is invalid</mat-error>
   </mat-form-field>
-  <div class="single-row justify-center">
-    <button *ngIf="!isLoading" mat-flat-button type="submit" class="u-xs-margin-top" color="primary">Login</button>
+  <div class="space-between">
+    <button mat-button type="submit" class="u-xs-margin-top login-form__forgot-btn" 
+      color="primary">Forgot password?</button>
+    <button *ngIf="!isLoading" mat-flat-button type="submit" class="u-xs-margin-top login-form__login-btn" 
+      color="primary">Login</button>
     <mat-spinner *ngIf="isLoading" class="spinner" [diameter]="35"></mat-spinner>
   </div>
 </form>

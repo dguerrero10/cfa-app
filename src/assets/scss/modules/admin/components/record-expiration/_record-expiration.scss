@@ -64,8 +64,8 @@
 
     &__btn {
         max-height: 50px;
-        margin-top: 10px;
-        width: 100px;
+        padding: .60rem;
+        width: 110px;
         margin-left: 1rem;
     }
 
@@ -80,3 +80,6 @@ mat-card {
     background-color: $color-black;
 }
 
+mat-label {
+    color: $color-white;
+}

@@ -116,24 +116,6 @@ export class AttendanceFormModalComponent implements OnInit {
     }
   }
 
-  prepString(stringToTransform: string) {
-    for (let i = 0; i < stringToTransform.length; i++) {
-      // Find where to seperate string by uppercase letter
-      if (stringToTransform[i] === stringToTransform[i].toUpperCase()) {
-        // Seperate string by uppercase index
-        let transformedString = stringToTransform.substring(0, i) + ' ' + stringToTransform.substring(i);
-        // Split string into array to change first chracter to uppercase
-        let stringArray = transformedString.split('');
-        stringArray[0] = stringArray[0].toUpperCase();
-        // Join array into string and return it
-        return stringArray.join('');
-      }
-    }
-    let stringArray = stringToTransform.split('');
-    stringArray[0] = stringToTransform[0].toUpperCase();
-    return stringArray.join('');
-  }
-
   prepareData(formData: FormGroup) {
     let stringArray = formData.value.issue;
     if (formData.value.issue === 'Uniform') {
@@ -146,7 +128,8 @@ export class AttendanceFormModalComponent implements OnInit {
     const transformedSymptoms = [];
     for (let i = 0; i < formData.value.reportedSymptoms.length; i++) {
       // Transform each item in array
-      let transformedString = this.prepString(formData.value.reportedSymptoms[i]);
+      let stringArray = formData.value.reportedSymptoms[i].split('_');
+      let transformedString = stringArray.join(' ');
       // Push to new array
       transformedSymptoms.push(transformedString)
     }

@@ -14,7 +14,8 @@ export class AuthService {
   public endpointLogin: string = "http://localhost:3000/api/users/login";
   private authStatusListener = new Subject<boolean>();
   private authErrorListener = new Subject<boolean>();
-  private userRegisteredListener = new Subject<{success: boolean, email: string, password: string}>()
+  private userRegisteredListener = new Subject<{ success: boolean, email: string, password: string }>()
+  private registerErrorListener = new Subject<{ error: {message: string}}>();
   public isAuthenticated: boolean = false;
   private token: string | null | undefined = <string>('');
   private user: User = <User>{};
@@ -52,6 +53,10 @@ export class AuthService {
     return this.userRegisteredListener.asObservable();
   }
 
+  getRegisterError() {
+    return this.registerErrorListener.asObservable();
+  }
+
   createUser(registerUser: RegisterUser) {
     const newUser: RegisterUser = {
       firstName: registerUser.firstName,
@@ -60,20 +65,19 @@ export class AuthService {
       email: registerUser.email,
       password: registerUser.password
     };
-    this.http.post<{ success: boolean }>(this.endpointRegister, newUser)
-     .subscribe(res => {
+    return this.http.post<{ success: boolean }>(this.endpointRegister, newUser)
+      .subscribe(res => {
         if (res.success) {
           this.userRegisteredListener.next
-              ({
-               success: true, 
-               email: newUser.email, 
-               password: newUser.password
-              })
+            ({
+              success: true,
+              email: newUser.email,
+              password: newUser.password
+            })
         }
       }, error => {
-        console.log(error)
-      }
-      );
+        this.registerErrorListener.next(error);
+      });
   };
 
   loginUser(loginUser: Auth) {

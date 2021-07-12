@@ -1,5 +1,18 @@
 <app-top-nav></app-top-nav>
 <app-side-nav></app-side-nav>
 <div class="dashboard">
+<ng-container *ngIf="onDashboard">
+    <div class="space-between">
+        <div class="mat-h1 u-sm-margin-bottom">Dashboard</div>
+        <div class="dashboard__calendar">
+           <p class="dashboard__calendar--date">{{today | date:"longDate"}}</p><mat-icon>today</mat-icon>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="grid-container">
+       
+    </div>
+</ng-container>
+
     <router-outlet></router-outlet>
 </div>

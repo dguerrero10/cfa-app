@@ -17,7 +17,7 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
 })
 export class CaresDataTableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = [
-    'Date', 'Guest Name', 'Guest #', 'Mode of Visit', 'Category', 'Issue(s)', 'Team Member Position', 'Leader'
+   'Index', 'Date', 'Guest Name', 'Guest #', 'Mode of Visit', 'Category', 'Issue(s)', 'Team Member Position', 'Leader'
   ];
   public caresData: Care[] = [];
   public chartData: Care[] = [];
@@ -54,6 +54,10 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
           this.noData = true;
           this.disableMetricService.switchState(this.noData);
         }
+        else {
+          this.noData = false;
+          this.disableMetricService.switchState(this.noData)
+        }
       });
     this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -64,7 +68,6 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
 
   refreshData() {
     this.caresService.getCares()
-      .pipe(first())
       .subscribe(data => {
         this.caresData = data.caresData;
         this.shareChartDataService.shareData(this.caresData);
@@ -124,13 +127,16 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.caresService.deleteCares(this.deleteDataForm.value)
-        .pipe(take(1),
+        .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
+            this.deleteStateService.changeDeleteState(false);
+            this.deleteStateService.deleteData(false);
+            this.rowIds = [];
           }
         });
     }
@@ -138,6 +144,5 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
-
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
+import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 
 @Component({
@@ -12,13 +13,14 @@ import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.se
 })
 export class BorrowingTrackerFormModalComponent implements OnInit {
   public borrowingTrackerForm: FormGroup = <FormGroup>{};
+  public submitting: boolean = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(public currentUserService: CurrentUserService,
+    private fb: FormBuilder,
     public refreshDataService: RefreshDataService,
     public snackBar: MatSnackBar,
     public borrowingTrackerService: BorrowingTrackerService,
     private dialogRef: MatDialogRef<BorrowingTrackerFormModalComponent>) { }
-    public submitting: boolean = false;
 
   ngOnInit(): void {
     this.createForm();
@@ -28,7 +30,7 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
     this.borrowingTrackerForm = this.fb.group({
       'itemBorrowed': ['', Validators.required],
       'amountOfItem': ['', Validators.required],
-      'fromLocation': ['', Validators.required],
+      'fromLocation': ['7809 Wadsworth Blvd, Arvada', Validators.required],
       'toLocation': ['', Validators.required],
       'notes': [''],
       'leaderFirstName': ['', Validators.required],

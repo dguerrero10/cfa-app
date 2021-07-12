@@ -11,22 +11,23 @@
         </div>
     </mat-card>
     <p mat-body class="record-expiration__para">
+        <mat-icon>info</mat-icon> 
         Change the amount of time that passes before records expire and delete.
         By default, records are set to expire and be deleted after 30 days.
     </p>
     <mat-divider></mat-divider>
     <div class="record-expiration__container">
         <div class="mat-h2 record-expiration__sm-header">{{featureEdit}}</div>
-        <div class="single-row">
+        <form>
             <mat-form-field appearance="outline">
-                <mat-label style="color: white;">Expiration</mat-label>
+                <mat-label>Expiration</mat-label>
                 <mat-select>
-                  <mat-option *ngFor="let time of expirationTimes" [value]="time">
-                    {{time}} days
-                  </mat-option>
+                    <mat-option *ngFor="let time of expirationTimes" [value]="time">
+                        {{time}} days
+                    </mat-option>
                 </mat-select>
-              </mat-form-field>
-              <button mat-flat-button class="record-expiration__btn" color="primary">Submit</button>
-        </div>
+            </mat-form-field>
+            <button mat-flat-button class="record-expiration__btn" color="primary">Submit</button>
+        </form>
     </div>
 </div>

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterTrackerService } from 'src/app/core/services/shared/router-tracker.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  
-  constructor() { }
+  public today: any;
+  public onDashboard: boolean = true;
+
+  constructor(private cdr: ChangeDetectorRef,
+              public routerTrackerService: RouterTrackerService,
+              public router: Router) { }
 
   ngOnInit(): void {
+  this.today = Date.now();
   }
 }

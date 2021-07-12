@@ -7,7 +7,6 @@ import { SideNavComponent } from './components/navigation/side-nav/side-nav.comp
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { TeamAttendanceComponent } from './components/team-attendance/team-attendance.component';
 import { AttendanceDataTableComponent } from './components/team-attendance/attendance-data-table/attendance-data-table.component';
-import { AttendanceDataMetricsComponent } from './components/team-attendance/attendance-data-metrics/attendance-data-metrics.component';
 import { CaresComponent } from './components/cares/cares.component';
 import { ItemOrderComponent } from './components/item-order/item-order.component';
 import { FinancialServicesComponent } from './components/financial-services/financial-services.component';
@@ -18,18 +17,13 @@ import { FinancialServicesDataTableComponent } from './components/financial-serv
 import { BorrowingTrackerDataTableComponent } from './components/borrowing-tracker/borrowing-tracker-data-table/borrowing-tracker-data-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedComponentsModule } from 'src/app/shared/components/shared-components.module';
-import { CallOutBarChartComponent } from './components/team-attendance/attendance-data-metrics/charts/call-out-bar-chart/call-out-bar-chart.component';
-import { CaresDataMetricsComponent } from './components/cares/cares-data-metrics/cares-data-metrics.component';
 import { CategoriesDoughnutChartComponent } from './components/cares/cares-data-metrics/charts/categories-doughnut-chart/categories-doughnut-chart.component';
 import { ModeOfVisitDoughnutChartComponent } from './components/cares/cares-data-metrics/charts/mode-of-visit-doughnut-chart/mode-of-visit-doughnut-chart.component';
 import { FoodQualityBarChartComponent } from './components/cares/cares-data-metrics/charts/food-quality-bar-chart/food-quality-bar-chart.component';
-import { ServiceBarChartComponent } from './components/cares/cares-data-metrics/charts/service-bar-chart/service-bar-chart.component';
 import { MissingItemsBarChartComponent } from './components/cares/cares-data-metrics/charts/missing-items-bar-chart/missing-items-bar-chart.component';
 import { TimeIssueLineChartComponent } from './components/cares/cares-data-metrics/charts/time-issue-line-chart/time-issue-line-chart.component';
 import { CallOutLineChartComponent } from './components/team-attendance/attendance-data-metrics/charts/call-out-line-chart/call-out-line-chart.component';
-import { BorrowingTrackerDataMetricsComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/borrowing-tracker-data-metrics.component';
 import { CashAccountabilityComponent } from './components/cash-accountability/cash-accountability.component';
-import { CashAccountabilityDataMetricsComponent } from './components/cash-accountability/cash-accountability-data-metrics/cash-accountability-data-metrics.component';
 import { CashAccountabilityDataTableComponent } from './components/cash-accountability/cash-accountability-data-table/cash-accountability-data-table.component';
 import { AttendanceFormModalComponent } from './components/modals/attendance-form-modal/attendance-form-modal.component';
 import { CaresFormModalComponent } from './components/modals/cares-form-modal/cares-form-modal.component';
@@ -37,6 +31,17 @@ import { ItemOrderFormModalComponent } from './components/modals/item-order-form
 import { FinancialServicesFormModalComponent } from './components/modals/financial-services-form-modal/financial-services-form-modal.component';
 import { BorrowingTrackerFormModalComponent } from './components/modals/borrowing-tracker-form-modal/borrowing-tracker-form-modal.component';
 import { CashAccountabilityFormModalComponent } from './components/modals/cash-accountability-form-modal/cash-accountability-form-modal.component';
+import { BohFohDoughnutChartComponent } from './components/team-attendance/attendance-data-metrics/charts/boh-foh-doughnut-chart/boh-foh-doughnut-chart.component';
+import { IssuesBarChart } from './components/team-attendance/attendance-data-metrics/charts/issues-bar-chart/issues-bar-chart.component';
+import { CaresDataMetricsComponent } from './components/cares/cares-data-metrics/cares-data-metrics.component';
+import { BorrowingTrackerDataMetricsComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/borrowing-tracker-data-metrics.component';
+import { CashAccountabilityDataMetricsComponent } from './components/cash-accountability/cash-accountability-data-metrics/cash-accountability-data-metrics.component';
+import { AttendanceDataMetricsComponent } from './components/team-attendance/attendance-data-metrics/attendance-data-metrics.component';
+import { TeamMemberIssueBarChartComponent } from './components/cares/cares-data-metrics/charts/tm-issue-bar-chart/tm-bar-chart.component';
+import { WrongItemsBarChartComponent } from './components/cares/cares-data-metrics/charts/wrong-items-bar-chart/wrong-items-bar-chart.component';
+import { ItemKindDoughnutChartComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/charts/item-kind-doughnut-chart/item-kind-doughnut-chart.component';
+import { AmountOfItemBarChartComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/charts/amount-of-item-bar-chart/amount-of-item-bar-chart.component';
+import { ShortageOverageDoughnutChartComponent } from './components/cash-accountability/cash-accountability-data-metrics/charts/shortage-overage-doughnut-chart/shortage-overage-doughnut-chart.component';
 
 @NgModule({
   declarations: [
@@ -58,12 +63,12 @@ import { CashAccountabilityFormModalComponent } from './components/modals/cash-a
     FinancialServicesFormModalComponent,
     BorrowingTrackerDataTableComponent,
     BorrowingTrackerFormModalComponent,
-    CallOutBarChartComponent,
+    IssuesBarChart,
     CaresDataMetricsComponent,
     CategoriesDoughnutChartComponent,
     ModeOfVisitDoughnutChartComponent,
     FoodQualityBarChartComponent,
-    ServiceBarChartComponent,
+    TeamMemberIssueBarChartComponent,
     MissingItemsBarChartComponent,
     TimeIssueLineChartComponent,
     CallOutLineChartComponent,
@@ -71,7 +76,12 @@ import { CashAccountabilityFormModalComponent } from './components/modals/cash-a
     CashAccountabilityComponent,
     CashAccountabilityDataMetricsComponent,
     CashAccountabilityDataTableComponent,
-    CashAccountabilityFormModalComponent
+    CashAccountabilityFormModalComponent,
+    BohFohDoughnutChartComponent,
+    WrongItemsBarChartComponent,
+    ItemKindDoughnutChartComponent,
+    AmountOfItemBarChartComponent,
+    ShortageOverageDoughnutChartComponent
   ],
   imports: [
     CommonModule,

@@ -1,39 +1,31 @@
 <div class="item-order">
     <div class="single-row u-xs-margin-bottom">
-        <button mat-icon-button class="refresh-data-btn" 
+        <button [disabled]="!onTableComponent" mat-icon-button class="refresh-data-btn" 
                 matTooltip="Refresh Data" 
                 matTooltipPosition="above"
                 (click)="refreshData()">
             <mat-icon>refresh</mat-icon>
         </button>
         <div class="mat-h1">Item Order</div>
-        <button mat-mini-fab matTooltip="Add Data"
+        <button *ngIf="onTableComponent" mat-mini-fab matTooltip="Add Data"
                 [matTooltipPosition]="toolTipPosition.value" class="add-btn-fab grow"
                 (click)="openItemOrderFormModal()">
             <mat-icon>add</mat-icon>
         </button>
-        <button *ngIf="deleteState" mat-mini-fab matTooltip="Delete Data" 
+        <button *ngIf="deleteState && onTableComponent" mat-mini-fab matTooltip="Delete Data" 
                  matTooltipPosition="right" 
                  class="delete-btn-fab grow"
                  (click)="deleteData()">
                  <mat-icon>delete</mat-icon>
         </button>
     </div>
-    <mat-tab-group animationDuration="0ms" class="item-order__tab-group">
+    <mat-tab-group animationDuration="0ms" class="item-order__tab-group" (selectedTabChange)="tabChanged($event)">
         <mat-tab>
             <ng-template mat-tab-label>
                 Data
                 <mat-icon class="tab-icon">list</mat-icon>
             </ng-template>
             <app-item-order-data-table></app-item-order-data-table>
-        </mat-tab>
-        <mat-tab [disabled]="metricDisabled">
-            <ng-template mat-tab-label>
-                Metrics
-                <mat-icon class="tab-icon">insights</mat-icon>
-            </ng-template>
-            <ng-template matTabContent>
-            </ng-template>
         </mat-tab>
     </mat-tab-group>
 </div>

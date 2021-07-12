@@ -18,6 +18,7 @@
             <mat-label>Employee ID</mat-label>
             <input matInput formControlName="employeeId" type="number">
             <mat-error *ngIf="registerForm.get('employeeId')">{{getFormErrors('employeeId')}}</mat-error>
+            <mat-error *ngIf="invalidEmployeeId">Cannot find employee with this ID.</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>

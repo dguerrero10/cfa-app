@@ -9,7 +9,8 @@ exports.createCare = (req, res, next) => {
         otherExplanation: req.body.otherExplanation,
         modeOfVisit: req.body.modeOfVisit,
         teamMemberPosition: req.body.teamMemberPosition,
-        leaderName: req.body.leaderName
+        leaderFirstName: req.body.leaderFirstName,
+        leaderLastName: req.body.leaderLastName,
     });
     care.save().then(careData => {
         res.status(201).json({
@@ -32,7 +33,7 @@ exports.getCares = (req, res, next) => {
 exports.deleteCares = (req, res, next) => {
     const _ids = req.body.ids;
     Care.deleteMany({ _id: { $in: _ids } })
-        .then(() => {
+        .then(result => {
             res.status(201).json({
                 success: true
             })

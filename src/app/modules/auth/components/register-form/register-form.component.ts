@@ -12,6 +12,7 @@ export class RegisterFormComponent implements OnInit {
   public registerForm: FormGroup = <FormGroup>{};
   public hide: boolean = true;
   public noMatch: boolean = false;
+  public invalidEmployeeId: boolean = false;
 
   constructor(public authService: AuthService,
     private fb: FormBuilder) { }
@@ -99,6 +100,19 @@ export class RegisterFormComponent implements OnInit {
     if (this.passwordsMatch() === false) {
       return;
     }
-    this.authService.createUser(formData.value)
+    this.authService.getRegisterError()
+     .subscribe(res => {
+        if (res) {
+          if (res.error.message === 'No employee ID found.') {
+            this.invalidEmployeeId = true;
+            this.registerForm.controls['employeeId'].setErrors({'incorrect': true})
+            setTimeout(() => {
+              this.invalidEmployeeId = false;
+              this.registerForm.controls['employeeId'].setErrors(null);
+            }, 2000);
+          }
+        }
+     })
+    this.authService.createUser(formData.value);
   }
 }

@@ -2,103 +2,123 @@ import { Select } from '../../models/interfaces/select.interface'
 
 export const MODES_OF_VISIT: Select[] = [
     {
-        value: 'dineIn',
-        name: 'Dine in'
+        value: 'Curb_side',
+        name: 'Curb Side'
     },
     {
-        value: 'driveThrough',
+        value: 'Drive_through',
         name: 'Drive through'
     },
     {
-        value: 'delivery',
+        value: 'Dine_in',
+        name: 'Dine in'
+    },
+    {
+        value: 'Carry_out',
+        name: 'Carry Out'
+    },
+    {
+        value: 'Delivery',
         name: 'Delivery'
     }
 ];
 
 export const CATEGORIES: Select[] = [
     {
-        value: 'foodQuality',
+        value: 'Food_quality',
         name: 'Food quality'
     },
     {
-        value: 'service',
-        name: 'Service'
+        value: 'Team_member_issue',
+        name: 'Team member issue'
     },
     {
-        value: 'missingItems',
+        value: 'Missing_items',
         name: 'Missing items'
+    },
+    {
+        value: 'Wrong_item',
+        name: 'Wrong item'
+    },
+    {
+        value: 'Other',
+        name: 'Other'
     }
 ];
 
 export const FOOD_QUALITY: Select[] = [
     {
-        value: 'foodCold',
+        value: 'Food_cold',
         name: 'Food cold'
     },
     {
-        value: 'foodUndercooked',
+        value: 'Food_undercooked',
         name: 'Food undercooked'
     },
     {
-        value: 'foodOvercooked',
+        value: 'Food_overcooked',
         name: 'Food overcooked'
     },
     {
-        value: 'poorTaste',
+        value: 'Poor_taste',
         name: 'Poor taste'
     },
     {
-        value: 'other',
+        value: 'Poorly_packaged',
+        name: 'Poorly packaged'
+    },
+    {
+        value: 'Other',
         name: 'Other'
     }
 ];
 
 export const SERVICES: Select[] = [
     {
-        value: 'badCustomerInteraction',
+        value: 'Bad_customer_interaction',
         name: 'Bad customer interaction'
     },
     {
-        value: 'orderWrong',
+        value: 'Order_wrong',
         name: 'Order wrong'
     },
     {
-        value: 'slowService',
+        value: 'Slow_service',
         name: 'Slow service'
     },
     {
-        value: 'other',
+        value: 'Other',
         name: 'Other'
     }
 ];
 
 export const MISSING_ITEMS: Select[] = [
     {
-        value: 'entree',
+        value: 'Entree',
         name: 'Entree(s)'
     },
     {
-        value: 'drink',
+        value: 'Drink',
         name: 'Drink(s)'
     },
     {
-        value: 'side',
+        value: 'Side',
         name: 'Side(s)'
     },
     {
-        value: 'fries',
+        value: 'Fries',
         name: 'Fries'
     },
     {
-        value: 'napkins',
+        value: 'Napkins',
         name: 'Napkins'
     },
     {
-        value: 'sauces',
+        value: 'Sauces',
         name: 'Sauces'
     },
     {
-        value: 'other',
+        value: 'Other',
         name: 'Other'
     }
 ];

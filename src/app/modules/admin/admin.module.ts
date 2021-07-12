@@ -10,6 +10,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { RecordExpirationComponent } from './components/record-expiration/record-expiration.component';
 import { DeleteUserWarningModalComponent } from './components/modals/delete-user-warning-modal/delete-user-warning-modal.component';
 import { ElevatePrivilegesWarningModalComponent } from './components/modals/elevate-privileges-warning-modal/elevate-privileges-warning-modal.component';
+import { AddEmployeeIdComponent } from './components/add-employee-id/add-employee-id.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,11 +20,13 @@ import { ElevatePrivilegesWarningModalComponent } from './components/modals/elev
     UserListComponent,
     RecordExpirationComponent,
     DeleteUserWarningModalComponent,
-    ElevatePrivilegesWarningModalComponent
+    ElevatePrivilegesWarningModalComponent,
+    AddEmployeeIdComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
+    ReactiveFormsModule,
     SharedComponentsModule,
     MaterialModule
   ]

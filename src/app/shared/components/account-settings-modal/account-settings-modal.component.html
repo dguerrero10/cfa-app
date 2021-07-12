@@ -1,0 +1,34 @@
+<div class="space-between">
+    <h2 mat-dialog-title>Account Settings</h2>
+    <button mat-icon-button class="exit-btn" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<div class="img-container">
+    <img class="profile-img" src='../../../../../../assets/images/profile-imgs/sacred-cow.png' alt="">
+    <button mat-mini-fab color="primary" class="profile-img__btn">
+        <mat-icon>add_a_photo</mat-icon>
+      </button>
+</div>
+<mat-divider></mat-divider>
+<form class="account-settings-form-modal u-md-margin-top">
+    <mat-form-field *ngIf="!changePasswordMode" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [value]="user.email" (keyup)="onChangeEmail($event)">
+    </mat-form-field>
+    <button class="u-md-margin-bottom" *ngIf="changeEmailMode && !changePasswordMode" mat-flat-button type="button" color="primary" (click)="onChangePassword()">Save Email</button>
+    <mat-form-field *ngIf="changePasswordMode" appearance="outline">
+        <mat-label>Current password</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="changePasswordMode" appearance="outline">
+        <mat-label>New password</mat-label>
+        <input matInput>
+    </mat-form-field>
+    <button *ngIf="!changePasswordMode" mat-stroked-button type="button" color="primary" (click)="onChangePassword()">Change password</button>
+    <div *ngIf="changePasswordMode" class="space-between">
+        <button (click)="cancelChangePassword()" mat-stroked-button type="button" color="warn">Cancel</button>
+        <button mat-flat-button type="button" color="primary">Save</button>
+    </div>
+</form>

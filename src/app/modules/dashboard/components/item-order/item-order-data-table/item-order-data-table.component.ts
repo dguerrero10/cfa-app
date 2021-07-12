@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { finalize, first, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ItemOrderService } from 'src/app/core/services/item-order/item-order.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
@@ -16,7 +16,7 @@ import { ItemOrder } from 'src/app/shared/models/form-table/item-order.model';
 })
 export class ItemOrderDataTableComponent implements OnInit {
   public displayedColumns: string[] = [
-    'Date', 'For', 'Areas Searched', "Item's Needed", 'Submitted By'];
+  'Index', 'Date', 'For', 'Areas Searched', "Item's Needed", 'Submitted By'];
   public itemOrderData: ItemOrder[] = [];
   public loading: boolean = true;
   public noData: boolean = false;
@@ -48,6 +48,10 @@ export class ItemOrderDataTableComponent implements OnInit {
           this.noData = true;
           this.disableMetricService.switchState(this.noData);
         }
+        else {
+          this.noData = false;
+          this.disableMetricService.switchState(this.noData)
+        }
       });
     this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -58,7 +62,6 @@ export class ItemOrderDataTableComponent implements OnInit {
 
   refreshData() {
     this.itemOrderService.getItemOrders()
-      .pipe(first())
       .subscribe(data => {
         this.itemOrderData = data.itemOrderData;
         // this.shareChartDataService.shareData(this.itemOrderData);
@@ -81,7 +84,6 @@ export class ItemOrderDataTableComponent implements OnInit {
       'ids': ['']
     });
   }
-
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -118,13 +120,16 @@ export class ItemOrderDataTableComponent implements OnInit {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.itemOrderService.deleteItemOrders(this.deleteDataForm.value)
-        .pipe(take(1),
+        .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
+            this.deleteStateService.changeDeleteState(false);
+            this.deleteStateService.deleteData(false);
+            this.rowIds = [];
           }
         });
     }
@@ -132,6 +137,5 @@ export class ItemOrderDataTableComponent implements OnInit {
   ngOnDestroy() {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
-
   }
 }

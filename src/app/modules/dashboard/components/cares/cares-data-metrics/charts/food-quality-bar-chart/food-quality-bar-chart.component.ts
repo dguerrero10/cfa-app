@@ -10,87 +10,72 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   styleUrls: ['./food-quality-bar-chart.component.scss']
 })
 export class FoodQualityBarChartComponent implements OnInit {
-  public barChartLabels: Label[] = ['Food Cold', 'Food Undercooked', 'Food Overcooked', 'Poor Taste', 'Other'];
-  public barChartData: ChartDataSets[] = [{ data: [], label: 'Food Quality Issues' }];
+  public barChartLabels: Label[] = [];
+  public barChartData: ChartDataSets[] = [
+    { data: [], 
+      label: 'Food Quality Issues',
+     }];
   public barChartType: ChartType = 'bar';
   public barChartLegend: boolean = true;
   public barChartPlugins = [];
-  public barChartOptions: ChartOptions = { 
+  public dictFoodQuality: any = <any>{};
+  public barChartOptions: ChartOptions = {
     responsive: true,
     scales: {
       yAxes: [{
-          ticks: {
-              beginAtZero: true
-          }
+        ticks: {
+          beginAtZero: true
+        }
       }]
-  }
+    }
   };
   barChartColors: Color[] = [
     {
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgb(50, 165, 88, 0.2)',
-        'rgba(255, 205, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(201, 203, 207, 0.2)'
+        'rgba(78, 137, 174, .7)',
+        'rgba(67, 101, 139, .7)',
+        'rgba(237, 102, 99, .7)',
+        'rgba(255, 163, 114, .7)',
+        'rgba(123, 17, 58, .7)',
+        'rgba(0, 168, 204, .7)'
       ],
       borderColor: [
-        'rgb(255, 99, 132)',
-        'rgb(50, 165, 88)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(54, 162, 235)',
-        'rgb(201, 203, 207)'
+        'rgba(78, 137, 174)',
+        'rgba(67, 101, 139)',
+        'rgba(237, 102, 99)',
+        'rgba(255, 163, 114)',
+        'rgba(123, 17, 58)',
+        'rgb(0, 168, 204)'
       ],
       borderWidth: 3
     }
   ];
 
-  public foodColdCounter: number = 0;
-  public foodUndercookedCounter: number = 0;
-  public foodOvercookedCounter: number = 0;
-  public poorTasteCounter: number = 0;
-  public otherCounter: number = 0;
-
   constructor(private shareChartDataService: ShareChartDataService) { }
 
-  getValue(value: string) {
-    switch (value) {
-      case 'Food Cold':
-        this.foodColdCounter++;
-        break;
-      case 'Food Undercooked':
-        this.foodUndercookedCounter++;
-        break;
-      case 'Food Overcooked':
-        this.foodOvercookedCounter++;
-        break;
-      case 'Poor Taste':
-        this.poorTasteCounter++;
-        break;
-      case 'Other':
-        this.otherCounter++;
-        break;
-    }
+  getValues(value: string) {
+    this.dictFoodQuality[value] = (this.dictFoodQuality[value] || 0) + 1;
   }
 
   ngOnInit(): void {
     this.shareChartDataService.currentData.subscribe(data => {
       Object.values(data).forEach((item: Care) => {
-        if (item.category === 'Food Quality') {
+        if (item.category === 'Food quality') {
           for (let i = 0; i < item.issue.length; i++) {
-            this.getValue(item.issue[i]);
+            this.getValues(item.issue[i]);
           }
         }
       });
-      this.barChartData[0].data?.push(
-        this.foodColdCounter,
-        this.foodUndercookedCounter,
-        this.foodOvercookedCounter,
-        this.poorTasteCounter,
-        this.otherCounter
-      );
+      for (const [key, value] of Object.entries(this.dictFoodQuality) as any) {
+        this.barChartData[0].data?.push(value);
+        this.barChartLabels.push(key)
+        if (Object.keys(this.dictFoodQuality).length <= 4) {
+          this.barChartData[0].barPercentage = .4;
+        }
+        if (Object.keys(this.dictFoodQuality).length <= 2) {
+          this.barChartData[0].barPercentage = .2;
+        }
+      }
     });
   }
 }

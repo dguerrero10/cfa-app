@@ -1,0 +1,31 @@
+@import '../../../../abstracts/variables';
+@import '../../../../base/animations';
+
+.employee-id {
+    animation: fadein .6s;
+    -moz-animation: fadein .6s; /* Firefox */
+    -webkit-animation: fadein .6s; /* Safari and Chrome */
+    -o-animation: fadein .6s; /* Opera */
+
+    &__header {
+        margin-bottom: 1.5rem !important;
+        color: $color-white;
+    }
+
+    &__para {
+        color: $color-white;
+        margin-top: 0 !important;
+    }
+
+    &__btn {
+        max-height: 50px;
+        padding: .60rem;
+        width: 110px;
+        margin-left: 1rem;
+    }
+
+    &__container {
+        max-width: 600px;
+        margin-top: 1rem;
+    }
+}

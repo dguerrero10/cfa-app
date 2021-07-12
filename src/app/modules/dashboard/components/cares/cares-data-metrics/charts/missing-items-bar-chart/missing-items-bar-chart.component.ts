@@ -10,85 +10,75 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   styleUrls: ['./missing-items-bar-chart.component.scss']
 })
 export class MissingItemsBarChartComponent implements OnInit {
-  public barChartLabels: Label[] = ['Entrees', 'Drinks', 'Sides', 'Napkins', 'Sauces', 'Other'];
+  public barChartLabels: Label[] = [];
+  public barChartData: ChartDataSets[] = [
+    {
+      data: [],
+      label: 'Missing Items Issues',
+    },
+
+  ];
   public barChartType: ChartType = 'bar';
   public barChartLegend: boolean = true;
-  public barChartData: ChartDataSets[] = [{ data: [], label: 'Missing Items Issues' }];
   public barChartPlugins = [];
+  public dictMissingItems: any = <any>{};
   public barChartOptions: ChartOptions = {
     responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }],
+    }
   };
   barChartColors: Color[] = [
     {
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgb(50, 165, 88, 0.2)',
-        'rgba(255, 205, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(201, 203, 207, 0.2)'
+        'rgba(78, 137, 174, .7)',
+        'rgba(67, 101, 139, .7)',
+        'rgba(237, 102, 99, .7)',
+        'rgba(255, 163, 114, .7)',
+        'rgba(123, 17, 58, .7)',
+        'rgba(0, 168, 204, .7)'
       ],
       borderColor: [
-        'rgb(255, 99, 132)',
-        'rgb(50, 165, 88)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(54, 162, 235)',
-        'rgb(201, 203, 207)'
+        'rgba(78, 137, 174)',
+        'rgba(67, 101, 139)',
+        'rgba(237, 102, 99)',
+        'rgba(255, 163, 114)',
+        'rgba(123, 17, 58)',
+        'rgb(0, 168, 204)'
       ],
       borderWidth: 3
-    },
+    }
   ];
-
-  public entreesCounter: number = 0;
-  public drinksCounter: number = 0;
-  public sidesCounter: number = 0;
-  public napkinsCounter: number = 0;
-  public saucesCounter: number = 0;
-  public otherCounter: number = 0;
 
   constructor(private shareChartDataService: ShareChartDataService) { }
 
-  getValue(value: string) {
-    switch (value) {
-      case 'Entree':
-        this.entreesCounter++;
-        break;
-      case 'Drink':
-        this.drinksCounter++;
-        break;
-      case 'Side':
-        this.sidesCounter++;
-        break;
-      case 'Napkins':
-        this.napkinsCounter++;
-        break;
-      case 'Sauces':
-        this.napkinsCounter++;
-        break;
-      case 'Other':
-        this.otherCounter++;
-        break;
-    }
+  getValues(value: string) {
+    this.dictMissingItems[value] = (this.dictMissingItems[value] || 0) + 1;
   }
 
   ngOnInit(): void {
     this.shareChartDataService.currentData.subscribe(data => {
       Object.values(data).forEach((item: Care) => {
-        if (item.category === 'Missing Items') {
+        if (item.category === 'Missing items') {
           for (let i = 0; i < item.issue.length; i++) {
-            this.getValue(item.issue[i]);
+            this.getValues(item.issue[i]);
           }
         }
       });
+      for (const [key, value] of Object.entries(this.dictMissingItems) as any) {
+        this.barChartData[0].data?.push(value);
+        this.barChartLabels.push(key)
+        if (Object.keys(this.dictMissingItems).length <= 4) {
+          this.barChartData[0].barPercentage = .4;
+        }
+        if (Object.keys(this.dictMissingItems).length <= 2) {
+          this.barChartData[0].barPercentage = .2;
+        }
+      }
     });
-    this.barChartData[0].data?.push(
-      this.entreesCounter,
-      this.drinksCounter,
-      this.sidesCounter,
-      this.napkinsCounter,
-      this.saucesCounter,
-      this.otherCounter
-    );
   }
 }

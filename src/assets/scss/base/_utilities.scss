@@ -10,6 +10,10 @@
     margin-top: .5rem !important;
 }
 
+.u-sm-margin-top {
+    margin-top: 1rem !important;
+}
+
 .u-sm-margin-right {
     margin-right: 1rem;
 }
@@ -22,6 +26,16 @@
     margin-top: 1.5rem;
 }
 
+.u-md-margin-bottom {
+    margin-bottom: 1.5rem !important;
+}
+
 .u-slight-shadow {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+}
+
+.u-icon-center-inline {
+    vertical-align: middle;
+    margin-right: 3px;
+    margin-top: 4px !important;
 }

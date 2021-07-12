@@ -1,13 +1,33 @@
+@import '../../../../base/animations';
+
 .fs-form-modal {
     display: flex;
     flex-direction: column;
 
     &__upload-btn {
-        width: 150px;
+        width: 240px;
         margin-bottom: 1.5975em;
+    }
+}
+
+.fs__img-preview {
+    animation: scaleIn .25s;
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 350px;
+    border-radius: 5px;
+    cursor: default;
+    
+    &-btn {
+        width: 100px !important;
     }
 }
 
 .mat-flat-button {
     width: 100%;
+}
+
+input[type="file"] {
+    visibility: hidden;
 }

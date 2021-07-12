@@ -10,10 +10,11 @@ import { Care } from 'src/app/shared/models/form-table/cares.model';
   styleUrls: ['./categories-doughnut-chart.component.scss']
 })
 export class CategoriesDoughnutChartComponent implements OnInit {
-  public doughnutChartLabels: Label[] = ['Food Quality Issues', 'Service Issues', 'Missing Items Issues'];
+  public doughnutChartLabels: Label[] = [];
   public doughnutChartType: ChartType = 'doughnut';
   public dataRefreshed: boolean = false;
   public doughnutChartData: MultiDataSet = [];
+  public dictCategories: any = <any>{};
   public chartData: number[] = [];
 
   public barChartOptions: ChartOptions = {
@@ -23,37 +24,30 @@ export class CategoriesDoughnutChartComponent implements OnInit {
   doughnutChartColors: Color[] = [
     {
       backgroundColor: [
-        'rgba(255, 99, 132, 0.8)',
-        'rgb(50, 165, 88, 0.8)',
-        'rgba(255, 205, 86, 0.8)'
+        'rgba(78, 137, 174, .9)',
+        'rgba(67, 101, 139, .9)',
+        'rgba(237, 102, 99, .9)',
+        'rgba(255, 163, 114, .9)',
+        'rgba(123, 17, 58, .9)'
       ]
     }
   ];
 
-  public foodQualityCounter: number = 0;
-  public serviceCounter: number = 0;
-  public missingItemsCounter: number = 0;
-
   constructor(public shareChartDataService: ShareChartDataService) { }
+
+  getValues(value: string) {
+    this.dictCategories[value] = (this.dictCategories[value] || 0) + 1;
+  }
 
   ngOnInit(): void {
     this.shareChartDataService.currentData.subscribe(data => {
       Object.values(data).forEach((item: Care) => {
-        if (item.category === 'Food Quality') {
-          this.foodQualityCounter++;
-        }
-        if (item.category === 'Service') {
-          this.serviceCounter++;
-        }
-        if (item.category === 'Missing Items') {
-          this.missingItemsCounter++;
-        }
+        this.getValues(item.category)
       });
-      this.chartData.push(
-        this.foodQualityCounter,
-        this.serviceCounter,
-        this.missingItemsCounter)
- 
+      for (const [key, value] of Object.entries(this.dictCategories) as any) {
+        this.chartData.push(value)
+        this.doughnutChartLabels.push(key + " Issues")
+      }
     });
     this.doughnutChartData.push(this.chartData);
   }

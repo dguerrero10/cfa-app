@@ -9,7 +9,8 @@ const CareSchema = mongoose.Schema({
     otherExplanation: {type: String, required: false},
     modeOfVisit: {type: String, required: false},
     teamMemberPosition: {type: String, required: false},
-    leaderName: {type: String, required: true}
+    leaderFirstName: {type: String, required: true},
+    leaderLastName: {type: String, required: true},
 });
 
 module.exports = mongoose.model('Care', CareSchema);

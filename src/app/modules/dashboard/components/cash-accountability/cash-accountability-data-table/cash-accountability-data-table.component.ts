@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { finalize, first, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { CashAccountabilityService } from 'src/app/core/services/cash-accountability/cash-accountability.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
@@ -17,7 +17,7 @@ import { CashAccountability } from 'src/app/shared/models/form-table/cash-accoun
 })
 export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = [
-    'Date', 'Leader', 'Team Member', "Shortage / Overage", 'Amount Missing', 'Mixed Drawer',
+    'Index', 'Date', 'Leader', 'Team Member', "Shortage / Overage", 'Amount Missing', 'Mixed Drawer',
     'Mixed with Team Member', 'Notes'];
   public cashAccountabilityData: CashAccountability[] = [];
   public loading: boolean = true;
@@ -45,11 +45,16 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
     });
     this.cashAccountabilityService.getCashAccountability()
       .subscribe(data => {
-        this.cashAccountabilityData = data.cashAccountabilityData
+        this.cashAccountabilityData = data.cashAccountabilityData;
+        this.shareChartDataService.shareData(this.cashAccountabilityData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.cashAccountabilityData);
         if (this.cashAccountabilityData.length === 0) {
           this.noData = true;
+          this.disableMetricService.switchState(this.noData);
+        }
+        else {
+          this.noData = false;
           this.disableMetricService.switchState(this.noData);
         }
       });
@@ -62,7 +67,6 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
 
   refreshData() {
     this.cashAccountabilityService.getCashAccountability()
-      .pipe(first())
       .subscribe(data => {
         this.cashAccountabilityData = data.cashAccountabilityData;
         this.shareChartDataService.shareData(this.cashAccountabilityData);
@@ -121,13 +125,16 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.cashAccountabilityService.deleteCashAccountability(this.deleteDataForm.value)
-        .pipe(take(1),
+        .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
         .subscribe(data => {
           if (data.success) {
             this.refreshData();
+            this.deleteStateService.changeDeleteState(false);
+            this.deleteStateService.deleteData(false);
+            this.rowIds = [];
           }
         });
     }

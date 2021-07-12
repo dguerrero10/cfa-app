@@ -27,7 +27,7 @@ exports.getItemOrders = (req, res, next) => {
 exports.deleteItemOrders = (req, res, next) => {
     const _ids = req.body.ids;
     ItemOrder.deleteMany({ _id: { $in: _ids } })
-        .then(() => {
+        .then(result => {
             res.status(201).json({
                 success: true
             })

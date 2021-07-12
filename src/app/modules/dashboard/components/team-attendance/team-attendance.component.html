@@ -1,25 +1,25 @@
 <div class="team-attendance">
     <div class="single-row u-xs-margin-bottom">
-        <button mat-icon-button class="refresh-data-btn" 
+        <button [disabled]="!onTableComponent" mat-icon-button class="refresh-data-btn" 
                 matTooltip="Refresh Data" 
                 matTooltipPosition="above"
                 (click)="refreshData()">
             <mat-icon>refresh</mat-icon>
         </button>
         <div class="mat-h1">Team Member Attendance</div>
-        <button mat-mini-fab matTooltip="Add Data"
+        <button *ngIf="onTableComponent" mat-mini-fab matTooltip="Add Data"
                 [matTooltipPosition]="toolTipPosition.value" class="add-btn-fab grow"
                 (click)="openTeamAttendanceFormModal()">
             <mat-icon>add</mat-icon>
         </button>
-        <button *ngIf="deleteState" mat-mini-fab matTooltip="Delete Data" 
+        <button *ngIf="deleteState && onTableComponent" mat-mini-fab matTooltip="Delete Data" 
                  matTooltipPosition="right" 
                  class="delete-btn-fab grow"
                  (click)="deleteData()">
                  <mat-icon>delete</mat-icon>
         </button>
     </div>
-    <mat-tab-group animationDuration="0ms" class="team-attendance__tab-group">
+    <mat-tab-group animationDuration="0ms" class="team-attendance__tab-group" (selectedTabChange)="tabChanged($event)">
         <mat-tab>
             <ng-template mat-tab-label>
                 Data

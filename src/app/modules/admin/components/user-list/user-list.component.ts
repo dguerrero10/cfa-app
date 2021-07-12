@@ -14,11 +14,11 @@ export class UserListComponent implements OnInit {
   public checked: boolean = false;
   public users: User[] = <User[]>([]); 
 
-  constructor(private userService: AdminUsersService,
+  constructor(private adminUserService: AdminUsersService,
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-   this.userService.userSourceListener.subscribe(userData => this.users = userData);
+   this.adminUserService.userSourceListener.subscribe(userData => this.users = userData);
   }
 
   deleteUserWarningModal(userId: string) {

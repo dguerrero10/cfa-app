@@ -1,1 +1,15 @@
-<p>borrowing-tracker-data-metrics works!</p>
+<div class="single-row align-center borrowing-tracker-metrics">
+    <div class="mat-h1 borrowing-tracker-metrics__header">Past {{timeFrame}}</div>
+    <mat-form-field appearance="outline" class="borrowing-tracker-metrics__form-field">
+        <mat-label>Select Timeframe</mat-label>
+        <mat-select (selectionChange)="getData($event)" placeholder="1 Month">
+            <mat-option *ngFor="let time of timeFrames"
+                        [value]="time.value">{{time.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<mat-divider></mat-divider>
+<div class="grid-container">
+    <app-item-kind-doughnut-chart class="chart-container"></app-item-kind-doughnut-chart>
+    <app-amount-of-item-bar-chart class="chart-container"></app-amount-of-item-bar-chart>
+</div>

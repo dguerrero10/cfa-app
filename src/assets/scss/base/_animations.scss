@@ -33,3 +33,37 @@
         opacity: 1;
     }
 }
+
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@-moz-keyframes scaleIn { /* Firefox */
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@-webkit-keyframes scaleIn { /* Safari and Chrome */
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@-o-keyframes scaleIn { /* Opera */
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}

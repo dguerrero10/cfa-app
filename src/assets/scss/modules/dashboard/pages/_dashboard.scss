@@ -4,4 +4,16 @@
     top: 90px;
     width:  calc(100% - 250px);
     padding: 1rem 4rem;
+
+    &__calendar {
+        width: 200px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: -.5rem;
+
+        &--date {
+            margin-right: .5rem;
+        }
+    }
 }

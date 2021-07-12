@@ -1,1 +1,15 @@
-<p>cash-accountability-data-metrics works!</p>
+<div class="single-row align-center cash-accountability-metrics">
+    <div class="mat-h1 cash-accountability-metrics__header">Past {{timeFrame}}</div>
+    <mat-form-field appearance="outline" class="cash-accountability-metrics__form-field">
+        <mat-label>Select Timeframe</mat-label>
+        <mat-select (selectionChange)="getData($event)" placeholder="1 Month">
+            <mat-option *ngFor="let time of timeFrames"
+                        [value]="time.value">{{time.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<mat-divider></mat-divider>
+<div class="grid-container">
+    <app-shortage-overage-doughnut-chart class="chart-container"></app-shortage-overage-doughnut-chart>
+    <app-amount-of-item-bar-chart class="chart-container"></app-amount-of-item-bar-chart>
+</div>

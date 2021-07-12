@@ -6,7 +6,7 @@ const teamMemberAttendanceController = require('../controllers/team-member-atten
 
 const router = express.Router();
 
-router.post("", checkAuth, teamMemberAttendanceController.createteamMemberAttendance);
+router.post("", checkAuth, teamMemberAttendanceController.createTeamMemberAttendance);
 router.post("/delete", checkAuth, teamMemberAttendanceController.deleteTeamMemberAttendance);
 router.get("", checkAuth, teamMemberAttendanceController.getTeamMemberAttendance);
 

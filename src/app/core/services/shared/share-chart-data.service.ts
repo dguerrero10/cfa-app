@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Care } from 'src/app/shared/models/form-table/cares.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShareChartDataService {
-  private dataSource = new BehaviorSubject<Care[]>([]);
+  private dataSource = new BehaviorSubject<[]>([]);
   public currentData = this.dataSource.asObservable();
 
   constructor() { }

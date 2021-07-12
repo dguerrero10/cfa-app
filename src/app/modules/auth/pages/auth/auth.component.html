@@ -1,7 +1,8 @@
 <div class="auth">
-    <img class="auth__logo" [src]=cfaLogo>
     <app-login-form *ngIf="login"></app-login-form>
     <app-register-form *ngIf="!login"></app-register-form>
-    <p class="mat-body auth__form-switch">{{formDialogueRef.dialogue}}<span class="auth__form-switch--btn"
-        (click)="switchForms()">{{formDialogueRef.action}}</span></p>
+    <p class="mat-body auth__form-switch">{{formDialogueRef.dialogue}}
+        <button mat-button color="primary" class="auth__form-switch--btn" (click)="switchForms()">
+            {{formDialogueRef.action}}</button>
+    </p>
 </div>

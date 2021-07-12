@@ -33,35 +33,39 @@ export const ISSUES: Select[] = [
 
 export const SYMPTOMS: Select[] = [
   {
-    value: 'throwingUp',
+    value: 'Throwing_up',
     name: 'Throwing up'
   },
   {
-    value: 'soreThroat',
+    value: 'Sore_throat',
     name: 'Sore throat'
   },
   {
-    value: 'fever',
+    value: 'Fever',
     name: 'Fever'
   },
   {
-    value: 'headache',
+    value: 'Headache',
     name: 'Headache'
   },
   {
-    value: 'coughing',
+    value: 'Coughing',
     name: 'Coughing'
   },
   {
-    value: 'bodyAches',
+    value: 'Body_aches',
     name: 'Body aches'
   },
   {
-    value: 'diarrhea',
+    value: 'Diarrhea',
     name: 'Diarrhea'
   },
   {
-    value: 'stomachPain',
+    value: 'Stomach_pain',
     name: 'Stomach pain'
   },
+  {
+    value: 'Other',
+    name: 'Other'
+  }
 ];

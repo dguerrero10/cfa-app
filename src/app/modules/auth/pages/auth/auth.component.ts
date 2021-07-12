@@ -12,7 +12,6 @@ export interface FormDialogue {
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  cfaLogo = '../../../../../assets/images/cfa-logo.svg';
   login: boolean = true;
 
   formDialogueRef: FormDialogue = {
