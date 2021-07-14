@@ -7,13 +7,19 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ResetPasswordFormComponent } from './components/reset-password-form/reset-password-form.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { UpdatePasswordFormComponent } from './components/update-password-form/update-password-form.component';
 
 
 @NgModule({
   declarations: [
     AuthComponent,
     LoginFormComponent,
-    RegisterFormComponent
+    RegisterFormComponent,
+    ResetPasswordFormComponent,
+    ResetPasswordComponent,
+    UpdatePasswordFormComponent
   ],
   imports: [
     CommonModule,

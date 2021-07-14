@@ -1,4 +1,4 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
+<form *ngIf="!onResetPasswordForm" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
   <img class="cfa-logo" [src]=cfaLogo>
   <div class="mat-h1">Login</div>
   <mat-form-field appearance="outline">
@@ -18,10 +18,12 @@
     <mat-error *ngIf="dataInvalid">Email or password is invalid</mat-error>
   </mat-form-field>
   <div class="space-between">
-    <button mat-button type="submit" class="u-xs-margin-top login-form__forgot-btn" 
+    <button mat-button type="button" class="u-xs-margin-top login-form__forgot-btn"
+      (click)="resetPassword()" 
       color="primary">Forgot password?</button>
     <button *ngIf="!isLoading" mat-flat-button type="submit" class="u-xs-margin-top login-form__login-btn" 
       color="primary">Login</button>
     <mat-spinner *ngIf="isLoading" class="spinner" [diameter]="35"></mat-spinner>
   </div>
 </form>
+<app-reset-password-form *ngIf="onResetPasswordForm"></app-reset-password-form>

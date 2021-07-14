@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { FormListenerService } from 'src/app/core/services/auth/form-listener.service';
 
 export interface FormDialogue {
   dialogue: string;
@@ -12,17 +13,21 @@ export interface FormDialogue {
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  login: boolean = true;
+  public login: boolean = true;
+  public onPasswordResetForm: boolean = false;
 
-  formDialogueRef: FormDialogue = {
+  public formDialogueRef: FormDialogue = {
     dialogue: 'Need an account? ',
     action: ' Register'
   }
 
-  constructor(private authService: AuthService) { }
+  constructor(private formListenerService: FormListenerService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.getUserRegisteredListener()
+    this.formListenerService.onResetPasswordFormListener
+      .subscribe(value => this.onPasswordResetForm = value);
+      this.authService.getUserRegisteredListener()
       .subscribe(data => {
         if (data.success) {
           this.login = true;
@@ -41,7 +46,7 @@ export class AuthComponent implements OnInit {
     else { 
       this.formDialogueRef = {
         dialogue: 'Already have an account? ',
-        action: ' Login'
+        action: 'Login'
       }
     }
   }

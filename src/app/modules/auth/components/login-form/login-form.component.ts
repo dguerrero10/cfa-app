@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { FormListenerService } from 'src/app/core/services/auth/form-listener.service';
 
 export interface RegisterFormData {
   success: boolean;
@@ -16,16 +17,20 @@ export interface RegisterFormData {
 })
 export class LoginFormComponent implements OnInit {
   public cfaLogo = '../../../../../assets/images/cfa-logo.svg';
+  public onResetPasswordForm: boolean = false;
   public loginForm: FormGroup = <FormGroup>{};
   public isLoading: boolean = false;
   public hide: boolean = true;
   public dataInvalid: boolean = false;
   public registerFormData: RegisterFormData = {success: false, email: '', password: ''}
 
-  constructor(private fb: FormBuilder,
-    public authService: AuthService) { }
+  constructor(private formListnerService: FormListenerService,
+              private fb: FormBuilder,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.formListnerService.onResetPasswordFormListener
+      .subscribe(value => this.onResetPasswordForm = value);
     this.createForm();
     this.authService.getAuthStatusListener()
       .subscribe(() => {
@@ -50,6 +55,10 @@ export class LoginFormComponent implements OnInit {
       'email': ['', [Validators.required, Validators.email]],
       'password': ['', [Validators.required]]
     });
+  }
+
+  resetPassword() {
+    this.formListnerService.onResetPasswordForm(true);
   }
 
   getFormErrors(el: string) {

@@ -6,7 +6,9 @@ const UserSchema = mongoose.Schema({
     lastName: {type: String, required: true},
     employeeId: {type: String, required: true},
     email: {type: String, required: true, unique: true},
-    password: {type: String, required: true}
+    password: {type: String, required: true},
+    resetPasscode: {type: String, required: false},
+    resetPasscodeExpiration: {type: Date, required: false}
 });
 
 UserSchema.plugin(uniqueValidator);

@@ -12,5 +12,8 @@ router.post("/add-employee-id", checkAuth, UserController.addEmployeeId);
 router.get('/all-users', checkAuth, UserController.getAllUsers);
 router.get('/current-user/:id', checkAuth, UserController.currentUser);
 router.delete('/delete/:id', checkAuth, UserController.deleteUser);
+router.post('/password-reset', UserController.postReset);
+router.post('/password-reset/validate-passcode', UserController.validatePasscode);
+router.post('/password-reset/update-password', UserController.postNewPassword);
 
 module.exports = router;

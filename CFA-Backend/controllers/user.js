@@ -30,14 +30,14 @@ exports.registerUser = (req, res, next) => {
                         email: req.body.email,
                         password: hash
                     });
-                    user.save() 
+                    user.save()
                         .then(() => {
                             transporter.sendMail({
-                            to: req.body.email,
-                            from: 'cfadash7809@gmail.com',
-                            subject: 'CFA-Dashboard Sign Up Successful!',
-                            html: 
-                            `<h3>Sign Up Successful!</h3>
+                                to: req.body.email,
+                                from: 'cfadash7809@gmail.com',
+                                subject: 'CFA-Dashboard Sign Up Successful!',
+                                html:
+                                    `<h3>Sign Up Successful!</h3>
                             <p>
                                 Hi, <strong>${req.body.firstName} ${req.body.lastName}</strong>.
                             </p>
@@ -53,12 +53,12 @@ exports.registerUser = (req, res, next) => {
                             <p>with an explanation of the issue you're experiencing.</p>
                             <p>This is an automated email, do not respond.</p>
                             `
-                     });
-                    });
+                            });
+                        });
                     res.status(201).json({
                         success: true
                     });
-                   
+
                 })
                 .catch(error => {
                     res.status(401).json({
@@ -145,3 +145,89 @@ exports.addEmployeeId = (req, res, next) => {
         success: true
     });
 };
+
+exports.postReset = (req, res, next) => {
+    let p = Math.floor(1000 + Math.random() * 9000);
+    const resetPasscode = p.toString();
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            if (!user) {
+                return res.status(401).json({
+                    success: false
+                });
+            }
+            user.resetPasscode = resetPasscode;
+            user.resetPasscodeExpiration = Date.now() + 36000000;
+            return user.save();
+        })
+        .then(result => {
+            transporter.sendMail({
+                to: req.body.email,
+                from: 'cfadash7809@gmail.com',
+                subject: 'CFA-Dashboard Password Reset',
+                html:
+                    `<p>You requested a password reset.</p>
+                     <p>Your four digit code:</p>
+                     <h1><strong>${resetPasscode}</strong></h1>
+                     <p>If you did not request a password reset, ignore this message.</p> 
+                    `
+            });
+            res.status(200).json({
+                success: true,
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+exports.validatePasscode = (req, res, next) => {
+    User.findOne
+        ({
+            email: req.body.email,
+            resetPasscode: req.body.resetPasscode,
+            resetPasscodeExpiration: { $gt: Date.now() }
+        })
+        .then(result => {
+            if (!result) {
+                return res.status(401).json({
+                    message: 'Passcode is incorrect.'
+                });
+            }
+            return res.status(200).json({
+                success: true
+            })
+        })
+        .catch(error => {
+            res.status(401).json({
+                error: error
+            })
+        })
+}
+
+exports.postNewPassword = (req, res, next) => {
+    const newPassword = req.body.newPassword;
+    let resetUser;
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            resetUser = user;
+            return bcrypt.hash(newPassword, 10);
+        })
+        .then(hashedPassword => {
+            resetUser.password = hashedPassword;
+            resetUser.resetPasscode = null;
+            resetUser.resetPasscodeExpiration = undefined;
+            return resetUser.save();
+        })
+        .then(result => {
+            res.status(200).json({
+                success: true
+            })
+        })
+        .catch(error => {
+            res.status(401).json({
+                message: error
+            });
+        });
+
+}

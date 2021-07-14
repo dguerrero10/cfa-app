@@ -1,7 +1,7 @@
 <div class="auth">
     <app-login-form *ngIf="login"></app-login-form>
     <app-register-form *ngIf="!login"></app-register-form>
-    <p class="mat-body auth__form-switch">{{formDialogueRef.dialogue}}
+    <p *ngIf="!onPasswordResetForm" class="mat-body auth__form-switch">{{formDialogueRef.dialogue}}
         <button mat-button color="primary" class="auth__form-switch--btn" (click)="switchForms()">
             {{formDialogueRef.action}}</button>
     </p>
