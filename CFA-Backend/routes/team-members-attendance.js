@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("", checkAuth, teamMemberAttendanceController.createTeamMemberAttendance);
 router.post("/delete", checkAuth, teamMemberAttendanceController.deleteTeamMemberAttendance);
+router.post("/update-expiration", checkAuth, teamMemberAttendanceController.updateExpiration);
 router.get("", checkAuth, teamMemberAttendanceController.getTeamMemberAttendance);
 
 module.exports = router;

@@ -1,7 +1,8 @@
 <app-top-nav></app-top-nav>
-<app-side-nav></app-side-nav>
-<div class="dashboard">
-<ng-container *ngIf="onDashboard">
+<app-side-nav *ngIf="!onMobile"></app-side-nav>
+<app-mobile-side-nav *ngIf="onMobile"></app-mobile-side-nav>
+<div class="dashboard" *ngIf="!onMobile">
+<ng-container *ngIf="route.children.length === 0">
     <div class="space-between">
         <div class="mat-h1 u-sm-margin-bottom">Dashboard</div>
         <div class="dashboard__calendar">
@@ -9,10 +10,7 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="grid-container">
-       
-    </div>
+    <div class="grid-container"></div>
 </ng-container>
-
     <router-outlet></router-outlet>
 </div>

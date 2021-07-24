@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './core/services/auth/admin.guard';
 import { AuthGuard } from './core/services/auth/auth.guard';
 
 const routes: Routes = [
@@ -12,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(mod => mod.DashboardModule) 
   },
   {
-    path: 'admin', canActivate: [AuthGuard],
+    path: 'admin', canActivate: [AdminGuard],
     loadChildren: () => import('./modules/admin/admin.module').then(mod => mod.AdminModule) 
   },
   {
@@ -25,6 +26,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuard]
+  providers: [AuthGuard, AdminGuard]
 })
 export class AppRoutingModule { }

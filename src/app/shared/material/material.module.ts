@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { LayoutModule } from '@angular/cdk/layout';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,8 +31,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatRippleModule } from '@angular/material/core'
 import { MatRadioModule } from '@angular/material/radio';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 const MaterialComponents = [
@@ -67,7 +67,8 @@ const MaterialComponents = [
   MatRippleModule,
   MatRadioModule,
   NgxSpinnerModule,
-  DragDropModule
+  LayoutModule,
+  MatSidenavModule
 ];
 
 @NgModule({

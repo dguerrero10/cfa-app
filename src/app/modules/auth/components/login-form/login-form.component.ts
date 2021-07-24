@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { FormListenerService } from 'src/app/core/services/auth/form-listener.service';
 
@@ -23,21 +23,24 @@ export class LoginFormComponent implements OnInit {
   public hide: boolean = true;
   public dataInvalid: boolean = false;
   public registerFormData: RegisterFormData = {success: false, email: '', password: ''}
+  private formSub$ = new Subscription;
+  private authStatusSub$ = new Subscription;
+  private authErrorSub$ = new Subscription;
 
   constructor(private formListnerService: FormListenerService,
               private fb: FormBuilder,
               private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.formListnerService.onResetPasswordFormListener
+   this.formSub$ = this.formListnerService.onResetPasswordFormListener
       .subscribe(value => this.onResetPasswordForm = value);
     this.createForm();
-    this.authService.getAuthStatusListener()
+   this.authStatusSub$ = this.authService.getAuthStatusListener()
       .subscribe(() => {
         this.isLoading = false;
       }
     );
-    this.authService.getAuthErrorListener()
+   this.authErrorSub$ = this.authService.getAuthErrorListener()
       .subscribe(() => {
         this.dataInvalid = true;
         this.loginForm.controls['email'].setErrors({ 'incorrect': true })
@@ -87,6 +90,12 @@ export class LoginFormComponent implements OnInit {
     }
     this.isLoading = true;
     this.authService.loginUser(formData.value);
+  }
+
+  ngOnDestroy() {
+    this.formSub$.unsubscribe();
+    this.authStatusSub$.unsubscribe();
+    this.authErrorSub$.unsubscribe();
   }
 
 }

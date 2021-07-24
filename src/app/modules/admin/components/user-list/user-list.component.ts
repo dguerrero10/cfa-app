@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { AdminUsersService } from 'src/app/core/services/admin/admin-users.service';
 import { User } from 'src/app/shared/models/auth/user.model';
 import { DeleteUserWarningModalComponent } from '../modals/delete-user-warning-modal/delete-user-warning-modal.component';
@@ -10,15 +11,16 @@ import { ElevatePrivilegesWarningModalComponent } from '../modals/elevate-privil
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
   public checked: boolean = false;
-  public users: User[] = <User[]>([]); 
+  public users: User[] = <User[]>([]);
+  private userDataSub$ = new Subscription; 
 
   constructor(private adminUserService: AdminUsersService,
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-   this.adminUserService.userSourceListener.subscribe(userData => this.users = userData);
+   this.userDataSub$ = this.adminUserService.userSourceListener.subscribe(userData => this.users = userData);
   }
 
   deleteUserWarningModal(userId: string) {
@@ -33,6 +35,10 @@ export class UserListComponent implements OnInit {
     if (event.checked) {
       this.dialog.open(ElevatePrivilegesWarningModalComponent);
     }
+  }
+
+  ngOnDestroy() {
+    this.userDataSub$.unsubscribe();
   }
 
 }

@@ -40,7 +40,6 @@ export class ShortageOverageDoughnutChartComponent implements OnInit {
   ngOnInit(): void {
     this.shareChartDataService.currentData.subscribe(data => {
       Object.values(data).forEach((item: CashAccountability) => {
-        console.log(data)
         this.getValues(item.shortageOverage);
       });
       for (const [key, value] of Object.entries(this.dictShortageOverage) as any) {

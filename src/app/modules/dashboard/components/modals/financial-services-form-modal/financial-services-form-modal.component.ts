@@ -40,6 +40,7 @@ export class FinancialServicesFormModalComponent implements OnInit {
   onImagePicked(event: any) {
     const file = (event.target as HTMLInputElement).files![0];
     this.fileName = file.name;
+    this.fsForm.controls['imgName'].setValue(this.fileName);
     this.fsForm.patchValue({receiptImg: file});
     this.fsForm.get('receiptImage')?.updateValueAndValidity();
     const reader = new FileReader();
@@ -79,6 +80,7 @@ export class FinancialServicesFormModalComponent implements OnInit {
         validators: [Validators.required],
         asyncValidators: [mimeType]
       }),
+      'imgName': [''],
       'firstName': ['', [Validators.required]],
       'lastName': ['', [Validators.required]]
     });
@@ -91,6 +93,7 @@ export class FinancialServicesFormModalComponent implements OnInit {
     this.fsService.addFinancialService(
       this.fsForm.value.receiptPurpose,
       this.fsForm.value.receiptImg,
+      this.fsForm.value.imgName,
       this.fsForm.value.firstName,
       this.fsForm.value.lastName).subscribe(data => {
       if (data.success) {
@@ -102,5 +105,4 @@ export class FinancialServicesFormModalComponent implements OnInit {
       }
     });
   }
-
 }

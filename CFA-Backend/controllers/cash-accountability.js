@@ -20,13 +20,27 @@ exports.createCashAccountability = (req, res, next) => {
 };
 
 exports.getCashAccountability = (req, res, next) => {
-    CashAccountability.find().sort({ _id: -1 })
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const query = CashAccountability.find();
+    let fetchedData;
+    if (pageSize && currentPage) {
+        query
+          .skip(pageSize * (currentPage -1))
+          .limit(pageSize);
+    }
+    query.find().sort({ _id: -1 })
         .then(cashAccountabilityData => {
-            res.status(201).json({
+            fetchedData = cashAccountabilityData;
+            return CashAccountability.countDocuments();
+   
+        }).then(count => {
+            res.status(200).json({
                 success: true,
-                cashAccountabilityData: cashAccountabilityData
+                cashAccountabilityData: fetchedData,
+                itemCount: count
             });
-        });
+        })
 };
 
 exports.deleteCashAccountability = (req, res, next) => {

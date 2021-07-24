@@ -1,9 +1,17 @@
+@import '../../../base/animations';
+
 .dashboard {
     position: absolute;
     left: 90px;
     top: 90px;
     width:  calc(100% - 250px);
     padding: 1rem 4rem;
+
+    // @media (max-width: 900px) {
+    //     left: 0;
+    //     width: 700px !important;
+    //     padding: 1.5rem 2.9rem;
+    // }
 
     &__calendar {
         width: 200px;

@@ -17,6 +17,11 @@
         margin-top: 0 !important;
     }
 
+    &__checkbox {
+        color: $color-white;
+        margin-left: 1rem;
+    }
+
     &__btn {
         max-height: 50px;
         padding: .60rem;

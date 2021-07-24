@@ -1,0 +1,94 @@
+<div class="cares">
+    <div class="mat-h1 cares__header">Cares</div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="caresForm" (ngSubmit)="onSubmit(caresForm)" class="cares-form">
+        <mat-form-field appearance="outline" class="u-md-margin-top">
+            <mat-label>Guest name</mat-label>
+            <input required matInput formControlName="guestName">
+            <mat-error *ngIf="caresForm.get('guestName')">{{getFormErrors('guestName')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Guest phone number</mat-label>
+            <input matInput type="number" pattern="[0-9]" formControlName="guestPhoneNumber">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Issue Category</mat-label>
+            <mat-select required formControlName="category" (selectionChange)="onCategoryChange($event)">
+                <mat-option *ngFor="let category of categories" [value]=category.value>
+                    {{category.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="caresForm.get('category')">{{getFormErrors('category')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Issue</mat-label>
+            <mat-select required formControlName="issue" multiple (selectionChange)="onIssueChange($event)">
+
+                <ng-container *ngIf="selectedCategory === 'Food_quality'">
+                    <mat-option *ngFor="let quality of foodQuality" [value]=quality.value>
+                        {{quality.name}}
+                    </mat-option>
+                </ng-container>
+
+                <ng-container *ngIf="selectedCategory === 'Team_member_issue'">
+                    <mat-option *ngFor="let service of services" [value]=service.value>
+                        {{service.name}}
+                    </mat-option>
+                </ng-container>
+
+                <ng-container *ngIf="selectedCategory === 'Wrong_item'">
+                    <mat-option *ngFor="let item of missingItems" [value]=item.value>
+                        {{item.name}}
+                    </mat-option>
+                </ng-container>
+
+                <ng-container *ngIf="selectedCategory === 'Missing_items'">
+                    <mat-option *ngFor="let item of missingItems" [value]=item.value>
+                        {{item.name}}
+                    </mat-option>
+                </ng-container>
+
+            </mat-select>
+            <mat-error *ngIf="caresForm.get('issue')">{{getFormErrors('issue')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="other" appearance="outline">
+            <mat-label>Other (Explanation)</mat-label>
+            <input required matInput formControlName="otherExplanation">
+            <mat-error *ngIf="caresForm.get('otherExplanation')">{{getFormErrors('otherExplanation')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Mode of visit</mat-label>
+            <mat-select required formControlName="modeOfVisit">
+                <mat-option *ngFor="let mode of modesOfVisit" [value]=mode.value>{{mode.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="caresForm.get('modeOfVisit')">{{getFormErrors('modeOfVisit')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Team member position (optional)</mat-label>
+            <input matInput formControlName="teamMemberPosition">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="u-two-form-field">
+            <mat-label>Leader's first name</mat-label>
+            <input required matInput formControlName="leaderFirstName">
+            <mat-error *ngIf="caresForm.get('leaderFirstName')">{{getFormErrors('leaderFirstName')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Leader's last name</mat-label>
+            <input required matInput formControlName="leaderLastName">
+            <mat-error *ngIf="caresForm.get('leaderLastName')">{{getFormErrors('leaderLastName')}}</mat-error>
+        </mat-form-field>
+
+        <div class="single-row justify-center">
+            <button *ngIf="!submitting" mat-flat-button color="primary" type="submit"
+                class="u-xs-margin-top">Submit</button>
+            <mat-spinner *ngIf="submitting" [diameter]="40"></mat-spinner>
+        </div>
+    </form>
+</div>

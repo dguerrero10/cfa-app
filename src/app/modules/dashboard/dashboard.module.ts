@@ -42,6 +42,13 @@ import { WrongItemsBarChartComponent } from './components/cares/cares-data-metri
 import { ItemKindDoughnutChartComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/charts/item-kind-doughnut-chart/item-kind-doughnut-chart.component';
 import { AmountOfItemBarChartComponent } from './components/borrowing-tracker/borrowing-tracker-data-metrics/charts/amount-of-item-bar-chart/amount-of-item-bar-chart.component';
 import { ShortageOverageDoughnutChartComponent } from './components/cash-accountability/cash-accountability-data-metrics/charts/shortage-overage-doughnut-chart/shortage-overage-doughnut-chart.component';
+import { ViewImageModalComponent } from './components/modals/view-image-modal/view-image-modal.component';
+import { MobileSideNavComponent } from './components/navigation/mobile-side-nav/mobile-side-nav.component';
+import { TeamAttendanceMobileComponent } from './components/team-attendance/team-attendance-mobile/team-attendance-mobile.component';
+import { CaresMobileComponent } from './components/cares/cares-mobile/cares-mobile.component';
+import { ItemOrderMobileComponent } from './components/item-order/item-order-mobile/item-order-mobile.component';
+import { BorrowingTrackerMobileComponent } from './components/borrowing-tracker/borrowing-tracker-mobile/borrowing-tracker-mobile.component';
+import { CashAccountabilityMobileComponent } from './components/cash-accountability/cash-accountability-mobile/cash-accountability-mobile.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +88,14 @@ import { ShortageOverageDoughnutChartComponent } from './components/cash-account
     WrongItemsBarChartComponent,
     ItemKindDoughnutChartComponent,
     AmountOfItemBarChartComponent,
-    ShortageOverageDoughnutChartComponent
+    ShortageOverageDoughnutChartComponent,
+    ViewImageModalComponent,
+    MobileSideNavComponent,
+    TeamAttendanceMobileComponent,
+    CaresMobileComponent,
+    ItemOrderMobileComponent,
+    BorrowingTrackerMobileComponent,
+    CashAccountabilityMobileComponent,
   ],
   imports: [
     CommonModule,

@@ -7,7 +7,6 @@ import { TeamMemberAttendance } from 'src/app/shared/models/form-table/team-memb
 })
 export class TeamMemberAttendanceService {
   private endpoint = "http://localhost:3000/api/team-members-attendance";
-  private endpointDelete = "http://localhost:3000/api/team-members-attendance/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -15,11 +14,18 @@ export class TeamMemberAttendanceService {
     return this.http.post<{ success: boolean }>(this.endpoint, teamMemberAttendance);
   }
 
-  getTeamMemberAttendance() {
-    return this.http.get<{ success: boolean; teamMemberAttendanceData: TeamMemberAttendance[] }>(this.endpoint);
+  getTeamMemberAttendance(itemsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
+    return this.http.get
+          <{ success: boolean; teamMemberAttendanceData: TeamMemberAttendance[], itemCount: number 
+           }>(this.endpoint + queryParams);
   }
 
   deleteTeamMemberAttendanceData(rowIds: any) {
-    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
+    return this.http.post<{ success: boolean }>(this.endpoint + '/' + 'delete', rowIds)
   }
+
+  updateExpiration() {
+    return this.http.post<{ success: boolean }>(this.endpoint + '/' + 'update-expiration', 'test');
+  } 
 }

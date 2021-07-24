@@ -1,6 +1,6 @@
-<div class="cares">
+<div *ngIf="!onMobile" class="cares">
     <div class="single-row u-xs-margin-bottom">
-        <button [disabled]="!onTableComponent" mat-icon-button class="refresh-data-btn" 
+        <button [disabled]="(!onTableComponent || !isAdmin)" mat-icon-button class="refresh-data-btn" 
             matTooltip="Refresh Data" 
             matTooltipPosition="above"
             (click)="refreshData()">
@@ -22,20 +22,25 @@
     </div>
     <mat-tab-group animationDuration="0ms" class="cares__tab-group" (selectedTabChange)="tabChanged($event)">
         <mat-tab>
+        <div *ngIf="!isAdmin" class="mat-body no-permission-para">
+            <mat-icon class="info-icon">info_outline</mat-icon>
+            You don't have permission to view this data.
+        </div>
             <ng-template mat-tab-label>
                 Data
                 <mat-icon class="tab-icon">list</mat-icon>
             </ng-template>
-            <app-cares-data-table></app-cares-data-table>
+            <app-cares-data-table *ngIf="isAdmin"></app-cares-data-table>
         </mat-tab>
-        <mat-tab [disabled]="metricDisabled">
+        <mat-tab [disabled]="(metricDisabled || !isAdmin)">
             <ng-template mat-tab-label>
                 Metrics
                 <mat-icon class="tab-icon">insights</mat-icon>
             </ng-template>
             <ng-template matTabContent>
-                <app-cares-data-metrics></app-cares-data-metrics>
+                <app-cares-data-metrics *ngIf="isAdmin"></app-cares-data-metrics>
             </ng-template>
         </mat-tab>
     </mat-tab-group>
 </div>
+<app-cares-mobile *ngIf="onMobile"></app-cares-mobile>

@@ -15,11 +15,25 @@ exports.createItemOrder = (req, res, next) => {
 };
 
 exports.getItemOrders = (req, res, next) => {
-    ItemOrder.find().sort({ _id: -1 })
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const query = ItemOrder.find();
+    let fetchedData;
+    if (pageSize && currentPage) {
+        query
+          .skip(pageSize * (currentPage -1))
+          .limit(pageSize);
+    }
+    query.find().sort({ _id: -1 })
         .then(itemOrderData => {
-            res.status(201).json({
+            fetchedData = itemOrderData;
+            return ItemOrder.countDocuments();
+   
+        }).then(count => {
+            res.status(200).json({
                 success: true,
-                itemOrderData: itemOrderData
+                itemOrderData: fetchedData,
+                itemCount: count
             });
         });
 };
@@ -30,6 +44,6 @@ exports.deleteItemOrders = (req, res, next) => {
         .then(result => {
             res.status(201).json({
                 success: true
-            })
-        })
+            });
+        });
 }

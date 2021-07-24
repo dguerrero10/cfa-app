@@ -1,0 +1,83 @@
+<div class="cash-accountability">
+    <div class="mat-h1 borrowing-tracker__header">Borrowing Tracker</div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="cashAccountabilityForm" (ngSubmit)="onSubmit(cashAccountabilityForm)"
+        class="cash-accountability-form">
+        <div class="u-md-margin-top">
+            <mat-form-field appearance="outline">
+                <mat-label>Leader's first name</mat-label>
+                <input required matInput formControlName="leaderFirstName">
+                <mat-error *ngIf="cashAccountabilityForm.get('leaderFirstName')">{{getFormErrors('leaderFirstName')}}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Leader's last name</mat-label>
+                <input required matInput formControlName="leaderLastName">
+                <mat-error *ngIf="cashAccountabilityForm.get('leaderLastName')">{{getFormErrors('leaderLastName')}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline">
+            <mat-label>TM's first name</mat-label>
+            <input required matInput formControlName="teamMemberFirstName">
+            <mat-error *ngIf="cashAccountabilityForm.get('teamMemberFirstName')">
+                {{getFormErrors('teamMemberFirstName')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>TM's last name</mat-label>
+            <input required matInput formControlName="teamMemberLastName">
+            <mat-error *ngIf="cashAccountabilityForm.get('teamMemberLastName')">
+                {{getFormErrors('teamMemberLastName')}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-radio-group formControlName="shortageOverage" color="primary">
+            <mat-radio-button value="Shortage" class="u-sm-margin-right">Shortage</mat-radio-button>
+            <mat-radio-button value="Overage">Overage</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field appearance="outline" class="u-sm-margin-top">
+            <mat-label>Amount missing</mat-label>
+            <input required matInput type="number" formControlName="amountMissing">
+            <mat-error *ngIf="cashAccountabilityForm.get('amountMissing')">{{getFormErrors('amountMissing')}}
+            </mat-error>
+        </mat-form-field>
+
+        <p class="mat-body">Was your drawer mixed with another Team Member?</p>
+        <mat-radio-group aria-labelledby="mixed-drawer" class="u-sm-margin-bottom u-md-margin-top"
+            formControlName="mixedDrawer" color="primary" (change)="onRadioButtonChange($event)">
+            <mat-radio-button value="Yes" class="u-sm-margin-right">Yes</mat-radio-button>
+            <mat-radio-button value="No">No</mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="mixedDrawer">
+            <mat-form-field appearance="outline" class="u-sm-margin-top">
+                <mat-label>TM's first name (drawer)</mat-label>
+                <input required matInput formControlName="mixedDrawerTeamMemberFirstName">
+                <mat-error *ngIf="cashAccountabilityForm.get('mixedDrawerTeamMemberFirstName')">
+                    {{getFormErrors('mixedDrawerTeamMemberFirstName')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>TM's last name (drawer)</mat-label>
+                <input required matInput formControlName="mixedDrawerTeamMemberLastName">
+                <mat-error *ngIf="cashAccountabilityForm.get('mixedDrawerTeamMemberLastName')">
+                    {{getFormErrors('mixedDrawerTeamMemberLastName')}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" [class.u-sm-margin-top]="!mixedDrawer">
+            <mat-label>Notes</mat-label>
+            <input matInput formControlName="notes">
+        </mat-form-field>
+
+        <div class="justify-center">
+            <button *ngIf="!submitting" mat-flat-button color="primary" type="submit"
+                class="u-xs-margin-top">Submit</button>
+            <mat-spinner *ngIf="submitting" [diameter]="40"></mat-spinner>
+        </div>
+    </form>
+</div>

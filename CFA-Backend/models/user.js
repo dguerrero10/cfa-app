@@ -6,6 +6,7 @@ const UserSchema = mongoose.Schema({
     lastName: {type: String, required: true},
     employeeId: {type: String, required: true},
     email: {type: String, required: true, unique: true},
+    adminPrivilege: {type: Boolean, required: true, default: false},
     password: {type: String, required: true},
     resetPasscode: {type: String, required: false},
     resetPasscodeExpiration: {type: Date, required: false}

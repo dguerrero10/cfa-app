@@ -6,7 +6,7 @@
             <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button *ngIf="!navigatedToAdmin" mat-menu-item (click)="goToAdmin()">
+            <button *ngIf="!navigatedToAdmin && user.adminPrivilege" mat-menu-item (click)="goToAdmin()">
                 <mat-icon>admin_panel_settings</mat-icon>
                 <span>Admin</span>
             </button>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TeamMemberAttendanceService } from 'src/app/core/services/team-attendance/team-member-attendance.service';
 import { FEATURES_COPY } from 'src/app/shared/data/features-copy';
 import { Feature } from 'src/app/shared/models/feature.model';
 
@@ -10,10 +11,14 @@ import { Feature } from 'src/app/shared/models/feature.model';
 export class RecordExpirationComponent implements OnInit {
   public features: Feature[] = FEATURES_COPY;
   public featureEdit: string = this.features[0].feature;
-  public expirationTimes: any[] = [10, 20, 30, 40, 50, 60, 70, 'Never'];
-  constructor() { }
+  public expirationTimes: any[] = ['1', '4', '8', '12', 'Never'];
+  
+  constructor(private teamMemberAttendanceService: TeamMemberAttendanceService) { }
 
   ngOnInit(): void {
+    this.teamMemberAttendanceService.updateExpiration().subscribe(
+      data => console.log(data)
+    )
     this.onSelect(this.featureEdit);
   }
 

@@ -61,6 +61,10 @@ body.dark {
   color: $color-blue !important;
 
 }
+.view-img-btn-fab {
+  margin-left: 1.25rem !important;
+  margin-top: -.25rem !important;
+}
 .delete-btn-fab {
   margin-left: 1.25rem !important;
   margin-top: -.25rem !important;
@@ -88,7 +92,10 @@ body.dark {
   justify-content: center;
   align-items: center;
 }
+.mat-paginator {margin-top: 1rem;}
 mat-error {margin-left: -.5rem}
+.no-permission-para {display: flex; justify-content: center; margin-top: 2.5rem;}
+.info-icon {margin-right: .5rem; margin-top: -3px;}
 .no-data {
   margin: 4rem;
   display: flex;

@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { NumberValidationService } from 'src/app/shared/helpers/number-validation.service';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.scss']
 })
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent implements OnInit, OnDestroy {
+  public cfaLogo = '../../../../../assets/images/cfa-logo.svg';
   public registerForm: FormGroup = <FormGroup>{};
   public hide: boolean = true;
   public noMatch: boolean = false;
   public invalidEmployeeId: boolean = false;
+  private registerErrorSub$ = new Subscription;
 
   constructor(public authService: AuthService,
     private fb: FormBuilder) { }
@@ -100,7 +102,7 @@ export class RegisterFormComponent implements OnInit {
     if (this.passwordsMatch() === false) {
       return;
     }
-    this.authService.getRegisterError()
+   this.registerErrorSub$ = this.authService.getRegisterError()
      .subscribe(res => {
         if (res) {
           if (res.error.message === 'No employee ID found.') {
@@ -114,5 +116,9 @@ export class RegisterFormComponent implements OnInit {
         }
      })
     this.authService.createUser(formData.value);
+  }
+
+  ngOnDestroy() {
+    this.registerErrorSub$.unsubscribe();
   }
 }

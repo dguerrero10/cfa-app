@@ -7,7 +7,6 @@ import { ItemOrder } from 'src/app/shared/models/form-table/item-order.model';
 })
 export class ItemOrderService {
   private endpoint = "http://localhost:3000/api/item-orders";
-  private endpointDelete = "http://localhost:3000/api/item-orders/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -15,12 +14,15 @@ export class ItemOrderService {
     return this.http.post<{ success: boolean }>(this.endpoint, itemOrder);
   }
 
-  getItemOrders() {
-    return this.http.get<{ success: boolean; itemOrderData: ItemOrder[] }>(this.endpoint);
+  getItemOrders(itemsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
+    return this.http.get
+          <{ success: boolean; itemOrderData: ItemOrder[], itemCount: number 
+           }>(this.endpoint + queryParams);
   }
 
   deleteItemOrders(rowIds: any) {
-    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
+    return this.http.post<{ success: boolean }>(this.endpoint + '/delete', rowIds)
   }
 
 }

@@ -21,13 +21,27 @@ exports.createCare = (req, res, next) => {
 };
 
 exports.getCares = (req, res, next) => {
-    Care.find().sort({ _id: -1 })
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const query = Care.find();
+    let fetchedData;
+    if (pageSize && currentPage) {
+        query
+          .skip(pageSize * (currentPage -1))
+          .limit(pageSize);
+    }
+    query.find().sort({ _id: -1 })
         .then(caresData => {
-            res.status(201).json({
+            fetchedData = caresData;
+            return Care.countDocuments();
+   
+        }).then(count => {
+            res.status(200).json({
                 success: true,
-                caresData: caresData
+                caresData: fetchedData,
+                itemCount: count
             });
-        });
+        })
 };
 
 exports.deleteCares = (req, res, next) => {

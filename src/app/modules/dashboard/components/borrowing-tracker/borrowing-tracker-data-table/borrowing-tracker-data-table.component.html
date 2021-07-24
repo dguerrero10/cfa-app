@@ -1,7 +1,7 @@
 <div class="d-table">
     <mat-form-field appearance="fill" class="d-table__search">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input>
+        <input matInput (keyup)="applyFilter($event)" #input [disabled]="noData">
         <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
     <div *ngIf="loading" class="table-spinner-container">
@@ -63,4 +63,10 @@
             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
         </tr>
     </table>
+    <mat-paginator *ngIf="borrowingTrackerData.length > 0" 
+        [length]="itemCount" 
+        [pageSize]="itemsPerPage" 
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onChangePage($event)">
+    </mat-paginator>
 </div>

@@ -23,9 +23,10 @@ export class BohFohDoughnutChartComponent implements OnInit {
   doughnutChartColors: Color[] = [
     {
       backgroundColor: [
-        'rgba(255, 99, 132, 0.8)',
-        'rgb(50, 165, 88, 0.8)',
-        'rgba(255, 205, 86, 0.8)'
+        'rgba(78, 137, 174, .9)',
+        'rgba(237, 102, 99, .9)',
+        'rgba(255, 163, 114, .9)',
+        'rgba(123, 17, 58, .9)'
       ]
     }
   ];

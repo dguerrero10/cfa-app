@@ -7,7 +7,6 @@ import { CashAccountability } from 'src/app/shared/models/form-table/cash-accoun
 })
 export class CashAccountabilityService {
   private endpoint: string = "http://localhost:3000/api/cash-accountability";
-  private endpointDelete: string = "http://localhost:3000/api/cash-accountability/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -15,12 +14,15 @@ export class CashAccountabilityService {
     return this.http.post<{ success: boolean }>(this.endpoint, cashAccountability);
   }
 
-  getCashAccountability() {
-    return this.http.get<{ success: boolean; cashAccountabilityData: CashAccountability[] }>(this.endpoint);
+  getCashAccountability(itemsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
+    return this.http.get
+          <{ success: boolean; cashAccountabilityData: CashAccountability[], itemCount: number 
+           }>(this.endpoint + queryParams);
   }
 
   deleteCashAccountability(rowIds: any) {
-    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
+    return this.http.post<{ success: boolean }>(this.endpoint + '/delete', rowIds)
   }
 
 }

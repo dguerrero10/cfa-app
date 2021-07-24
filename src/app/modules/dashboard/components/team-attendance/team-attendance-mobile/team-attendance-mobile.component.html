@@ -1,0 +1,68 @@
+<div class="team-attendance">
+    <div class="mat-h1 team-attendance__header">Team Member Attendance</div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="teamAttendanceForm" class="team-attendance-form" (ngSubmit)="onSubmit(teamAttendanceForm)">
+        <div class="u-md-margin-top">
+            <mat-form-field appearance="outline">
+                <mat-label>TM's first name</mat-label>
+                <input required matInput formControlName="firstName">
+                <mat-error *ngIf="teamAttendanceForm.get('firstName')">{{getFormErrors('firstName')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>TM's last name</mat-label>
+                <input required matInput formControlName="lastName">
+                <mat-error *ngIf="teamAttendanceForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <mat-radio-group formControlName="workArea" color="primary">
+            <mat-radio-button value="BOH" [checked]="true" class="u-sm-margin-right">BOH</mat-radio-button>
+            <mat-radio-button value="FOH">FOH</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field appearance="outline" class="u-sm-margin-top">
+            <mat-label>Issue</mat-label>
+            <mat-select required (selectionChange)="onIssueChange($event)" formControlName="issue">
+                <mat-option *ngFor="let issue of issues" [value]=issue.value>{{issue.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="teamAttendanceForm.get('issue')">{{getFormErrors('issue')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="sick" appearance="outline">
+            <mat-label>Reported symptoms</mat-label>
+            <mat-select required formControlName="reportedSymptoms" multiple>
+                <mat-option *ngFor="let symptom of symptoms" [value]=symptom.value>{{symptom.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="teamAttendanceForm.get('reportedSymptoms')">{{getFormErrors('reportedSymptoms')}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="other" appearance="outline">
+            <mat-label>Other (explanation)</mat-label>
+            <input required matInput formControlName="otherExplanation">
+            <mat-error *ngIf="teamAttendanceForm.get('otherExplanation')">{{getFormErrors('otherExplanation')}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Notes</mat-label>
+            <textarea matInput formControlName="notes"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Leader's first name</mat-label>
+            <input required matInput formControlName="leaderFirstName">
+            <mat-error *ngIf="teamAttendanceForm.get('leaderFirstName')">{{getFormErrors('leaderFirstName')}}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Leader's last name</mat-label>
+            <input required matInput formControlName="leaderLastName">
+            <mat-error *ngIf="teamAttendanceForm.get('leaderLastName')">{{getFormErrors('leaderLastName')}}</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
+    </form>
+</div>

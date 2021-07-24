@@ -1,9 +1,12 @@
 @import '../../../../abstracts/variables';
 
 .d-table {
+    min-width: 700px !important;
+
     &__search {
         width: 100%;
     }
+
     
     &__table {
         width: 100%;

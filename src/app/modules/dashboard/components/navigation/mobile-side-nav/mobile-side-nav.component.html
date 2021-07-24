@@ -1,0 +1,39 @@
+<mat-sidenav-container class="side-nav__container" [hasBackdrop]="false">
+  <mat-sidenav #drawer class="side-nav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'push' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <li class="side-nav__list">
+      <div *ngFor="let feature of features; index as i;" class="side-nav__list-item">
+          <a mat-fab [routerLinkActiveOptions]="{exact: true}" 
+                     [routerLink]="feature.feature"
+             routerLinkActive="side-nav__list-btn-active"
+              class="side-nav__list-btn u-icon-center-inline">
+              <mat-icon class="side-nav__list-icon">{{feature.icon}}</mat-icon>
+          </a>
+      </div>
+      <div class="side-nav__settings">
+        <button mat-icon-button>
+          <mat-icon class="side-nav__settings--icon">settings</mat-icon>
+        </button>
+      </div>
+  </li>
+  </mat-sidenav>
+  <mat-sidenav-content class="side-nav__content">
+    <mat-toolbar class="side-nav__toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon class="side-nav__menu-icon" aria-label="Side nav toggle icon">dashboard</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="side-nav__date">
+      <div class="mat-body side-nav__date--month">{{currentMonth}}</div>
+      <div class="mat-display-2 side-nav__date--day">{{currentDay}}</div>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

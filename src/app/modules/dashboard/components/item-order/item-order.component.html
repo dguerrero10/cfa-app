@@ -1,6 +1,6 @@
-<div class="item-order">
+<div *ngIf="!onMobile" class="item-order">
     <div class="single-row u-xs-margin-bottom">
-        <button [disabled]="!onTableComponent" mat-icon-button class="refresh-data-btn" 
+        <button [disabled]="(!onTableComponent || !isAdmin)" mat-icon-button class="refresh-data-btn" 
                 matTooltip="Refresh Data" 
                 matTooltipPosition="above"
                 (click)="refreshData()">
@@ -21,11 +21,16 @@
     </div>
     <mat-tab-group animationDuration="0ms" class="item-order__tab-group" (selectedTabChange)="tabChanged($event)">
         <mat-tab>
+            <div *ngIf="!isAdmin" class="mat-body no-permission-para">
+                <mat-icon class="info-icon">info_outline</mat-icon>
+                You don't have permission to view this data.
+            </div>
             <ng-template mat-tab-label>
                 Data
                 <mat-icon class="tab-icon">list</mat-icon>
             </ng-template>
-            <app-item-order-data-table></app-item-order-data-table>
+            <app-item-order-data-table *ngIf="isAdmin"></app-item-order-data-table>
         </mat-tab>
     </mat-tab-group>
 </div>
+<app-item-order-mobile *ngIf="onMobile"></app-item-order-mobile>

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
-import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 
 @Component({
@@ -15,12 +14,11 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
   public borrowingTrackerForm: FormGroup = <FormGroup>{};
   public submitting: boolean = false;
 
-  constructor(public currentUserService: CurrentUserService,
-    private fb: FormBuilder,
-    public refreshDataService: RefreshDataService,
-    public snackBar: MatSnackBar,
-    public borrowingTrackerService: BorrowingTrackerService,
-    private dialogRef: MatDialogRef<BorrowingTrackerFormModalComponent>) { }
+  constructor(private fb: FormBuilder,
+              public refreshDataService: RefreshDataService,
+              public snackBar: MatSnackBar,
+              public borrowingTrackerService: BorrowingTrackerService,
+              private dialogRef: MatDialogRef<BorrowingTrackerFormModalComponent>) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -67,7 +65,7 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
         else return;
 
       case 'leaderLastName':
-        if (this.borrowingTrackerForm.controls['leaderFirstName'].hasError('required')) {
+        if (this.borrowingTrackerForm.controls['leaderLastName'].hasError('required')) {
           return "Leader's last name is required."
         }
         else return;

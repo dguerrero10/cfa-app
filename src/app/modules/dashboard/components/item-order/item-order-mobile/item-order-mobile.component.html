@@ -1,0 +1,63 @@
+<div class="item-order">
+    <div class="mat-h1 item-order__header">Item Order</div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="itemOrderForm" (ngSubmit)="onSubmit(itemOrderForm)" class="item-order-form">
+        <mat-radio-group formControlName="workAreaItem" (change)="onRadioButtonChange($event)" color="primary">
+            <mat-radio-button value="BOH" class="u-sm-margin-bottom">BOH</mat-radio-button>
+            <mat-radio-button value="FOH" class="u-sm-margin-bottom">FOH</mat-radio-button>
+            <mat-radio-button value="Delivery" class="u-sm-margin-bottom">Delivery</mat-radio-button>
+            <mat-radio-button value="Other">Other</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field *ngIf="otherRadioSelected" appearance="outline">
+            <mat-label>Other</mat-label>
+            <input required matInput formControlName="other">
+            <mat-error *ngIf="itemOrderForm.get('other')">{{getFormErrors('other')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Areas searched for items</mat-label>
+            <mat-select required multiple formControlName="areasSearched" (selectionChange)="onSelectionChange($event)">
+                <mat-option *ngFor="let area of areasSerched" [value]="area.value">{{area.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="itemOrderForm.get('areasSearched')">{{getFormErrors('areasSearched')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="otherSelectSelected" appearance="outline">
+            <mat-label>What area?</mat-label>
+            <input required matInput formControlName="otherArea">
+            <mat-error *ngIf="itemOrderForm.get('otherArea')">{{getFormErrors('otherArea')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Items needed</mat-label>
+            <mat-chip-list #chipListItem aria-label="Items needed" formControlName="itemsNeeded">
+                <mat-chip *ngFor="let item of items" [selectable]="selectable" [removable]="removable"
+                    (removed)="removeItem(item)">
+                    {{item}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input required placeholder="New item..." #itemInput [matAutocomplete]="auto"
+                    [matChipInputFor]="chipListItem" [formControl]="itemCtrl"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addItem($event)">
+            </mat-chip-list>
+            <mat-error *ngIf="itemOrderForm.get('itemsNeeded')">{{getFormErrors('itemsNeeded')}}</mat-error>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedItems($event)">
+                <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+                    {{item}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Your first name</mat-label>
+            <input required matInput formControlName="firstName">
+            <mat-error *ngIf="itemOrderForm.get('firstName')">{{getFormErrors('firstName')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Your last name</mat-label>
+            <input required matInput formControlName="lastName">
+            <mat-error *ngIf="itemOrderForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
+    </form>
+</div>

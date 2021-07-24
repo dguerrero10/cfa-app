@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
 import { User } from '../../models/auth/user.model';
@@ -11,12 +12,13 @@ import { AccountSettingsModalComponent } from '../account-settings-modal/account
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.scss']
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent implements OnInit, OnDestroy {
   public profileImg = '../../../../../../assets/images/profile-imgs/sacred-cow.png';
   public url: string = <string>('');
   public user: User = <User>{};
   public adminUrl: string = 'admin';
   public navigatedToAdmin: boolean = false;
+  private userServiceSub$ = new Subscription;
 
   constructor(public dialog: MatDialog,
               public currentUserService: CurrentUserService,
@@ -26,7 +28,7 @@ export class TopNavComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.currentUserService.getCurrentUser()
+   this.userServiceSub$ = this.currentUserService.getCurrentUser()
       .subscribe(userData => {
         this.user = (Object.values(userData)[0]);
       });
@@ -52,6 +54,10 @@ export class TopNavComponent implements OnInit {
 
   openAccountSettings() {
     this.dialog.open(AccountSettingsModalComponent, {width: '400px'});
+  }
+
+  ngOnDestroy() {
+    this.userServiceSub$.unsubscribe();
   }
 
 }

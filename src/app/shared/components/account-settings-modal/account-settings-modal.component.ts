@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
 import { User } from '../../models/auth/user.model';
 
@@ -7,15 +8,16 @@ import { User } from '../../models/auth/user.model';
   templateUrl: './account-settings-modal.component.html',
   styleUrls: ['./account-settings-modal.component.scss']
 })
-export class AccountSettingsModalComponent implements OnInit {
+export class AccountSettingsModalComponent implements OnInit, OnDestroy{
   public user: User = <User>{};
   public changePasswordMode: boolean = false;
   public changeEmailMode: boolean = false;
+  private userServiceSub$ = new Subscription;
 
   constructor(public currentUserService: CurrentUserService) { }
 
   ngOnInit(): void {
-    this.currentUserService.getCurrentUser()
+   this.userServiceSub$ = this.currentUserService.getCurrentUser()
       .subscribe(userData => {
         this.user = (Object.values(userData)[0]);
       });
@@ -38,4 +40,9 @@ export class AccountSettingsModalComponent implements OnInit {
     this.changeEmailMode = false;
     this.changePasswordMode = false;
   }
+
+  ngOnDestroy() {
+    this.userServiceSub$.unsubscribe();
+  }
+
 }

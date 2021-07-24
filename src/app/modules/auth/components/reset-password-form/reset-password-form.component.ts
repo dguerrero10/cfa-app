@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FormListenerService } from 'src/app/core/services/auth/form-listener.service';
 import { ResetPasswordService } from 'src/app/core/services/auth/reset-password.service';
@@ -14,7 +15,8 @@ export class ResetPasswordFormComponent implements OnInit {
   public resetPasswordForm: FormGroup = <FormGroup>{};
   public isLoading: boolean = false;
 
-  constructor(private router: Router,
+  constructor(private snackBar: MatSnackBar,
+              private router: Router,
               private resetPasswordService: ResetPasswordService,
               private formListenerService: FormListenerService,
               private fb: FormBuilder) { }
@@ -53,7 +55,9 @@ export class ResetPasswordFormComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+    let email = this.resetPasswordForm.controls['email'].value;
     this.router.navigate(['login', 'reset-password'])
+      .then(() => this.snackBar.open(`Passcode was sent to ${email}`, 'Dismiss', {duration: 4000}))
     this.resetPasswordService.passwordReset(formData.value);
   }
 }

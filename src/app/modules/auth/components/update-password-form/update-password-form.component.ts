@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ResetPasswordService } from 'src/app/core/services/auth/reset-password.service';
 
 @Component({
@@ -7,18 +8,19 @@ import { ResetPasswordService } from 'src/app/core/services/auth/reset-password.
   templateUrl: './update-password-form.component.html',
   styleUrls: ['./update-password-form.component.scss']
 })
-export class UpdatePasswordFormComponent implements OnInit {
+export class UpdatePasswordFormComponent implements OnInit, OnDestroy {
   public hide: boolean = true;
   public updatePasswordForm: FormGroup = <FormGroup>{};
   public isLoading: boolean = false;
   public email: string = <string>('');
   public noMatch: boolean = false;
+  private resetPasswordSub$ = new Subscription;
 
   constructor(private resetPasswordService: ResetPasswordService,
               private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.resetPasswordService.emailListener.subscribe(email => this.email = email.email);
+    this.resetPasswordSub$ = this.resetPasswordService.emailListener.subscribe(email => this.email = email.email);
     this.createForm();
   }
 
@@ -75,5 +77,9 @@ export class UpdatePasswordFormComponent implements OnInit {
     this.isLoading = true;
     this.updatePasswordForm.controls['email'].setValue(this.email);
     this.resetPasswordService.updatePassword(formData.value);
+  }
+
+  ngOnDestroy() {
+    this.resetPasswordSub$.unsubscribe();
   }
 }

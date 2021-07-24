@@ -7,7 +7,6 @@ import { BorrowingTracker } from 'src/app/shared/models/form-table/borrowing-tra
 })
 export class BorrowingTrackerService {
   private endpoint: string = "http://localhost:3000/api/borrowing-tracker";
-  private endpointDelete: string = "http://localhost:3000/api/borrowing-tracker/delete";
 
   constructor(private http: HttpClient) { }
 
@@ -15,12 +14,15 @@ export class BorrowingTrackerService {
     return this.http.post<{ success: boolean }>(this.endpoint, borrowingTracker);
   }
 
-  getBorrowingTrackerItems() {
-    return this.http.get<{ success: boolean; borrowingTrackerData: BorrowingTracker[] }>(this.endpoint);
+  getBorrowingTrackerItems(itemsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${itemsPerPage}&page=${currentPage}`;
+    return this.http.get
+          <{ success: boolean; borrowingTrackerData: BorrowingTracker[], itemCount: number 
+           }>(this.endpoint + queryParams);
   }
 
   deleteBorrowingTrackerData(rowIds: any) {
-    return this.http.post<{ success: boolean }>(this.endpointDelete, rowIds)
+    return this.http.post<{ success: boolean }>(this.endpoint + '/delete', rowIds)
   }
 
 }

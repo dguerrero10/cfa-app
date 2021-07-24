@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FormListenerService } from 'src/app/core/services/auth/form-listener.service';
 import { ResetPasswordService } from 'src/app/core/services/auth/reset-password.service';
 
@@ -9,7 +10,7 @@ import { ResetPasswordService } from 'src/app/core/services/auth/reset-password.
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit, OnDestroy{
   public isLoading: boolean = false;
   public passcodeForm: FormGroup = <FormGroup>{};
   public formData: FormGroup = <FormGroup>{};
@@ -17,6 +18,9 @@ export class ResetPasswordComponent implements OnInit {
   public resetPasscode: string = <string>('');
   public displayUpdatePasswordForm: boolean = false;
   public resetPasscodeFailed: boolean = false;
+  private emailSub$ = new Subscription;
+  private passcodeSub$ = new Subscription;
+  private validatePasscodeSub$ = new Subscription;
 
   constructor(private fb: FormBuilder,
     private resetPasswordService: ResetPasswordService,
@@ -25,8 +29,8 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
-    this.resetPasswordService.emailListener.subscribe(email => this.email = email.email);
-    this.passcodeForm.valueChanges.subscribe(num => {
+    this.emailSub$ = this.resetPasswordService.emailListener.subscribe(email => this.email = email.email);
+    this.passcodeSub$ = this.passcodeForm.valueChanges.subscribe(num => {
       if (num.numOne !== null && num.numTwo !== null && num.numThree !== null && num.numFour !== null) {
         for (const field in this.passcodeForm.controls) {
           this.resetPasscode += this.passcodeForm.controls[field].value;
@@ -60,7 +64,7 @@ export class ResetPasswordComponent implements OnInit {
 
   submitPasscode(formData: FormGroup) {
     this.isLoading = true;
-    this.resetPasswordService.validatePasscode(formData.value)
+    this.validatePasscodeSub$ = this.resetPasswordService.validatePasscode(formData.value)
       .subscribe(res => {
         this.isLoading = false;
         if (res.success) {
@@ -70,5 +74,11 @@ export class ResetPasswordComponent implements OnInit {
           this.resetPasscodeFailed = true;
           this.isLoading = false;
       });
+  }
+
+  ngOnDestroy() {
+    this.emailSub$.unsubscribe();
+    this.passcodeSub$.unsubscribe();
+    this.validatePasscodeSub$.unsubscribe();
   }
 }

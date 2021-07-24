@@ -7,7 +7,8 @@
                 <mat-label>Employee ID</mat-label>
                 <input type="number" matInput formControlName="employeeId">
                 <mat-error *ngIf="addEmployeeIdForm.get('employeeId')">{{getFormErrors('employeeId')}}</mat-error>
-            </mat-form-field>            
+            </mat-form-field>
+            <mat-checkbox formControlName="adminPrivilege" color="primary" class="employee-id__checkbox">Admin</mat-checkbox>            
             <button mat-flat-button class="employee-id__btn" type="submit" color="primary">Add</button>
         </form>
     </div>

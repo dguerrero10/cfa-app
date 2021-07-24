@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { CashAccountabilityService } from 'src/app/core/services/cash-accountability/cash-accountability.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
@@ -26,6 +28,15 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   public clickedRows = new Set<CashAccountability>();
   public rowIds: string[] = [];
   public deleteDataForm: FormGroup = <FormGroup>{};
+  public pageSizeOptions: number[] = [10, 20, 40, 60, 120];
+  public itemsPerPage: number = this.pageSizeOptions[2];
+  public currentPage: number = 1;
+  public itemCount: number = 0;
+  private deleteStateSub$ = new Subscription;
+  private cashAccountabilitySub$ = new Subscription;
+  private refreshDataSub$ = new Subscription;
+  private deleteDataSub$ = new Subscription;
+  private cashAccountabilityRefreshSub$ = new Subscription;
 
   constructor(private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -38,14 +49,15 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
-    this.deleteStateService.deleteDataListener.subscribe(data => {
+    this.deleteStateSub$ = this.deleteStateService.deleteDataListener.subscribe(data => {
       if (data) {
         this.deleteData(true);
       }
     });
-    this.cashAccountabilityService.getCashAccountability()
+    this.cashAccountabilitySub$ = this.cashAccountabilityService.getCashAccountability(this.itemsPerPage, this.currentPage)
       .subscribe(data => {
         this.cashAccountabilityData = data.cashAccountabilityData;
+        this.itemCount = data.itemCount; 
         this.shareChartDataService.shareData(this.cashAccountabilityData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.cashAccountabilityData);
@@ -58,17 +70,18 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
           this.disableMetricService.switchState(this.noData);
         }
       });
-    this.refreshDataService.dataRefreshed.subscribe(data => {
+    this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
-        this.refreshData();
+        this.refreshData(this.itemsPerPage, this.currentPage);
       }
     });
   }
 
-  refreshData() {
-    this.cashAccountabilityService.getCashAccountability()
+  refreshData(itemsPerPage: number, currentPage: number) {
+   this.cashAccountabilityRefreshSub$ = this.cashAccountabilityService.getCashAccountability(itemsPerPage, currentPage)
       .subscribe(data => {
         this.cashAccountabilityData = data.cashAccountabilityData;
+        this.itemCount = data.itemCount; 
         this.shareChartDataService.shareData(this.cashAccountabilityData);
         this.loading = false;
         this.dataSource = new MatTableDataSource(this.cashAccountabilityData);
@@ -80,8 +93,18 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
         else {
           this.noData = false;
           this.disableMetricService.switchState(this.noData);
+          this.deleteStateService.changeDeleteState(false);
+          this.deleteStateService.deleteData(false);
+          this.rowIds = [];
+          this.clickedRows.clear();
         }
       });
+  }
+
+  onChangePage(pageData: PageEvent) {
+    this.currentPage = pageData.pageIndex + 1;
+    this.itemsPerPage = pageData.pageSize;
+    this.refreshData(this.itemsPerPage, this.currentPage);
   }
 
   createForm() {
@@ -124,17 +147,18 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   deleteData(deleteStatus: boolean) {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
-      this.cashAccountabilityService.deleteCashAccountability(this.deleteDataForm.value)
+      this.deleteDataSub$ = this.cashAccountabilityService.deleteCashAccountability(this.deleteDataForm.value)
         .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
         .subscribe(data => {
           if (data.success) {
-            this.refreshData();
+            this.refreshData(this.itemsPerPage, this.currentPage);
             this.deleteStateService.changeDeleteState(false);
             this.deleteStateService.deleteData(false);
             this.rowIds = [];
+            this.clickedRows.clear();
           }
         });
     }
@@ -142,5 +166,10 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
+    this.deleteStateSub$.unsubscribe();
+    this.cashAccountabilitySub$.unsubscribe();
+    this.refreshDataSub$.unsubscribe();
+    this.deleteDataSub$.unsubscribe();
+    this.cashAccountabilityRefreshSub$.unsubscribe();
   }
 }

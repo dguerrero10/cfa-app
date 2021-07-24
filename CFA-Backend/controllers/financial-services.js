@@ -4,9 +4,10 @@ exports.createFinancialService = (req, res, next) => {
     const url = req.protocol + '://' + req.get("host");
     const financialService = new FinancialService({
         receiptPurpose: req.body.receiptPurpose,
+        imgPath: url + "/images/" + req.file.filename,
+        imgName: req.body.imgName,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        imgPath: url + "/images/" + req.file.filename
     });
     financialService.save();
     res.status(201).json({
@@ -15,11 +16,25 @@ exports.createFinancialService = (req, res, next) => {
 };
 
 exports.getFinancialServices = (req, res, next) => {
-    FinancialService.find().sort({ _id: -1 })
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const query = FinancialService.find();
+    let fetchedData;
+    if (pageSize && currentPage) {
+        query
+          .skip(pageSize * (currentPage -1))
+          .limit(pageSize);
+    }
+    query.find().sort({ _id: -1 })
         .then(financialServiceData => {
-            res.status(201).json({
+            fetchedData = financialServiceData;
+            return FinancialService.countDocuments();
+   
+        }).then(count => {
+            res.status(200).json({
                 success: true,
-                financialServiceData: financialServiceData
+                financialServiceData: fetchedData,
+                itemCount: count
             });
         });
 };

@@ -1,7 +1,7 @@
 <div class="d-table">
     <mat-form-field appearance="fill" class="d-table__search">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input>
+        <input matInput (keyup)="applyFilter($event)" #input [disabled]="noData">
         <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
     <div *ngIf="loading" class="table-spinner-container">
@@ -33,7 +33,7 @@
 
         <ng-container matColumnDef="Receipt Image">
             <th mat-header-cell *matHeaderCellDef> Receipt Image </th>
-            <td mat-cell *matCellDef="let element"> Image </td>
+            <td mat-cell *matCellDef="let element"> {{element.imgName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Submitted by">
@@ -42,10 +42,16 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr class="ripple" mat-row (click)="addRow(row)" [class.row-is-clicked]="clickedRows.has(row)"
+        <tr class="ripple" mat-row (click)="addRowViewImage(row)" [class.row-is-clicked]="clickedRows.has(row)"
             *matRowDef="let row; columns: displayedColumns;"></tr>
         <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
         </tr>
     </table>
+    <mat-paginator *ngIf="financialServiceData.length > 0" 
+        [length]="itemCount" 
+        [pageSize]="itemsPerPage" 
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onChangePage($event)">
+    </mat-paginator>
 </div>

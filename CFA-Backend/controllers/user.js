@@ -3,7 +3,7 @@ const sendgridTransporter = require('nodemailer-sendgrid-transport');
 
 const transporter = nodemailer.createTransport(sendgridTransporter({
     auth: {
-        api_key: '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'
+        api_key: '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'
     }
 }));
 
@@ -16,6 +16,7 @@ const EmployeeId = require('../models/employee-id');
 exports.registerUser = (req, res, next) => {
     EmployeeId.findOne({ employeeId: req.body.employeeId })
         .then(employeeId => {
+            let hasAdminPrivilege = employeeId.adminPrivilege;
             if (!employeeId) {
                 return res.status(401).json({
                     message: "No employee ID found."
@@ -28,6 +29,7 @@ exports.registerUser = (req, res, next) => {
                         lastName: req.body.lastName,
                         employeeId: req.body.employeeId,
                         email: req.body.email,
+                        adminPrivilege: hasAdminPrivilege,
                         password: hash
                     });
                     user.save()
@@ -137,8 +139,10 @@ exports.deleteUser = (req, res, next) => {
 }
 
 exports.addEmployeeId = (req, res, next) => {
+    console.log(req.body.admin)
     const _employeeId = new EmployeeId({
-        employeeId: req.body.employeeId
+        employeeId: req.body.employeeId,
+        adminPrivilege: req.body.adminPrivilege
     });
     _employeeId.save();
     res.status(201).json({
