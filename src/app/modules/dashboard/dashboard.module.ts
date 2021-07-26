@@ -49,6 +49,7 @@ import { CaresMobileComponent } from './components/cares/cares-mobile/cares-mobi
 import { ItemOrderMobileComponent } from './components/item-order/item-order-mobile/item-order-mobile.component';
 import { BorrowingTrackerMobileComponent } from './components/borrowing-tracker/borrowing-tracker-mobile/borrowing-tracker-mobile.component';
 import { CashAccountabilityMobileComponent } from './components/cash-accountability/cash-accountability-mobile/cash-accountability-mobile.component';
+import { SettingsBottomSheetComponent } from './components/mobile/settings-bottom-sheet/settings-bottom-sheet.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { CashAccountabilityMobileComponent } from './components/cash-accountabil
     ItemOrderMobileComponent,
     BorrowingTrackerMobileComponent,
     CashAccountabilityMobileComponent,
+    SettingsBottomSheetComponent,
   ],
   imports: [
     CommonModule,
