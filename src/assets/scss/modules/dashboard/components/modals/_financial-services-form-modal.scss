@@ -18,6 +18,13 @@
     max-height: 200px;
     border-radius: 5px;
     cursor: default;
+
+    &--first {
+        animation: scaleIn .25s;
+        border-radius: 5px;
+        width: 300px;
+        height: 250px;
+    }
     
     &-btn {
         width: 100px !important;

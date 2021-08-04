@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { throwError } from 'rxjs';
 import { CaresService } from 'src/app/core/services/cares/cares.service';
 import { CATEGORIES, FOOD_QUALITY, MISSING_ITEMS, MODES_OF_VISIT, SERVICES } from 'src/app/shared/data/forms/cares';
 
@@ -141,7 +143,6 @@ export class CaresMobileComponent implements OnInit {
     return formData;
   }
 
-
   onSubmit(formData: FormGroup) {
     if (this.caresForm.invalid) {
       return;
@@ -153,6 +154,7 @@ export class CaresMobileComponent implements OnInit {
     }
     this.caresService.addCare(formData.value).subscribe(data => {
       if (data.success) {
+        this.submitting = false;
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {
           duration: 1000
         });

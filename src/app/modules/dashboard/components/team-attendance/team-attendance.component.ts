@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { CurrentUserService } from 'src/app/core/services/shared/current-user.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { MobileViewService } from 'src/app/core/services/shared/mobile-view.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { AttendanceFormModalComponent } from '../modals/attendance-form-modal/attendance-form-modal.component';
@@ -20,6 +21,7 @@ export class TeamAttendanceComponent implements OnInit, OnDestroy {
   public onTableComponent: boolean = true;
   public deleteState: boolean = false;
   public isAdmin: boolean = false;
+  public isError: boolean = false;
   public onMobile: boolean = false;
   public tooltipPositionArr: TooltipPosition[] = ['right', 'above'];
   public toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
@@ -27,8 +29,10 @@ export class TeamAttendanceComponent implements OnInit, OnDestroy {
   private metricSerivceSub$ = new Subscription;
   private deleteStateServiceSub$ = new Subscription;
   private onMobileSub$ = new Subscription;
+  private errorHandlerSub$ = new Subscription;
 
-  constructor(public mobileViewService: MobileViewService,
+  constructor(public errorHandlerService: ErrorHandlerService,
+              public mobileViewService: MobileViewService,
               public currentUserService: CurrentUserService,
               public deleteStateService: DeleteStateService,
               public refreshDataService: RefreshDataService,
@@ -36,6 +40,7 @@ export class TeamAttendanceComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.errorHandlerSub$ = this.errorHandlerService.errorListener.subscribe(errorState => this.isError = errorState);
     this.onMobileSub$ = this.mobileViewService.onMobileViewListener.subscribe(value => this.onMobile = value);
     this.userServiceSub$ = this.currentUserService.getCurrentUser().subscribe(userData => {
       this.isAdmin = (Object.values(userData)[0].adminPrivilege);
@@ -68,6 +73,8 @@ export class TeamAttendanceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.errorHandlerService.errorOccured(false);
+    this.errorHandlerSub$.unsubscribe();
     this.userServiceSub$.unsubscribe();
     this.metricSerivceSub$.unsubscribe();
     this.deleteStateServiceSub$.unsubscribe();

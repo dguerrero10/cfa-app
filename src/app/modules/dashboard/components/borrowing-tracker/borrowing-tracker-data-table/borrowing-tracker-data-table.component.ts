@@ -4,10 +4,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, retry } from 'rxjs/operators';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
 import { BorrowingTracker } from 'src/app/shared/models/form-table/borrowing-tracker.model';
@@ -19,7 +20,7 @@ import { BorrowingTracker } from 'src/app/shared/models/form-table/borrowing-tra
 })
 export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = [
-   'Index', 'Date', 'Item Borrowed', 'Amount of Item', 'From', 'To', 'Leader', 'Notes'
+    'Index', 'Date', 'Item Borrowed', 'Amount of Item', 'From', 'To', 'Leader', 'Notes'
   ];
   public borrowingTrackerData: BorrowingTracker[] = [];
   public loading: boolean = true;
@@ -32,6 +33,7 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
   public itemsPerPage: number = this.pageSizeOptions[2];
   public currentPage: number = 1;
   public itemCount: number = 0;
+  public isError: boolean = false;
   private deleteStateSub$ = new Subscription;
   private borrowingTrackerSub$ = new Subscription;
   private refreshDataSub$ = new Subscription;
@@ -40,21 +42,25 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
     private snackBar: MatSnackBar,
+    private errorHandlerService: ErrorHandlerService,
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
     private borrowingTrackerService: BorrowingTrackerService,
-    public shareChartDataService: ShareChartDataService,
+    public shareChartDataService: ShareChartDataService
   ) { }
 
   ngOnInit(): void {
     this.createForm();
-   this.deleteStateSub$ = this.deleteStateService.deleteDataListener.subscribe(deleteStatus => {
+    this.deleteStateSub$ = this.deleteStateService.deleteDataListener.subscribe(deleteStatus => {
       if (deleteStatus) {
         this.deleteData(true)
       }
     });
-   this.borrowingTrackerSub$ = this.borrowingTrackerService.getBorrowingTrackerItems(this.itemsPerPage, this.currentPage)
+    this.borrowingTrackerSub$ = this.borrowingTrackerService.getBorrowingTrackerItems(this.itemsPerPage, this.currentPage)
+      .pipe(
+        retry(3)
+      )
       .subscribe(data => {
         this.borrowingTrackerData = data.borrowingTrackerData;
         this.shareChartDataService.shareData(this.borrowingTrackerData);
@@ -69,16 +75,25 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
           this.noData = false;
           this.disableMetricService.switchState(this.noData);
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
-   this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
-      if (data) {
-        this.refreshData(this.itemsPerPage, this.currentPage);
-      }
+      this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
+        if (data) {
+          this.refreshData(this.itemsPerPage, this.currentPage);
+        }
     });
   }
 
   refreshData(itemsPerPage: number, currentPage: number) {
-   this.borrowingTrackerRefreshSub$ = this.borrowingTrackerService.getBorrowingTrackerItems(itemsPerPage, currentPage)
+    this.borrowingTrackerRefreshSub$ = this.borrowingTrackerService.getBorrowingTrackerItems(itemsPerPage, currentPage)
+      .pipe(
+        retry(3)
+      )
       .subscribe(data => {
         this.borrowingTrackerData = data.borrowingTrackerData;
         this.shareChartDataService.shareData(this.borrowingTrackerData);
@@ -98,6 +113,12 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
           this.rowIds = [];
           this.clickedRows.clear();
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error)
       });
   }
 
@@ -149,6 +170,7 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
       this.deleteDataSub$ = this.borrowingTrackerService.deleteBorrowingTrackerData(this.deleteDataForm.value)
         .pipe(
+          retry(3),
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
           }))
@@ -160,10 +182,10 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
             this.rowIds = [];
             this.clickedRows.clear();
           }
-        });
+        },
+        (error) => this.errorHandlerService.handleDeleteDataErrors(error));
     }
   }
-
   ngOnDestroy() {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
@@ -173,6 +195,5 @@ export class BorrowingTrackerDataTableComponent implements OnInit, OnDestroy {
     this.deleteDataSub$.unsubscribe();
     this.borrowingTrackerRefreshSub$.unsubscribe();
   }
-
 }
 

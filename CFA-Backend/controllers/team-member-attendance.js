@@ -13,10 +13,16 @@ exports.createTeamMemberAttendance = (req, res, next) => {
         leaderFirstName: req.body.leaderFirstName,
         leaderLastName: req.body.leaderLastName,
     });
-    teamMemberAttendance.save();
-    res.status(201).json({
-        success: true
-    });
+    teamMemberAttendance.save()
+        .then(() =>
+            res.status(201).json({
+                success: true
+            }))
+        .catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
     TeamMemberAttendanceQueries.queryNoAttendance(req);
     TeamMemberAttendanceQueries.queryLateToWork(req);
     TeamMemberAttendanceQueries.queryUniformIssues(req);
@@ -43,15 +49,24 @@ exports.getTeamMemberAttendance = (req, res, next) => {
                 teamMemberAttendanceData: fetchedData,
                 itemCount: count
             });
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
         });
 };
 
 exports.deleteTeamMemberAttendance = (req, res, next) => {
     const _ids = req.body.ids;
     TeamMemberAttendance.deleteMany({ _id: { $in: _ids } })
-        .then(result => {
+        .then(() => {
             res.status(201).json({
                 success: true
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: error
             });
         });
 };

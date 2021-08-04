@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { CaresService } from 'src/app/core/services/cares/cares.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
 import { Care } from 'src/app/shared/models/form-table/cares.model';
@@ -33,6 +34,7 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
   public itemsPerPage: number = this.pageSizeOptions[2];
   public currentPage: number = 1;
   public itemCount: number = 0;
+  public isError: boolean = false;
   private deleteStateSub$ = new Subscription;
   private careSub$ = new Subscription;
   private refreshDataSub$ = new Subscription;
@@ -41,6 +43,7 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
     private snackBar: MatSnackBar,
+    private errorHandlerService: ErrorHandlerService,
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
@@ -70,6 +73,12 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
           this.noData = false;
           this.disableMetricService.switchState(this.noData)
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
    this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -99,6 +108,11 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
           this.rowIds = [];
           this.clickedRows.clear();
         }
+      },
+      (error) => {
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
   }
 
@@ -162,7 +176,8 @@ export class CaresDataTableComponent implements OnInit, OnDestroy {
             this.rowIds = [];
             this.clickedRows.clear();
           }
-        });
+        },
+        (error) => this.errorHandlerService.handleDeleteDataErrors(error));
     }
   }
   ngOnDestroy() {

@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
 import { TeamMemberAttendanceService } from 'src/app/core/services/team-attendance/team-member-attendance.service';
@@ -27,6 +28,7 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
   public clickedRows = new Set<TeamMemberAttendance>();
   public rowIds: string[] = [];
   public deleteDataForm: FormGroup = <FormGroup>{};
+  public isError: boolean = false;
   public pageSizeOptions: number[] = [10, 20, 40, 60, 120];
   public itemsPerPage: number = this.pageSizeOptions[2];
   public currentPage: number = 1;
@@ -37,15 +39,14 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
   private deleteDataSub$ = new Subscription;
   private teamMemberRefreshSub$ = new Subscription;
 
-  constructor(private fb: FormBuilder,
+  constructor(private errorHandlerService: ErrorHandlerService,
+    private fb: FormBuilder,
     private snackBar: MatSnackBar,
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
     public disableMetricService: DisableMetricTabService,
     private teamMemberAttendanceService: TeamMemberAttendanceService,
-    public shareChartDataService: ShareChartDataService
-    ) { }
-
+    public shareChartDataService: ShareChartDataService) { }
 
   ngOnInit(): void {
    this.createForm();
@@ -69,6 +70,12 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
           this.noData = false;
           this.disableMetricService.switchState(this.noData);
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
    this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -98,6 +105,12 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
           this.rowIds = [];
           this.clickedRows.clear();
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
   }
 
@@ -160,7 +173,8 @@ export class AttendanceDataTableComponent implements OnInit, OnDestroy {
             this.rowIds = [];
             this.clickedRows.clear();
           }
-        });
+        },
+        (error) => this.errorHandlerService.handleDeleteDataErrors(error));
     }
   }
 

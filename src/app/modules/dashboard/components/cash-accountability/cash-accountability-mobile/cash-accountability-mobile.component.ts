@@ -109,6 +109,7 @@ export class CashAccountabilityMobileComponent implements OnInit {
     }
     this.cashAccountabilityService.addCashAccountability(formData.value).subscribe(data => {
       if (data.success) {
+        this.submitting = false;
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {
           duration: 1000
         });

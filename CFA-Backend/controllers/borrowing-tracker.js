@@ -10,18 +10,14 @@ exports.createBorrowingTrackerItem = (req, res, next) => {
         leaderFirstName: req.body.leaderFirstName,
         leaderLastName: req.body.leaderLastName
     });
-    borrowingTracker.save();
-    res.status(201).json({
-        success: true
-    });
-};
-
-exports.getBorrowingTrackerItems = (req, res, next) => {
-    BorrowingTracker.find().sort({ _id: -1 })
-        .then(borrowingTrackerData => {
+    borrowingTracker.save()
+        .then(() =>
             res.status(201).json({
-                success: true,
-                borrowingTrackerData: borrowingTrackerData
+                success: true
+            }))
+        .catch(error => {
+            res.status(500).json({
+                error: error
             });
         });
 };
@@ -33,29 +29,37 @@ exports.getBorrowingTrackerItems = (req, res, next) => {
     let fetchedData;
     if (pageSize && currentPage) {
         query
-          .skip(pageSize * (currentPage -1))
-          .limit(pageSize);
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
     }
     query.find().sort({ _id: -1 })
         .then(borrowingTrackerData => {
             fetchedData = borrowingTrackerData;
             return BorrowingTracker.countDocuments();
-   
+
         }).then(count => {
             res.status(200).json({
                 success: true,
                 borrowingTrackerData: fetchedData,
                 itemCount: count
             });
-        })
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 };
 
 exports.deleteBorrowingTrackerItems = (req, res, next) => {
     const _ids = req.body.ids;
     BorrowingTracker.deleteMany({ _id: { $in: _ids } })
-        .then(result => {
-            res.status(201).json({
+        .then(() => {
+            res.status(200).json({
                 success: true
-            })
-        })
+            });
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 }

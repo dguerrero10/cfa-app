@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { retry } from 'rxjs/operators';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 
 @Component({
@@ -15,10 +17,11 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
   public submitting: boolean = false;
 
   constructor(private fb: FormBuilder,
-              public refreshDataService: RefreshDataService,
-              public snackBar: MatSnackBar,
-              public borrowingTrackerService: BorrowingTrackerService,
-              private dialogRef: MatDialogRef<BorrowingTrackerFormModalComponent>) { }
+    private errorHandlerService: ErrorHandlerService,
+    public refreshDataService: RefreshDataService,
+    public snackBar: MatSnackBar,
+    public borrowingTrackerService: BorrowingTrackerService,
+    private dialogRef: MatDialogRef<BorrowingTrackerFormModalComponent>) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -79,14 +82,22 @@ export class BorrowingTrackerFormModalComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    this.borrowingTrackerService.addBorrowingTrackerItem(formData.value).subscribe(data => {
-      if (data.success) {
-        this.refreshDataService.refreshData(true);
-        this.dialogRef.close();
-        this.snackBar.open('Data submitted successfully!', 'Dismiss', {
-          duration: 1000
-        });
-      }
-    });
+    this.borrowingTrackerService.addBorrowingTrackerItem(formData.value)
+      .pipe(
+        retry(3)
+      )
+      .subscribe(data => {
+        if (data.success) {
+          this.refreshDataService.refreshData(true);
+          this.dialogRef.close();
+          this.snackBar.open('Data submitted successfully!', 'Dismiss', {
+            duration: 1000
+          });
+        }
+      }, 
+      (error) => {
+        this.submitting = false;
+        this.errorHandlerService.handleSubmissionErrors(error);
+      });
   }
 }

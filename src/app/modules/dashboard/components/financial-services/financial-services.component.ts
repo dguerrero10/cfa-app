@@ -20,7 +20,6 @@ export class FinancialServicesComponent implements OnInit {
   public deleteState: boolean = false;
   public tooltipPositionArr: TooltipPosition[] = ['right', 'above'];
   public toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
-  private userServiceSub$ = new Subscription;
   private metricSerivceSub$ = new Subscription;
   private deleteStateServiceSub$ = new Subscription;
   private viewImageServiceSub$ = new Subscription;
@@ -32,9 +31,9 @@ export class FinancialServicesComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.metricService.currentMetricState.subscribe(data => this.metricDisabled = data);
-    this.viewImgService.viewImgVisibleListener.subscribe(data => this.viewImgState = data);
-    this.deleteStateService.deleteVisibleListener.subscribe(value => {
+   this.metricSerivceSub$ = this.metricService.currentMetricState.subscribe(data => this.metricDisabled = data);
+   this.viewImageServiceSub$ = this.viewImgService.viewImgVisibleListener.subscribe(data => this.viewImgState = data);
+   this.deleteStateServiceSub$ = this.deleteStateService.deleteVisibleListener.subscribe(value => {
       this.deleteState = value;
       if (this.deleteState === true) this.toolTipPosition = new FormControl(this.tooltipPositionArr[1]);
       else this.toolTipPosition = new FormControl(this.tooltipPositionArr[0]);
@@ -55,6 +54,12 @@ export class FinancialServicesComponent implements OnInit {
 
   openFinancialServicesFormModal() {
     this.dialog.open(FinancialServicesFormModalComponent, {width: '400px'});
+  }
+
+  ngOnDestroy() {
+    this.metricSerivceSub$.unsubscribe();
+    this.deleteStateServiceSub$.unsubscribe();
+    this.viewImageServiceSub$.unsubscribe();
   }
 
 }

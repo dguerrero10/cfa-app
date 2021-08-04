@@ -1,16 +1,16 @@
 <div class="space-between">
-  <h2 mat-dialog-title>Team Member Attendance</h2>
+  <h2 mat-dialog-title>Financial Services</h2>
   <button mat-icon-button class="exit-btn" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
 </div>
 <ng-container *ngIf="imgPreview !== '' && imgPreview !== null && !imgSaved">
-  <img class="fs__img-preview" [src]="imgPreview" alt="">
+  <div class="justify-center">
+    <img class="fs__img-preview--first" [src]="imgPreview" alt="">
+  </div>
   <div class="space-between u-md-margin-top">
-    <button class="fs__img-preview-btn" mat-stroked-button color="warn"
-    (click)="cancelImg()">Cancel</button>
-    <button class="fs__img-preview-btn" mat-flat-button color="primary"
-    (click)="saveImg()">Save</button>
+    <button class="fs__img-preview-btn" mat-stroked-button color="warn" (click)="cancelImg()">Cancel</button>
+    <button class="fs__img-preview-btn" mat-flat-button color="primary" (click)="saveImg()">Save</button>
   </div>
 </ng-container>
 <ng-container *ngIf="imgSaved">
@@ -25,23 +25,22 @@
       <img class="fs__img-preview u-sm-margin-bottom" [src]="imgPreview" alt="">
     </ng-container>
     <div class="space-between">
-      <button mat-stroked-button type="button" (click)="filePicker.click()"
-              class="fs-form-modal__upload-btn">
+      <button mat-stroked-button type="button" (click)="filePicker.click()" class="fs-form-modal__upload-btn">
         <mat-icon>file_upload</mat-icon>
         Upload image
       </button>
       <input type="file" #filePicker (change)="onImagePicked($event)">
     </div>
-      <mat-form-field appearance="outline">
-        <mat-label>Your first name</mat-label>
-        <input matInput required formControlName="firstName">
-        <mat-error *ngIf="fsForm.get('firstName')">{{getFormErrors('firstName')}}</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Your last name</mat-label>
-        <input matInput required formControlName="lastName">
-        <mat-error *ngIf="fsForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
-      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Your first name</mat-label>
+      <input matInput required formControlName="firstName">
+      <mat-error *ngIf="fsForm.get('firstName')">{{getFormErrors('firstName')}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Your last name</mat-label>
+      <input matInput required formControlName="lastName">
+      <mat-error *ngIf="fsForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
+    </mat-form-field>
     <button mat-flat-button color="primary" class="u-xs-margin-top">Submit</button>
   </form>
 </ng-container>

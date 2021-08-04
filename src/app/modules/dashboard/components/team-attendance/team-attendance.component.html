@@ -21,9 +21,13 @@
     </div>
     <mat-tab-group animationDuration="0ms" class="team-attendance__tab-group" (selectedTabChange)="tabChanged($event)">
         <mat-tab>
-            <div *ngIf="!isAdmin" class="mat-body no-permission-para">
+            <div *ngIf="!isAdmin && !isError" class="mat-body no-permission-para">
                 <mat-icon class="info-icon">info_outline</mat-icon>
                 You don't have permission to view this data.
+            </div>
+            <div *ngIf="isError" class="mat-body no-permission-para">
+                <mat-icon class="info-icon">report_problem</mat-icon>
+                An error occured fetching your data. Try refreshing the page.
             </div>
             <ng-template mat-tab-label>
                 Data

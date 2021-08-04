@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { ItemOrderService } from 'src/app/core/services/item-order/item-order.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { ItemOrder } from 'src/app/shared/models/form-table/item-order.model';
 
@@ -22,6 +23,7 @@ export class ItemOrderDataTableComponent implements OnInit {
   public itemOrderData: ItemOrder[] = [];
   public loading: boolean = true;
   public noData: boolean = false;
+  public isError: boolean = false;
   public dataSource: any;
   public clickedRows = new Set<ItemOrder>();
   public rowIds: string[] = [];
@@ -37,6 +39,7 @@ export class ItemOrderDataTableComponent implements OnInit {
   private itemOrderRefreshSub$ = new Subscription;
 
   constructor(private fb: FormBuilder,
+    private errorHandlerService: ErrorHandlerService,
     private snackBar: MatSnackBar,
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
@@ -64,6 +67,12 @@ export class ItemOrderDataTableComponent implements OnInit {
           this.noData = false;
           this.disableMetricService.switchState(this.noData)
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
    this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -92,6 +101,12 @@ export class ItemOrderDataTableComponent implements OnInit {
           this.rowIds = [];
           this.clickedRows.clear();
         }
+      },
+      (error) => {
+        this.loading = false;
+        this.isError = true;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
   }
 
@@ -154,7 +169,8 @@ export class ItemOrderDataTableComponent implements OnInit {
             this.rowIds = [];
             this.clickedRows.clear();
           }
-        });
+        },
+        (error) => this.errorHandlerService.handleDeleteDataErrors(error));
     }
   }
 

@@ -1,1 +1,10 @@
-<p>settings-bottom-sheet works!</p>
+<mat-nav-list class="settings">
+    <div mat-list-item class="single-row settings__item">
+        <mat-icon>settings</mat-icon>     
+        <button mat-button>Account settings</button>
+    </div>
+    <div mat-list-item class="single-row settings__item">
+        <mat-icon>logout</mat-icon>     
+        <button mat-button (click)="onLogout()">Logout</button>
+    </div>
+</mat-nav-list>

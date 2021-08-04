@@ -13,6 +13,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ViewImageService } from 'src/app/core/services/shared/view-image.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewImageModalComponent } from '../../modals/view-image-modal/view-image-modal.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-financial-services-data-table',
@@ -34,6 +35,12 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
   public itemsPerPage: number = this.pageSizeOptions[2];
   public currentPage: number = 1;
   public itemCount: number = 0;
+  private deleteStateSub$ = new Subscription;
+  private financialServiceSub$ = new Subscription;
+  private refreshDataSub$ = new Subscription;
+  private deleteDataSub$ = new Subscription;
+  private viewImgSub$ = new Subscription;
+  private financialServiceRefreshSub$ = new Subscription;
 
   constructor(private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -48,17 +55,17 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createForm();
-    this.deleteStateService.deleteDataListener.subscribe(deleteStatus => {
+    this.deleteStateSub$ = this.deleteStateService.deleteDataListener.subscribe(deleteStatus => {
       if (deleteStatus) {
         this.deleteData(true);
       }
     });
-    this.viewImgService.viewImgListener.subscribe(viewImgStatus => {
-      if (viewImgStatus) {
+    this.viewImgSub$ = this.viewImgService.viewImgListener.subscribe(viewImgState => {
+      if (viewImgState) {
         this.viewImg(true);
       }
     });
-    this.fsService.getFinancialServices(this.itemsPerPage, this.currentPage)
+    this.financialServiceSub$ = this.fsService.getFinancialServices(this.itemsPerPage, this.currentPage)
       .subscribe(data => {
         this.financialServiceData = data.financialServiceData;
         this.itemCount = data.itemCount;
@@ -73,7 +80,7 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
           this.disableMetricService.switchState(this.noData);
         }
       });
-    this.refreshDataService.dataRefreshed.subscribe(data => {
+    this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
         this.refreshData(this.itemsPerPage, this.currentPage);
       }
@@ -81,7 +88,7 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
   }
 
   refreshData(itemsPerPage: number, currentPage: number) {
-    this.fsService.getFinancialServices(itemsPerPage, currentPage)
+   this.financialServiceRefreshSub$ = this.fsService.getFinancialServices(itemsPerPage, currentPage)
       .subscribe(data => {
         this.financialServiceData = data.financialServiceData;
         this.itemCount = data.itemCount;
@@ -131,9 +138,9 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
       this.deleteStateService.changeDeleteState(false);
       this.viewImgService.changeViewImgState(false);
     }
-    // else if (this.clickedRows.size > 1) {
-    //   this.viewImgService.changeViewImgState(false);
-    // }
+    if (this.clickedRows.size > 1) {
+      this.viewImgService.changeViewImgState(false);
+    }
     else {
       this.deleteStateService.changeDeleteState(true);
       this.viewImgService.changeViewImgState(true);
@@ -155,7 +162,7 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
   }
 
   removeImgToView(row: any) {
-    this.imgPaths = this.imgPaths.filter(x => x !== row.imgPath)
+    this.imgPaths = this.imgPaths.filter(x => x !== row.imgPath);
   }
 
   viewImg(viewImgStatus: boolean) {
@@ -171,7 +178,7 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
   deleteData(deleteStatus: boolean) {
     if (deleteStatus) {
       this.deleteDataForm.controls['ids'].setValue(this.rowIds);
-      this.fsService.deleteFinancialServices(this.deleteDataForm.value)
+      this.deleteDataSub$ = this.fsService.deleteFinancialServices(this.deleteDataForm.value)
         .pipe(
           finalize(() => {
             this.snackBar.open('Data deleted succesfully!', 'Dismiss', { duration: 1000 });
@@ -193,5 +200,11 @@ export class FinancialServicesDataTableComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.deleteStateService.changeDeleteState(false);
     this.deleteStateService.deleteData(false);
+    this.deleteStateSub$.unsubscribe();
+    this.financialServiceSub$.unsubscribe();
+    this.refreshDataSub$.unsubscribe();
+    this.deleteDataSub$.unsubscribe();
+    this.viewImgSub$.unsubscribe();
+    this.financialServiceRefreshSub$.unsubscribe();
   }
 }

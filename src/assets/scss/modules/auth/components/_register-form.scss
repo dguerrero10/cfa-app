@@ -12,3 +12,25 @@
     width: 100px;
     height: 100px;
 }
+
+@media (max-width: 500px) {
+    .register-form {
+        padding: 0;
+        border: none;
+        padding-top: 2rem;
+    }
+    mat-form-field {
+        width: 100%;
+    }
+}
+
+@media (max-height: 750px) {
+    .cfa-logo {
+        margin-top: 9rem;
+    }
+
+    .cfa-logo {
+        width: 80px;
+        height: 80px;
+    }
+}

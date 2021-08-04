@@ -12,12 +12,16 @@ exports.createCare = (req, res, next) => {
         leaderFirstName: req.body.leaderFirstName,
         leaderLastName: req.body.leaderLastName,
     });
-    care.save().then(careData => {
-        res.status(201).json({
-            success: true,
-            care: careData
+    care.save()
+        .then(() =>
+            res.status(201).json({
+                success: true
+            }))
+        .catch(error => {
+            res.status(500).json({
+                error: error
+            });
         });
-    });
 };
 
 exports.getCares = (req, res, next) => {
@@ -27,29 +31,37 @@ exports.getCares = (req, res, next) => {
     let fetchedData;
     if (pageSize && currentPage) {
         query
-          .skip(pageSize * (currentPage -1))
-          .limit(pageSize);
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
     }
     query.find().sort({ _id: -1 })
         .then(caresData => {
             fetchedData = caresData;
             return Care.countDocuments();
-   
+
         }).then(count => {
             res.status(200).json({
                 success: true,
                 caresData: fetchedData,
                 itemCount: count
             });
-        })
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 };
 
 exports.deleteCares = (req, res, next) => {
     const _ids = req.body.ids;
     Care.deleteMany({ _id: { $in: _ids } })
-        .then(result => {
-            res.status(201).json({
+        .then(() => {
+            res.status(200).json({
                 success: true
-            })
-        })
+            });
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 }

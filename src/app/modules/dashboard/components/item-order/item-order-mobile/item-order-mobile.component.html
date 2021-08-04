@@ -58,6 +58,10 @@
             <input required matInput formControlName="lastName">
             <mat-error *ngIf="itemOrderForm.get('lastName')">{{getFormErrors('lastName')}}</mat-error>
         </mat-form-field>
-        <button mat-flat-button color="primary" type="submit" class="u-xs-margin-top">Submit</button>
+        <div class="justify-center">
+            <button *ngIf="!submitting" mat-flat-button color="primary" type="submit"
+                class="u-xs-margin-top">Submit</button>
+            <mat-spinner *ngIf="submitting" [diameter]="40"></mat-spinner>
+        </div>
     </form>
 </div>

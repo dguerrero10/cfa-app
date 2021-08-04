@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { CashAccountabilityService } from 'src/app/core/services/cash-accountability/cash-accountability.service';
 import { DeleteStateService } from 'src/app/core/services/shared/delete-state.service';
 import { DisableMetricTabService } from 'src/app/core/services/shared/disable-metric-tab.service';
+import { ErrorHandlerService } from 'src/app/core/services/shared/helpers/error-handler.service';
 import { RefreshDataService } from 'src/app/core/services/shared/refresh-data.service';
 import { ShareChartDataService } from 'src/app/core/services/shared/share-chart-data.service';
 import { CashAccountability } from 'src/app/shared/models/form-table/cash-accountability.model';
@@ -24,6 +25,7 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   public cashAccountabilityData: CashAccountability[] = [];
   public loading: boolean = true;
   public noData: boolean = false;
+  public isError: boolean = false;
   public dataSource: any;
   public clickedRows = new Set<CashAccountability>();
   public rowIds: string[] = [];
@@ -38,7 +40,8 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
   private deleteDataSub$ = new Subscription;
   private cashAccountabilityRefreshSub$ = new Subscription;
 
-  constructor(private fb: FormBuilder,
+  constructor(private errorHandlerService: ErrorHandlerService,
+    private fb: FormBuilder,
     private snackBar: MatSnackBar,
     public deleteStateService: DeleteStateService,
     public refreshDataService: RefreshDataService,
@@ -69,6 +72,12 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
           this.noData = false;
           this.disableMetricService.switchState(this.noData);
         }
+      },
+      (error) => {
+        this.isError = true;
+        this.loading = false;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
     this.refreshDataSub$ = this.refreshDataService.dataRefreshed.subscribe(data => {
       if (data) {
@@ -98,6 +107,12 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
           this.rowIds = [];
           this.clickedRows.clear();
         }
+      },
+      (error) => {
+        this.isError = true;
+        this.loading = false;
+        this.errorHandlerService.errorOccured(true);
+        this.errorHandlerService.handleFetchingDataErrors(error);
       });
   }
 
@@ -160,7 +175,8 @@ export class CashAccountabilityDataTableComponent implements OnInit, OnDestroy {
             this.rowIds = [];
             this.clickedRows.clear();
           }
-        });
+        },
+        (error) => this.errorHandlerService.handleDeleteDataErrors(error));
     }
   }
   ngOnDestroy() {

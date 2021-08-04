@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -21,17 +23,29 @@ export class TopNavComponent implements OnInit, OnDestroy {
   private userServiceSub$ = new Subscription;
 
   constructor(public dialog: MatDialog,
-              public currentUserService: CurrentUserService,
-              public authService: AuthService,
-              private router: Router) { }
+    private snackBar: MatSnackBar,
+    public currentUserService: CurrentUserService,
+    public authService: AuthService,
+    private router: Router) { }
 
 
+  handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      this.snackBar.open('An error occured, please logout and try again.', 'Dismiss', {
+        duration: 5000
+      })
+    }
+  }
 
   ngOnInit(): void {
-   this.userServiceSub$ = this.currentUserService.getCurrentUser()
+    this.userServiceSub$ = this.currentUserService.getCurrentUser()
       .subscribe(userData => {
         this.user = (Object.values(userData)[0]);
-      });
+      },
+        (error) => {
+          this.handleError(error);
+        }
+      );
     if (this.router.url.includes(this.adminUrl)) {
       this.navigatedToAdmin = true;
     }
@@ -53,7 +67,7 @@ export class TopNavComponent implements OnInit, OnDestroy {
   }
 
   openAccountSettings() {
-    this.dialog.open(AccountSettingsModalComponent, {width: '400px'});
+    this.dialog.open(AccountSettingsModalComponent, { width: '400px' });
   }
 
   ngOnDestroy() {

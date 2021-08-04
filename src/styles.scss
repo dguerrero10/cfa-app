@@ -92,6 +92,10 @@ body.dark {
   justify-content: center;
   align-items: center;
 }
+.hide {
+  animation: fadeOut ease .3s;
+  animation-fill-mode: forwards;
+}
 .mat-paginator {margin-top: 1rem;}
 mat-error {margin-left: -.5rem}
 .no-permission-para {display: flex; justify-content: center; margin-top: 2.5rem;}

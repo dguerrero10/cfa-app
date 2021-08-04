@@ -1,7 +1,8 @@
 <form [formGroup]="registerForm" class="register-form" (ngSubmit)="onSubmit(registerForm)">
     <img class="cfa-logo" [src]=cfaLogo>
     <div class="mat-h1">Register</div>
-    <div class="single-row">
+
+    <div class="single-row mobile-row">
         <mat-form-field appearance="outline" class="u-two-form-field">
             <mat-label>First name</mat-label>
             <input matInput formControlName="firstName">
@@ -14,7 +15,7 @@
         </mat-form-field>
     </div>
 
-    <div class="single-row">
+    <div class="single-row mobile-row">
         <mat-form-field appearance="outline" class="u-two-form-field">
             <mat-label>Employee ID</mat-label>
             <input matInput formControlName="employeeId" type="number">

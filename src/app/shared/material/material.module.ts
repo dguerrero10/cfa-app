@@ -33,7 +33,7 @@ import { MatRippleModule } from '@angular/material/core'
 import { MatRadioModule } from '@angular/material/radio';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { MatSidenavModule } from '@angular/material/sidenav';
-
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 const MaterialComponents = [
   MatToolbarModule,
@@ -68,7 +68,8 @@ const MaterialComponents = [
   MatRadioModule,
   NgxSpinnerModule,
   LayoutModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatBottomSheetModule
 ];
 
 @NgModule({

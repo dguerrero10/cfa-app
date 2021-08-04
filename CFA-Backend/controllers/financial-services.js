@@ -9,10 +9,16 @@ exports.createFinancialService = (req, res, next) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
-    financialService.save();
-    res.status(201).json({
-        success: true
-    });
+    financialService.save()
+    .then(() =>
+            res.status(201).json({
+                success: true
+            }))
+        .catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 };
 
 exports.getFinancialServices = (req, res, next) => {
@@ -36,15 +42,23 @@ exports.getFinancialServices = (req, res, next) => {
                 financialServiceData: fetchedData,
                 itemCount: count
             });
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
         });
 };
 
 exports.deleteFinancialService = (req, res, next) => {
     const _ids = req.body.ids;
     FinancialService.deleteMany({ _id: { $in: _ids } })
-        .then(result => {
+        .then(() => {
             res.status(201).json({
                 success: true
-            })
-        })
+            });
+        }).catch(error => {
+            res.status(500).json({
+                error: error
+            });
+        });
 }

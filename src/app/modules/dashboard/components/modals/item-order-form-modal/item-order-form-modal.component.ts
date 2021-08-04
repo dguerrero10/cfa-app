@@ -21,6 +21,7 @@ export class ItemOrderFormModalComponent implements OnInit {
   public removable: boolean = true;
   public otherRadioSelected: boolean = false;
   public otherSelectSelected: boolean = false;
+  public submitting: boolean = false;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public itemCtrl = new FormControl(Validators.required);
   public filteredItems: Observable<string[]>;
@@ -176,8 +177,10 @@ export class ItemOrderFormModalComponent implements OnInit {
     if (this.itemOrderForm.invalid) {
       return;
     }
+    this.submitting = true;
     this.itemOrderService.addItemOrder(formData.value).subscribe(data => {
       if (data.success) {
+        this.submitting = false;
         this.refreshDataService.refreshData(true);
         this.dialogRef.close();
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {

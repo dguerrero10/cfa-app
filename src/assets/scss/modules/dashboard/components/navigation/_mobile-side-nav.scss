@@ -10,12 +10,18 @@
 
     &__content {
         background-color: $color-white;
+
+        &--name {
+            color: $color-white;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
     }
 
     &__settings {
         display: flex;
         justify-content: center;
-        margin-top: 2rem;
+        margin: 2rem 0;
 
         &--icon {
             color: $color-white;
@@ -26,22 +32,26 @@
         display: flex;
         justify-content: flex-end;
         padding-right: 2rem;
-        padding-top: 2rem;
+        padding-top: 1rem;
+        border-bottom: 1px solid $color-light-gray;
 
         &--day {
-            margin-bottom: 0;
+            margin-bottom: .5rem;
         }
 
         &--month {
             display: flex;
             align-items: center;
             margin-right: .5rem;
+            margin-bottom: .5rem;
             color: $color-dark-gray;
         }
     }
 
     &__toolbar {
         background-color: $color-dark-charcoal;
+        display: flex;
+        justify-content: space-between;
     }
 
     &__menu-icon {

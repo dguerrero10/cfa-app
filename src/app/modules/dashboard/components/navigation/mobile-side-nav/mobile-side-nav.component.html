@@ -5,15 +5,15 @@
       [opened]="(isHandset$ | async) === false">
     <li class="side-nav__list">
       <div *ngFor="let feature of features; index as i;" class="side-nav__list-item">
-          <a mat-fab [routerLinkActiveOptions]="{exact: true}" 
+          <a mat-fab [routerLinkActiveOptions]="{exact: true}" (click)="toggleSideNav()" 
                      [routerLink]="feature.feature"
-             routerLinkActive="side-nav__list-btn-active"
+                      routerLinkActive="side-nav__list-btn-active"
               class="side-nav__list-btn u-icon-center-inline">
               <mat-icon class="side-nav__list-icon">{{feature.icon}}</mat-icon>
           </a>
       </div>
       <div class="side-nav__settings">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="openSettingsBottomSheet()">
           <mat-icon class="side-nav__settings--icon">settings</mat-icon>
         </button>
       </div>
@@ -29,6 +29,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon class="side-nav__menu-icon" aria-label="Side nav toggle icon">dashboard</mat-icon>
       </button>
+      <div class="mat-h3 side-nav__content--name">{{user.firstName}} {{user.lastName}}</div>
     </mat-toolbar>
     <div class="side-nav__date">
       <div class="mat-body side-nav__date--month">{{currentMonth}}</div>

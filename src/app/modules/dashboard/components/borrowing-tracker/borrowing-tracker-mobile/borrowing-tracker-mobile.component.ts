@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BorrowingTrackerService } from 'src/app/core/services/borrowing-tracker/borrowing-tracker.service';
@@ -77,6 +77,7 @@ export class BorrowingTrackerMobileComponent implements OnInit {
     this.submitting = true;
     this.borrowingTrackerService.addBorrowingTrackerItem(formData.value).subscribe(data => {
       if (data.success) {
+        this.submitting = false;
         this.snackBar.open('Data submitted successfully!', 'Dismiss', {
           duration: 1000
         });

@@ -1,7 +1,7 @@
 <div class="d-table">
-    <mat-form-field appearance="fill" class="d-table__search">
+    <mat-form-field appearance="fill" class="d-table__search" [ngClass]="{'hide': noData || isError}">
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input  [disabled]="noData">
+        <input matInput (keyup)="applyFilter($event)" #input>
         <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
     <div *ngIf="loading" class="table-spinner-container">
